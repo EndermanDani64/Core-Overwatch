@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: c59b3eb76dbb8194ab94c4bb1f08d5d3
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 212589
+  packageName: Timers Made Easy Lite
+  packageVersion: 1.0.0
+  assetPath: Assets/GolemiteGames/TimersMadeEasyLite/Scripts/DemoFunctionsForEvents.cs
+  uploadId: 478131
