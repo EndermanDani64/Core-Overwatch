@@ -125,12 +125,12 @@ public class PlayManagger : MonoBehaviour
 
         if (ecoolantSuplyDecrease.text != "" || int.Parse(ecoolantSuplyDecrease.text) != 0)
         {
-            ValueStorage.ECOOLANT_SUPPLY_DECREASE = int.Parse(ecoolantSuplyDecrease.text);
+            ValueStorage.COOLANT_SUPPLY_DECREASE = int.Parse(ecoolantSuplyDecrease.text);
         }
 
         if (ecoolantSuplyValue.text != "" || int.Parse(ecoolantSuplyValue.text) != 0)
         {
-            ValueStorage.ECOOLANT_SUPPLY_ADD = int.Parse(ecoolantSuplyValue.text);
+            ValueStorage.COOLANT_SUPPLY_ADD = int.Parse(ecoolantSuplyValue.text);
         }
 
         Debug.Log("Phase 2 complete");

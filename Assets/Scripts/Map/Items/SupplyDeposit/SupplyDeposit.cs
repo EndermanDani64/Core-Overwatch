@@ -63,7 +63,7 @@ public class SupplyDeposit : MonoBehaviour
                     //valueStorage.ReleaseID(inventorySystem.equippedItemID);
                     if (inventorySystem.heldItem == "ECoolantSupply")
                     {
-                        int checkValue = supplyedValue + ValueStorage.ECOOLANT_SUPPLY_ADD;
+                        int checkValue = supplyedValue + ValueStorage.COOLANT_SUPPLY_ADD;
                         if (checkValue > 100)
                         {
                             supplyedValue = 100;
@@ -71,7 +71,7 @@ public class SupplyDeposit : MonoBehaviour
                         }
                         else
                         {
-                            supplyedValue += ValueStorage.ECOOLANT_SUPPLY_ADD;
+                            supplyedValue += ValueStorage.COOLANT_SUPPLY_ADD;
                             outputText.text = $"Supply: {supplyedValue}%";
                         }
                         inventorySystem.ClearItemInHand();

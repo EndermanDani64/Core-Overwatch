@@ -47,7 +47,6 @@ public class TempController : MonoBehaviour
     public void TemperatureLoop()
     {
         UpdateTemperatureDynamics();
-        Debug.Log("ts igan");
         if (temp > ValueStorage.REACTOR_TMP_MELTINGPOINT)
         {
             isMeltdown = true;
@@ -92,8 +91,8 @@ public class TempController : MonoBehaviour
             simulatedIncrease = baseIncrease + controlRodEffect - fanCooling - coolantCooling;
         }
 
-        Debug.Log($"controlRodEffect = {controlRodEffect}");
-        Debug.Log($"simulatedIncrease = {simulatedIncrease}");
+        //Debug.Log($"controlRodEffect = {controlRodEffect}");
+        //Debug.Log($"simulatedIncrease = {simulatedIncrease}");
 
         temp += simulatedIncrease;
 

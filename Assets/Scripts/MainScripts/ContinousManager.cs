@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -5,10 +6,14 @@ public class ContinousManager : MonoBehaviour
 {
     [Header("Scripts that contains the functions")]
     [SerializeField] private SupplyDeposit supplyDeposit;
+    [SerializeField] private ValueStorage valueStorage;
     [SerializeField] private ElectricityDecreaseValueManagger electricityDValueManagger;
     [SerializeField] private GeneratorController generatorController;
     [SerializeField] private TempController tempController;
     [SerializeField] private ScoreManager scoreManager;
+
+    [Header("UI")]
+    [SerializeField] private UnityEngine.UI.Slider coolantInjectionSlider;
 
     private void Start()
     {
@@ -25,6 +30,7 @@ public class ContinousManager : MonoBehaviour
             {
                 tempController.TemperatureLoop();
             }
+            valueStorage.UpdateValue("COOLANT_SUPPLY_DECREASE", Convert.ToInt32(coolantInjectionSlider.value));
             yield return new WaitForSeconds(.5f);
         }
     }
@@ -46,7 +52,7 @@ public class ContinousManager : MonoBehaviour
         {
             if (tempController.isOnline)
             {
-                supplyDeposit.DecreaseSupplyValue(ValueStorage.ECOOLANT_SUPPLY_DECREASE);
+                supplyDeposit.DecreaseSupplyValue(ValueStorage.COOLANT_SUPPLY_DECREASE);
             }
             yield return new WaitForSeconds(2.5f);
         }
