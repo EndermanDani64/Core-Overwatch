@@ -2,17 +2,34 @@ using UnityEngine;
 
 public class TimeManager : MonoBehaviour
 {
-    public static 
+    [SerializeField] ScoreManager scoreManager;
+    [SerializeField] TempController tempController;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
+    public static float elapsedTimeInSeconds = 0;
+    public static int minutes = 0;
+    public static int hour = 12;
 
-    // Update is called once per frame
+    public static float timeScale = 3f; // 1 valós másodperc = 1 játékbeli perc
+
+    private int tempHour = 0;
+
     void Update()
     {
-        
+        elapsedTimeInSeconds += Time.deltaTime * timeScale;
+
+        minutes = Mathf.FloorToInt(elapsedTimeInSeconds) % 60;
+        hour = (12 + (Mathf.FloorToInt(elapsedTimeInSeconds) / 60) % 24) % 24;
+
+        if (hour == 12 && tempHour != 12 && tempController.isOnline)
+        {
+            scoreManager.WorkshiftEnd("Night");
+        }
+        else if (hour == 0 && tempHour != 0 && tempController.isOnline)
+        {
+            scoreManager.WorkshiftEnd("Day");
+        }
+            tempHour = hour;
+
+        Debug.Log($"{hour.ToString("00")}:{minutes.ToString("00")}");
     }
 }

@@ -15,7 +15,7 @@ public class ItemIDStore : MonoBehaviour
         }
         ValueStorage.ReserveID(randomID);
         ID = randomID;
-        Debug.Log($"ID reserved. ID: {randomID}");
+        //Debug.Log($"ID reserved. ID: {randomID}");
     }
 
     private void IDApplication()

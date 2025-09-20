@@ -55,7 +55,7 @@ public class BlackoutEvent : MonoBehaviour
     
     private IEnumerator randomEvent()
     {
-        Debug.Log("Random blackouts will occour again.");
+        //Debug.Log("Random blackouts will occour again.");
         while (!doesRandomHaveToStop)
         {
             int willEventStart = Random.Range(0, 150);

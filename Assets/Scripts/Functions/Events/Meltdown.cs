@@ -59,21 +59,21 @@ public class Meltdown : MonoBehaviour
     private IEnumerator CoreShockWaves()
     {
         yield return new WaitForSeconds(313f);
-        //animator.Play("CoreShockwave", 0, 0.25f);
-        StartCoroutine(CoreEffects.CoreShock());
+        animator.Play("CoreShockwave", 0, 0f);
+        //StartCoroutine(CoreEffects.CoreShock());
         yield return new WaitForSeconds(36f);
-        //animator.Play("CoreShockwave");
+        animator.Play("CoreShockwave", 0, 0f);
         CoreEffects.StopAllCoroutines();
-        //animator.Play("CoreShockwave");
-        StartCoroutine(CoreEffects.CoreShock());
+        animator.Play("CoreShockwave", 0, 0f);
+        //StartCoroutine(CoreEffects.CoreShock());
         yield return new WaitForSeconds(52f);
-        CoreEffects.StopAllCoroutines();
-        //animator.Play("CoreShockwave");
-        StartCoroutine(CoreEffects.CoreShock());
+        //CoreEffects.StopAllCoroutines();
+        animator.Play("CoreShockwave", 0, 0f);
+        //StartCoroutine(CoreEffects.CoreShock());
         yield return new WaitForSeconds(30f);
-        CoreEffects.StopAllCoroutines();
-        //animator.Play("CoreShockwave");
-        StartCoroutine(CoreEffects.CoreShock());
+        //CoreEffects.StopAllCoroutines();
+        animator.Play("CoreShockwave", 0, 0f);
+        //StartCoroutine(CoreEffects.CoreShock());
     }
 
     private IEnumerator MeltdownEvent()

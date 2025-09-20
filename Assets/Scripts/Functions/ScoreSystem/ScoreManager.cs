@@ -5,11 +5,24 @@ public class ScoreManager : MonoBehaviour
 {
     [SerializeField] public static int score = 0;
     [SerializeField] public TMP_Text scoreText;
+    [SerializeField] public TMP_Text scoreTextExtra;
+    [SerializeField] public Animator scoreTextAnimator;
+    [SerializeField] public TMP_Text scoreWorkshiftTextExtra;
+    [SerializeField] public Animator scoreWorkshiftTextAnimator;
+
     [SerializeField] public TempController tempController;
     void Start()
     {
         //PlayerPrefs.GetInt("HighScore");
     }
+
+    public void WorkshiftEnd(string workshift)
+    {
+        scoreWorkshiftTextExtra.text = $"{workshift} workshift ended! Score awarded: {ValueStorage.SCORE_WORKSHIFT_END}";
+        scoreWorkshiftTextAnimator.Play("WorkshiftEndText", 0, 0f);
+        score += ValueStorage.SCORE_WORKSHIFT_END;
+    }
+
     private int scoreAdd;
     public void CheckPossibleScores()
     {
@@ -53,7 +66,19 @@ public class ScoreManager : MonoBehaviour
             scoreAdd += -6;
         }
         score += scoreAdd;
-        Debug.Log($"scoreAdd = {scoreAdd}");
+        if (scoreAdd > 0)
+        {
+            scoreTextExtra.color = Color.green;
+            scoreTextExtra.text = $"+{scoreAdd}";
+            scoreTextAnimator.Play("ScoreAddAnimation", 0, 0f);
+        }
+        else if (scoreAdd < 0)
+        {
+            scoreTextExtra.color = Color.red;
+            scoreTextExtra.text = $"{scoreAdd}";
+            scoreTextAnimator.Play("ScoreAddAnimation", 0, 0f);
+        }
+
         scoreAdd = 0;
         scoreText.text = $"Score: {score}";
     }
