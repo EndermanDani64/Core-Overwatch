@@ -5,11 +5,11 @@ public class TimeManager : MonoBehaviour
     [SerializeField] ScoreManager scoreManager;
     [SerializeField] TempController tempController;
 
-    public static float elapsedTimeInSeconds = 0;
-    public static int minutes = 0;
-    public static int hour = 12;
+    public float elapsedTimeInSeconds = 0;
+    public int minutes = 0;
+    public int hour = 12;
 
-    public static float timeScale = 3f; // 1 valós másodperc = 1 játékbeli perc
+    public static float timeScale = 6f;
 
     private int tempHour = 0;
 
@@ -18,7 +18,7 @@ public class TimeManager : MonoBehaviour
         elapsedTimeInSeconds += Time.deltaTime * timeScale;
 
         minutes = Mathf.FloorToInt(elapsedTimeInSeconds) % 60;
-        hour = (12 + (Mathf.FloorToInt(elapsedTimeInSeconds) / 60) % 24) % 24;
+        hour = (23 + (Mathf.FloorToInt(elapsedTimeInSeconds) / 60) % 24) % 24;
 
         if (hour == 12 && tempHour != 12 && tempController.isOnline)
         {

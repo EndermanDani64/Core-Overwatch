@@ -44,6 +44,10 @@ public class TempController : MonoBehaviour
 
     [SerializeField] private List<TempIntensityModifier> intensityModifiers;
 
+
+    /// <summary>
+    /// Modifies the temp with all the other influential values
+    /// </summary>
     public void TemperatureLoop()
     {
         UpdateTemperatureDynamics();
@@ -139,7 +143,9 @@ public class TempController : MonoBehaviour
         previousDifference = difference;
         previousTemp = temp;
     }
-
+    /// <summary>
+    /// Starts the reactor, modifying the isOnline and tempIntensity values
+    /// </summary>
     public void StartReactor()
     {
         //Debug.Log("Reactor startup attempt started");

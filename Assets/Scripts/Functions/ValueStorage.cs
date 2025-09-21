@@ -10,8 +10,8 @@ public class ValueStorage : MonoBehaviour
      */
 
     [Header("Scoreing Values")]
-    [SerializeField] public static int COOLANTSUPPLYLEVEL_SCORE_ADD = 45; // i want to rename these
-    [SerializeField] public static int COOLANTSUPPLYLEVEL_SCORE_SUBTRACT = 15;
+    [SerializeField] public static int SCORE_COOLANTSUPPLYLEVEL_ADD = 45; // i want to rename these
+    [SerializeField] public static int SCORE_COOLANTSUPPLYLEVEL_SUBTRACT = 15;
     [SerializeField] public static int SCORE_WORKSHIFT_END = 500;
 
     [Header("MAX Values")]
@@ -69,10 +69,10 @@ public class ValueStorage : MonoBehaviour
         switch (key)
         {
             case "COOLANTSUPPLYLEVEL_SCORE_ADD":
-                COOLANTSUPPLYLEVEL_SCORE_ADD = intValue;
+                SCORE_COOLANTSUPPLYLEVEL_ADD = intValue;
                 break;
             case "COOLANTSUPPLYLEVEL_SCORE_SUBTRACT":
-                COOLANTSUPPLYLEVEL_SCORE_SUBTRACT = intValue;
+                SCORE_COOLANTSUPPLYLEVEL_SUBTRACT = intValue;
                 break;
             case "ELECTRICITY_MAX":
                 ELECTRICITY_MAX = intValue;

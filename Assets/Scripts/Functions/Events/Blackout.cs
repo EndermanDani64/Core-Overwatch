@@ -17,6 +17,7 @@ public class BlackoutEvent : MonoBehaviour
     [SerializeField] private OverallEvents OverallEvents;
     [SerializeField] private ShoutSystem ShoutSystem;
 
+    [SerializeField] private Meltdown meltdownEvent;
     public bool isBlackout = false;
 
     void Start()
@@ -43,9 +44,10 @@ public class BlackoutEvent : MonoBehaviour
 
         ShoutSystem.ShowMessage("Power went, whoossss-");
         yield return new WaitForSeconds(123);
+        OverallEvents.IsEventRunning = false;
+        isBlackout = false;
         RenderSettings.ambientIntensity = defaultAmbientIntensity;
         RenderSettings.reflectionIntensity = reflectionIntensity;
-        isBlackout = false;
         ShoutSystem.HideMessage();
         StartCoroutine(randomEvent());
         //flashLight.enabled = false;

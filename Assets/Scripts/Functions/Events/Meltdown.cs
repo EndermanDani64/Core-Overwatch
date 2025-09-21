@@ -6,7 +6,7 @@ using System.Collections.Generic;
 public class Meltdown : MonoBehaviour
 {
     [Header("Important scripts")]
-    [SerializeField] private TempController TempController;
+    [SerializeField] private TempController tempController;
     [SerializeField] private PressureControl PressureControl;
     [SerializeField] private BlackoutEvent BlackoutEvent;
     [SerializeField] private CoreEffects CoreEffects;
@@ -23,7 +23,7 @@ public class Meltdown : MonoBehaviour
     [SerializeField] private AudioSource source;
     [SerializeField] private AudioClip meltdownEventFirst;
     [SerializeField] private AudioClip meltdownEventSecond;
-    [SerializeField] private AudioClip successECoolant;
+    //[SerializeField] private AudioClip successECoolant;
 
     [Header("VFX effects")]
     [SerializeField] private ParticleSystem CoreRadioation;
@@ -45,9 +45,12 @@ public class Meltdown : MonoBehaviour
 
     private IEnumerator CheckForMeltdownEvent()
     {
-        while (OverallEvents.IsMainEventRunning == false && OverallEvents.IsEventRunning == false) // || !TempController.isMeltdown
+        while (OverallEvents.IsMainEventRunning == false) // || !TempController.isMeltdown
         {
-            if (TempController.isMeltdown)
+            Debug.LogWarning("Ran");
+            Debug.LogWarning($"tempController.isMeltdown = {tempController.isMeltdown}");
+            Debug.LogWarning($"OverallEvents.IsEventRunning = {OverallEvents.IsEventRunning}");
+            if (tempController.isMeltdown && OverallEvents.IsEventRunning == false)
             {
                 StartCoroutine(MeltdownEvent());
                 yield break;
@@ -79,7 +82,7 @@ public class Meltdown : MonoBehaviour
     private IEnumerator MeltdownEvent()
     {   
         OverallEvents.IsMainEventRunning = true;
-        Debug.Log($"MeltdownEvent started. | TempController.isMeltdown = {TempController.isMeltdown}");
+        Debug.Log($"MeltdownEvent started. | TempController.isMeltdown = {tempController.isMeltdown}");
         StartCoroutine(CoreShockWaves());
         timer.StartTimer();
         SoundSystem.BackgroundSoundsMute();
@@ -134,7 +137,7 @@ public class Meltdown : MonoBehaviour
     public void StopMeltdown()
     {
         TempController.temp = 0; // 3000
-        TempController.isError = false;
+        tempController.isError = false;
         PressureControl.isPressurized = false;
         PressureControl.isError = false;
         PressureControl.pressure = 250;
@@ -144,14 +147,14 @@ public class Meltdown : MonoBehaviour
         }
         StopCoroutine(CoreShockWaves());
         StopCoroutine(MeltdownEvent());
-        source.PlayOneShot(successECoolant);
+        //source.PlayOneShot(successECoolant);
         StartCoroutine(CheckForMeltdownEvent());
         StartCoroutine(CooldownAfterMeltdownECoolantSuccess());
     }
 
     public bool DEV_ForceMeltdown()
     {
-        TempController.isMeltdown = true;
+        tempController.isMeltdown = true;
         StartCoroutine(MeltdownEvent());
         return true;
     }
@@ -160,6 +163,6 @@ public class Meltdown : MonoBehaviour
     {
         yield return new WaitForSeconds(102);
         OverallEvents.IsMainEventRunning = false;
-        TempController.isMeltdown = false;
+        tempController.isMeltdown = false;
     }
 }
