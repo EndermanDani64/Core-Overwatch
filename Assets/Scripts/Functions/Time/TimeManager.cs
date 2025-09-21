@@ -9,7 +9,7 @@ public class TimeManager : MonoBehaviour
     public int minutes = 0;
     public int hour = 12;
 
-    public static float timeScale = 6f;
+    public static float timeScale = 5f;
 
     private int tempHour = 0;
 
@@ -18,7 +18,7 @@ public class TimeManager : MonoBehaviour
         elapsedTimeInSeconds += Time.deltaTime * timeScale;
 
         minutes = Mathf.FloorToInt(elapsedTimeInSeconds) % 60;
-        hour = (23 + (Mathf.FloorToInt(elapsedTimeInSeconds) / 60) % 24) % 24;
+        hour = (12 + (Mathf.FloorToInt(elapsedTimeInSeconds) / 60) % 24) % 24;
 
         if (hour == 12 && tempHour != 12 && tempController.isOnline)
         {
