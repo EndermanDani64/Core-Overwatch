@@ -22,6 +22,10 @@ public class ContinousManager : MonoBehaviour
         StartCoroutine(SecondsTrigger_E25());
     }
 
+    /// <summary>
+    /// Runs every contained functions in a 0.5 second delay.
+    /// </summary>
+    /// <returns></returns>
     public IEnumerator SecondsTrigger_E05() // E1 = every .5 sec
     {
         while (true)
@@ -35,6 +39,10 @@ public class ContinousManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Runs every contained functions in a 1 second delay.
+    /// </summary>
+    /// <returns></returns>
     public IEnumerator SecondsTrigger_E1() // E1 = every 1 sec
     {
         while (true)
@@ -46,6 +54,10 @@ public class ContinousManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Runs every contained functions in a 2.25 second delay.
+    /// </summary>
+    /// <returns></returns>
     public IEnumerator SecondsTrigger_E25() // E25 = every 2.5 sec
     {
         while (true)

@@ -1,4 +1,5 @@
 using UnityEngine;
+using static UnityEngine.Rendering.DebugUI;
 
 public class ElectricityManagger : MonoBehaviour
 {
@@ -127,16 +128,35 @@ public class ElectricityManagger : MonoBehaviour
         previousElectricity = electricity;
     }
 
-    public void DecreaseElectricityOnOffline(float value)
+    /// <summary>
+    /// Increased decrease rate for the electricity when the generator is offline.
+    /// </summary>
+    public void DecreaseElectricityOffline(float value)
     {
-        float electricityCheck = electricity - (value * 1.2f);
-
-        if (electricityCheck > ValueStorage.ELECTRICITY_MINIMUM && !isDepletedEnergy)
+        if (electricity - (value * 1.5f) > ValueStorage.ELECTRICITY_MINIMUM && !isDepletedEnergy)
         {
             electricity -= value;
             energyTextUpdater.textUpdate();
         }
-        else if (electricityCheck <= ValueStorage.ELECTRICITY_MINIMUM && !isDepletedEnergy)
+        else if (electricity - (value * 1.5f) <= ValueStorage.ELECTRICITY_MINIMUM && !isDepletedEnergy)
+        {
+            isDepletedEnergy = true;
+            DepletedEnergy();
+        }
+        previousElectricity = electricity;
+    }
+
+    /// <summary>
+    /// Increased decrease rate for the electricity when blackout event is active.
+    /// </summary>
+    public void DecreaseElectricityBlackout()
+    {
+        if (electricity - (ValueStorage.ELECTRICITY_BLACKOUT_DECREASE) > ValueStorage.ELECTRICITY_MINIMUM && !isDepletedEnergy)
+        {
+            electricity -= ValueStorage.ELECTRICITY_BLACKOUT_DECREASE;
+            energyTextUpdater.textUpdate();
+        }
+        else if (electricity - (ValueStorage.ELECTRICITY_BLACKOUT_DECREASE) <= ValueStorage.ELECTRICITY_MINIMUM && !isDepletedEnergy)
         {
             isDepletedEnergy = true;
             DepletedEnergy();
