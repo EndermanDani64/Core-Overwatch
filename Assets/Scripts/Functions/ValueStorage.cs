@@ -26,7 +26,7 @@ public class ValueStorage : MonoBehaviour
     [SerializeField] public static int ELECTRICITY_ECOOLANT_SUPPLY_CREATION_COST = 60;
 
     [Header("Electricity Decrease Values")]
-    [SerializeField] public static int ELECTRICITY_BLACKOUT_DECREASE = 4;
+    [SerializeField] public static int ELECTRICITY_BLACKOUT_DECREASE = 2;
 
     [SerializeField] public static int COOLANT_SUPPLY_DECREASE = 1;
     [SerializeField] public static int COOLANT_SUPPLY_ADD = 20;

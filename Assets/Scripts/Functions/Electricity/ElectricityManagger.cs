@@ -151,12 +151,12 @@ public class ElectricityManagger : MonoBehaviour
     /// </summary>
     public void DecreaseElectricityBlackout()
     {
-        if (electricity - (ValueStorage.ELECTRICITY_BLACKOUT_DECREASE) > ValueStorage.ELECTRICITY_MINIMUM && !isDepletedEnergy)
+        if (electricity - ValueStorage.ELECTRICITY_BLACKOUT_DECREASE > ValueStorage.ELECTRICITY_MINIMUM)
         {
             electricity -= ValueStorage.ELECTRICITY_BLACKOUT_DECREASE;
             energyTextUpdater.textUpdate();
         }
-        else if (electricity - (ValueStorage.ELECTRICITY_BLACKOUT_DECREASE) <= ValueStorage.ELECTRICITY_MINIMUM && !isDepletedEnergy)
+        else if (electricity - ValueStorage.ELECTRICITY_BLACKOUT_DECREASE <= ValueStorage.ELECTRICITY_MINIMUM && !isDepletedEnergy)
         {
             isDepletedEnergy = true;
             DepletedEnergy();

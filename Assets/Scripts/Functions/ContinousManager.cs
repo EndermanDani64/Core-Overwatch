@@ -7,10 +7,10 @@ public class ContinousManager : MonoBehaviour
     [Header("Scripts that contains the functions")]
     [SerializeField] private SupplyDeposit supplyDeposit;
     [SerializeField] private ValueStorage valueStorage;
-    [SerializeField] private ElectricityDecreaseValueManagger electricityDValueManagger;
-    [SerializeField] private GeneratorController generatorController;
+    [SerializeField] public ElectricityDecreaseValueManagger electricityDValueManagger;
+    [SerializeField] public GeneratorController generatorController;
     [SerializeField] private TempController tempController;
-    [SerializeField] private ScoreManager scoreManager;
+    [SerializeField] public ScoreManager scoreManager;
 
     [Header("UI")]
     [SerializeField] private UnityEngine.UI.Slider coolantInjectionSlider;

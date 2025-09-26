@@ -120,7 +120,7 @@ public class GeneratorController : MonoBehaviour
     /// </summary>
     public void ChangeEnergy()
     {
-        if (isGeneratorOnline)
+        if (isGeneratorOnline && !blackoutEvent.isBlackout)
         {
             if (ElectricityManagger.electricity <= ValueStorage.ELECTRICITY_MAX) // && ElectricityManagger.electricity != 0
             {
@@ -130,9 +130,11 @@ public class GeneratorController : MonoBehaviour
             }
         }
 
-        if (blackoutEvent.isBlackout)
+        if (isGeneratorOnline && blackoutEvent.isBlackout)
         {
             electricityManagger.DecreaseElectricityBlackout();
+
+            Debug.Log($"decreaseEnergy.decreaseValue = {ElectricityDecreaseValueManagger.decreaseValue}");
 
             if (ElectricityManagger.electricity <= 0)
             {
@@ -160,5 +162,25 @@ public class GeneratorController : MonoBehaviour
             }
             //previousGeneratorStatus = false;
         }
-    } 
+
+        if (!isGeneratorOnline && blackoutEvent.isBlackout)
+        {
+            electricityManagger.DecreaseElectricityBlackout();
+            StartCoroutine(SendOutShoutMessage("Watch the decreasing energy levels."));
+            electricityManagger.DecreaseElectricityOffline(ElectricityDecreaseValueManagger.decreaseValue);
+            Debug.Log($"decreaseEnergy.decreaseValue = {ElectricityDecreaseValueManagger.decreaseValue}");
+
+            Debug.Log($"decreaseEnergy.decreaseValue = {ElectricityDecreaseValueManagger.decreaseValue}");
+
+            if (ElectricityManagger.electricity <= 0)
+            {
+                isDecresing = false;
+            }
+            else
+            {
+                isDecresing = true;
+            }
+        }
+
+    }
 }

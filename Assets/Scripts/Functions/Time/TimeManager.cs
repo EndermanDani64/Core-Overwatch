@@ -30,6 +30,6 @@ public class TimeManager : MonoBehaviour
         }
             tempHour = hour;
 
-        Debug.Log($"{hour.ToString("00")}:{minutes.ToString("00")}");
+        //Debug.Log($"{hour.ToString("00")}:{minutes.ToString("00")}");
     }
 }
