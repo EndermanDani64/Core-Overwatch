@@ -149,7 +149,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   scoreText: {fileID: 0}
+  scoreTextExtra: {fileID: 0}
+  scoreTextAnimator: {fileID: 0}
+  scoreWorkshiftTextExtra: {fileID: 0}
+  scoreWorkshiftTextAnimator: {fileID: 0}
   tempController: {fileID: 0}
+  source: {fileID: 0}
+  workshift_end_funny_Audio: {fileID: 0}
 --- !u!4 &26317991
 Transform:
   m_ObjectHideFlags: 0
@@ -1374,7 +1380,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: v0.0.745
+  m_text: v0.0.75
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
