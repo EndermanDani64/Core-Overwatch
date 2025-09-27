@@ -63,7 +63,7 @@ public class UIRaycast : MonoBehaviour
                     pickupText.text = "Deposit [E]";
                 }
             }
-            else if (hitt.collider.CompareTag("Fixable"))
+            else if (hitt.collider.CompareTag("Fixable") && Fixables.isFixableAvalible)
             {
                 if (!pickupText.enabled)
                 {
