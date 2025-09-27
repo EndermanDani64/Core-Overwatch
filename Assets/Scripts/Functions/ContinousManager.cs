@@ -11,6 +11,7 @@ public class ContinousManager : MonoBehaviour
     [SerializeField] public GeneratorController generatorController;
     [SerializeField] private TempController tempController;
     [SerializeField] public ScoreManager scoreManager;
+    [SerializeField] private Fixables fixables;
 
     [Header("UI")]
     [SerializeField] private UnityEngine.UI.Slider coolantInjectionSlider;
@@ -49,6 +50,7 @@ public class ContinousManager : MonoBehaviour
         {
             electricityDValueManagger.DValueUpdate();
             scoreManager.CheckPossibleScores();
+            fixables.DamageRandomFixable();
             yield return new WaitForSeconds(1);
             generatorController.ChangeEnergy();
         }

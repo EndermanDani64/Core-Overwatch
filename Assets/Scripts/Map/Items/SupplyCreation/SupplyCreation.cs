@@ -12,11 +12,6 @@ public class SupplyCreation : MonoBehaviour
 
     public static bool isSupplyExists = false;
 
-    /*private void Start()
-    {
-        spawnPoint.position = ;
-    }*/
-
     public void ButtonActivation()
     {
         StartCoroutine(CreationManagger());
@@ -39,9 +34,7 @@ public class SupplyCreation : MonoBehaviour
         {
             creationButton.interactable = false;
             SupplyCreate();
-            yield return new WaitForSeconds(5);
-            Debug.Log("SupplyCreate()");
-            yield return new WaitForSeconds(2);
+            yield return new WaitForSeconds(7);
             creationButton.interactable = true;
         }
         else

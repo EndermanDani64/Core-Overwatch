@@ -18,6 +18,7 @@ public class UIRaycast : MonoBehaviour
     private ECoolantSupplyCreate equippedECoolantSupplyCreate = null;
     private Transform equippedTransform = null;
     Rigidbody equippedRigidbody = null;
+
     void Update()
     {
         if (OverlayUIManager.isPaused)
@@ -62,6 +63,14 @@ public class UIRaycast : MonoBehaviour
                     pickupText.text = "Deposit [E]";
                 }
             }
+            else if (hitt.collider.CompareTag("Fixable"))
+            {
+                if (!pickupText.enabled)
+                {
+                    pickupText.enabled = true;
+                    pickupText.text = "Fix [hold: E]";
+                }
+            }
             else
             {
                 pickupText.enabled = false;
@@ -73,26 +82,26 @@ public class UIRaycast : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.E))
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
+            RaycastHit hitInv;
 
-            if (Physics.Raycast(ray, out hit))
+            if (Physics.Raycast(ray, out hitInv))
             {
-                if (hit.collider.CompareTag("ECoolantSupply"))
+                if (hitInv.collider.CompareTag("ECoolantSupply"))
                 {
-                    float distance = Vector3.Distance(playerTransform.position, hit.collider.transform.position);
+                    float distance = Vector3.Distance(playerTransform.position, hitInv.collider.transform.position);
 
                     if (distance <= minDistanceToGrab)
                     {
-                        Transform transform = hit.collider.transform; ;
-                        ItemIDStore currentID = hit.collider.GetComponent<ItemIDStore>();
-                        ECoolantSupplyCreate eCoolantSupplyCreate = hit.collider.GetComponent<ECoolantSupplyCreate>();
+                        Transform transform = hitInv.collider.transform; ;
+                        ItemIDStore currentID = hitInv.collider.GetComponent<ItemIDStore>();
+                        ECoolantSupplyCreate eCoolantSupplyCreate = hitInv.collider.GetComponent<ECoolantSupplyCreate>();
 
                         if (currentID != null && eCoolantSupplyCreate != null)
                         {
-                            Rigidbody rigidbody = hit.collider.GetComponent<Rigidbody>();
-                            equippedRigidbody = hit.collider.GetComponent<Rigidbody>();
+                            Rigidbody rigidbody = hitInv.collider.GetComponent<Rigidbody>();
+                            equippedRigidbody = hitInv.collider.GetComponent<Rigidbody>();
 
-                            eCoolantSupplyCreate.PickUp(hit.collider.transform, currentID.ID);
+                            eCoolantSupplyCreate.PickUp(hitInv.collider.transform, currentID.ID);
                             rigidbody.isKinematic = true;
 
                             equippedID = currentID;

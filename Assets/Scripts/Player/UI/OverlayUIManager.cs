@@ -85,6 +85,9 @@ public class OverlayUIManager : MonoBehaviour
         }*/
     }
 
+    /// <summary>
+    /// Resumes the game when paused by any UI properly.
+    /// </summary>
     public void ResumeGame()
     {
         if (PauseMenuCanvas.enabled)
@@ -114,6 +117,9 @@ public class OverlayUIManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Opens the Pause Menu UI properly.
+    /// </summary>
     public void PauseGame()
     {
         if (!DeveloperMenuCanvas.enabled && !isPaused)
@@ -145,7 +151,9 @@ public class OverlayUIManager : MonoBehaviour
             PauseMenuCanvas.enabled = true;
         }
     }
-
+    /// <summary>
+    /// Opens the Developer Menu properly.
+    /// </summary>
     public void OpenDeveloperMenu()
     {
         if (!PauseMenuCanvas.enabled && !isPaused)
@@ -162,6 +170,9 @@ public class OverlayUIManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Locks and then hides the cursor.
+    /// </summary>
     public void HideCursor()
     {
         if (Cursor.visible == true && Cursor.lockState == CursorLockMode.None)
@@ -171,6 +182,9 @@ public class OverlayUIManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Unlocks and shows the cursor.
+    /// </summary>
     public void ShowCursor()
     {
         if (Cursor.visible == false && Cursor.lockState == CursorLockMode.Locked)
@@ -189,6 +203,9 @@ public class OverlayUIManager : MonoBehaviour
         // Debug.Log("Cursor locked on Start()");
     }
 
+    /// <summary>
+    /// (UNSTABLE DESCRIPTION) Switches the active Scene to the Scene that has the targetedSceneID set. 
+    /// </summary>
     public void ReturnToLobby()
     {
         if (LoadingManagger.targetedSceneID == 1)
