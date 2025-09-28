@@ -101,7 +101,7 @@ public class ElectricityManagger : MonoBehaviour
     public void IncreaseEnergy(float value, float decreaseValue) // here, we decrease as well
     {
         value -= decreaseValue;
-        Debug.LogWarning($"decreaseValue = {decreaseValue} | value = {value}");
+        //Debug.LogWarning($"decreaseValue = {decreaseValue} | value = {value}");
         if (cooldown > 0)
         {
             cooldown -= 1;
@@ -121,7 +121,7 @@ public class ElectricityManagger : MonoBehaviour
         }
         else if (electricityCheck <= ValueStorage.ELECTRICITY_MINIMUM && !isDepletedEnergy && cooldown == 0)
         {
-            Debug.LogWarning("1");
+            //Debug.LogWarning("1");
             isDepletedEnergy = true;
             DepletedEnergy();
         }
