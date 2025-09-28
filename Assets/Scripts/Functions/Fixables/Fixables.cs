@@ -34,7 +34,7 @@ public class Fixables : MonoBehaviour
                         hit.collider.GetComponent<ParticleSystem>().startLifetime = 1;
                         if (fixableAvalibleCount == 1)
                         {
-                            fixableAvalibleCount--;
+                            fixableAvalibleCount--; 
                             isFixableAvalible = false;
                         }
                         else
