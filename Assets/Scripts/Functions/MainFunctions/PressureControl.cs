@@ -8,16 +8,10 @@ public class PressureControl : MonoBehaviour
     public bool isError = false;
     
     [SerializeField] private Button startupButton;
-    [SerializeField] private TempController TempController; //temp, isOnline
+    [SerializeField] private TempController TempController;
+    [SerializeField] private Fixables fixables;
 
-    public int maxPressure;
-    public bool isPressurized = false;
-    void Start()
-    {
-        TempController.GetComponent<TempController>();
-        maxPressure = 99999; //Random.Range(250, 280)
-        //Debug.Log($"maxPressure: {maxPressure}");
-    }
+    public static bool isPressurized = false;
 
     private Coroutine increaseRoutine;
 
@@ -50,65 +44,47 @@ public class PressureControl : MonoBehaviour
         {
             if (TempController.isOnline)
             {
-                if (pressure < maxPressure || isPressurized)
+                if (pressure < ValueStorage.REACTOR_PS_MAX)
                 {
-                    if (TempController.temp < 0)
+                    if (pressure > ValueStorage.REACTOR_PS_PRESSURIZED)
                     {
-                        //pressure = 0;
-                        //TempController.isOnline = false;
-                        //break;
-                        continue;
+                        //float pressureIncrease = Mathf.Clamp(TempController.temp / 15 + Random.Range(0, 1), 1, 15); !!!!!!
                     }
                     else
                     {
-                        if (TempController.isMeltdown == true || isPressurized)
+                        float pressureIncrease = 0f;
+                        if (FanOverwatch.fanAmountOnline == 5)
                         {
-                            // Nyomás növekedése hõmérséklet alapján
-                            float pressureIncrease = Mathf.Clamp(TempController.temp / 15 + Random.Range(0, 1), 1, 15);
-
-                            // Ha hõmérséklet 150°C felett van, gyorsabb növekedés
-                            if (TempController.temp >= 150)
-                            {
-                                pressureIncrease *= 1.3f; // 130%-kal növekszik a növekedés
-                            }
-
-                            if (pressure > 2000)
-                            {
-                                isError = true;
-                                isPressurized = true;
-                            }
-
-                            if (!isPressurized)
-                            {
-                                pressure += pressureIncrease;
-                            }
-                            else
-                            {
-                                pressure += pressureIncrease * 1.8f;
-                                //Debug.Log("!!!WARNING!!!");
-                            }
-
-                            yield return new WaitForSeconds(1);
+                            pressureIncrease = Mathf.Clamp(TempController.temp / 15 + Random.Range(-4, 1), -12, 1);
+                        }
+                        else if(FanOverwatch.fanAmountOnline == 4)
+                        {
+                            pressureIncrease = Mathf.Clamp(TempController.temp / 15 + Random.Range(-3, 2), -9, 3);
+                        }
+                        else if (FanOverwatch.fanAmountOnline == 3)
+                        {
+                            pressureIncrease = Mathf.Clamp(TempController.temp / 15 + Random.Range(-3, 3), -7, 6);
+                        }
+                        else if (FanOverwatch.fanAmountOnline == 2)
+                        {
+                            pressureIncrease = Mathf.Clamp(TempController.temp / 15 + Random.Range(-1, 4), -5, 9);
+                        }
+                        else if (FanOverwatch.fanAmountOnline == 1)
+                        {
+                            pressureIncrease = Mathf.Clamp(TempController.temp / 15 + Random.Range(0, 5), -2, 12);
                         }
                         else
                         {
-                            pressure += Mathf.Clamp(Random.Range(1, 3), 1, 5);
-                            yield return new WaitForSeconds(2);
+                            pressureIncrease = Mathf.Clamp(TempController.temp / Random.Range(4, 6), 0, 15);
                         }
-
-                        // Nyomás fokozatos csökkenése (szimulálja a rendszer hõleadását)
-                        //if (pressure > 20 && Random.value < 0.2f)
-                        //{
-                            //pressure -= Random.Range(1, 3);
-                        //}
+                        pressure += pressureIncrease;
                     }
                 }
                 else
                 {
                     isError = true;
                     isPressurized = true;
-                    //DestroyReactor();
-                    //break;
+                    Debug.LogWarning("!!!PRESSURE MAX REACHED!!!");
                 }
             }
             else

@@ -47,9 +47,8 @@ public class Meltdown : MonoBehaviour
     {
         while (OverallEvents.IsMainEventRunning == false) // || !TempController.isMeltdown
         {
-            Debug.LogWarning("Ran");
-            Debug.LogWarning($"tempController.isMeltdown = {tempController.isMeltdown}");
-            Debug.LogWarning($"OverallEvents.IsEventRunning = {OverallEvents.IsEventRunning}");
+            /*Debug.LogWarning($"tempController.isMeltdown = {tempController.isMeltdown}");
+            Debug.LogWarning($"OverallEvents.IsEventRunning = {OverallEvents.IsEventRunning}");*/
             if (tempController.isMeltdown && OverallEvents.IsEventRunning == false)
             {
                 StartCoroutine(MeltdownEvent());

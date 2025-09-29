@@ -13,7 +13,7 @@ public class Fixables : MonoBehaviour
     }
 
     private float timeHeld = 0f;
-    private float timeNeedToHeld = 5f;
+    private float timeNeedToHeld = 3f;
     void Update()
     {
         if (Input.GetKey(KeyCode.E) && timeHeld < timeNeedToHeld)
@@ -22,7 +22,7 @@ public class Fixables : MonoBehaviour
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit))
             {
-                if (hit.collider.CompareTag("Fixable"))
+                if (hit.collider.CompareTag("Fixable") && !hit.collider.GetComponent<VariableStorage_Fixable>().isFixed)
                 {
                     bool isFixed = hit.collider.GetComponent<VariableStorage_Fixable>().isFixed;
                     Debug.Log($"timeheld = {Mathf.Round(timeHeld)} | isFixed = {isFixed}");
@@ -30,8 +30,9 @@ public class Fixables : MonoBehaviour
                     if (Mathf.Round(timeHeld) >= timeNeedToHeld && !isFixed)
                     {
                         Debug.Log("fixed!");
-                        isFixed = true;
-                        hit.collider.GetComponent<ParticleSystem>().startLifetime = 1;
+                        hit.collider.GetComponent<VariableStorage_Fixable>().isFixed = true;
+                        hit.collider.GetComponent<ParticleSystem>().startLifetime = 0;
+                        hit.collider.GetComponent<AudioSource>().PlayOneShot(hit.collider.GetComponent<VariableStorage_Fixable>().fixingSF);
                         if (fixableAvalibleCount == 1)
                         {
                             fixableAvalibleCount--; 
@@ -67,22 +68,23 @@ public class Fixables : MonoBehaviour
     /// Damages a random Fixable at a random time if called from ContinousManager.cs
     /// </summary>
 
-    bool temp = true;  
     public void DamageRandomFixable()
     {
         int randomEvent = Random.Range(45, 45); // should be defined in ValueStorage for different scenarios
 
-        if (randomEvent == 45 && temp)
+        if (randomEvent == 45 && fixableAvalibleCount < FixableList.Length)
         {
-            temp = false;
             int randomIndex = Random.Range(0, FixableList.Length);
-            FixableList[randomIndex].GetComponent<VariableStorage_Fixable>().isFixed = false;
-            FixableList[randomIndex].GetComponent<ParticleSystem>().startLifetime = 1;
+            if (FixableList[randomIndex].GetComponent<VariableStorage_Fixable>().isFixed) 
+            {
+                FixableList[randomIndex].GetComponent<VariableStorage_Fixable>().isFixed = false;
+                FixableList[randomIndex].GetComponent<ParticleSystem>().startLifetime = 0.13f;
 
-            isFixableAvalible = true;
-            fixableAvalibleCount++;
+                isFixableAvalible = true;
+                fixableAvalibleCount++;
 
-            Debug.Log($"Damaged a fixable. | isFixableAvalible = {isFixableAvalible}");
+                Debug.Log($"Damaged a fixable. | fixableAvalibleCount = {fixableAvalibleCount}");
+            }
         }
     }
 }

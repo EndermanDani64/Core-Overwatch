@@ -17,6 +17,8 @@ public class ValueStorage : MonoBehaviour
     [Header("MAX Values")]
     [SerializeField] public static int ELECTRICITY_MAX = 250; // 150
     [SerializeField] public static int REACTOR_TMP_MELTINGPOINT = 4000;
+    [SerializeField] public static int REACTOR_PS_PRESSURIZED = 2000; 
+    [SerializeField] public static int REACTOR_PS_MAX = 2000;
 
     [Header("Electricity Cost Values")]
     [SerializeField] public static int ELECTRICITY_MANUALDOORSCOST = 5; //overall
@@ -26,7 +28,7 @@ public class ValueStorage : MonoBehaviour
     [SerializeField] public static int ELECTRICITY_ECOOLANT_SUPPLY_CREATION_COST = 60;
 
     [Header("Electricity Decrease Values")]
-    [SerializeField] public static int ELECTRICITY_BLACKOUT_DECREASE = 2;
+    [SerializeField] public static int ELECTRICITY_BLACKOUT_DECREASE = 4;
 
     [SerializeField] public static int COOLANT_SUPPLY_DECREASE = 1;
     [SerializeField] public static int COOLANT_SUPPLY_ADD = 20;

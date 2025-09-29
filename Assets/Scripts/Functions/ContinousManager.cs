@@ -21,6 +21,7 @@ public class ContinousManager : MonoBehaviour
         StartCoroutine(SecondsTrigger_E05());
         StartCoroutine(SecondsTrigger_E1());
         StartCoroutine(SecondsTrigger_E25());
+        StartCoroutine(SecondsTrigger_E60());
     }
 
     /// <summary>
@@ -69,6 +70,18 @@ public class ContinousManager : MonoBehaviour
                 supplyDeposit.DecreaseSupplyValue(ValueStorage.COOLANT_SUPPLY_DECREASE);
             }
             yield return new WaitForSeconds(2.5f);
+        }
+    }
+    /// <summary>
+    /// Runs every contained functions in a 60 second delay.
+    /// </summary>
+    /// <returns></returns>
+    public IEnumerator SecondsTrigger_E60() // E60 = every 60 sec
+    {
+        while (true)
+        {
+            //fixables.DamageRandomFixable();
+            yield return new WaitForSeconds(60f);
         }
     }
 }
