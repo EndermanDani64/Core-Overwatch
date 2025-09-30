@@ -11,9 +11,9 @@ public class PressureControl : MonoBehaviour
     [SerializeField] private TempController TempController;
     [SerializeField] private Fixables fixables;
 
-    public static bool isPressurized = false;
+    [SerializeField] private Slider coolantInjector;
 
-    private Coroutine increaseRoutine;
+    public static bool isPressurized = false;
 
     public void StartupReactor()
     {
@@ -55,27 +55,27 @@ public class PressureControl : MonoBehaviour
                         float pressureIncrease = 0f;
                         if (FanOverwatch.fanAmountOnline == 5)
                         {
-                            pressureIncrease = Mathf.Clamp(TempController.temp / 15 + Random.Range(-4, 1), -12, 1);
+                            pressureIncrease = Mathf.Clamp(TempController.temp / 15 + Random.Range(-4, 1) - coolantInjector.value * 1.5f, -12, 2);
                         }
                         else if(FanOverwatch.fanAmountOnline == 4)
                         {
-                            pressureIncrease = Mathf.Clamp(TempController.temp / 15 + Random.Range(-3, 2), -9, 3);
+                            pressureIncrease = Mathf.Clamp(TempController.temp / 15 + Random.Range(-3, 2) - coolantInjector.value * 1.5f, -9, 2);
                         }
                         else if (FanOverwatch.fanAmountOnline == 3)
                         {
-                            pressureIncrease = Mathf.Clamp(TempController.temp / 15 + Random.Range(-3, 3), -7, 6);
+                            pressureIncrease = Mathf.Clamp(TempController.temp / 15 + Random.Range(-3, 3) - coolantInjector.value * 1.5f, -7, 3);
                         }
                         else if (FanOverwatch.fanAmountOnline == 2)
                         {
-                            pressureIncrease = Mathf.Clamp(TempController.temp / 15 + Random.Range(-1, 4), -5, 9);
+                            pressureIncrease = Mathf.Clamp(TempController.temp / 15 + Random.Range(-1, 4) - coolantInjector.value * 1.5f, -5, 4);
                         }
                         else if (FanOverwatch.fanAmountOnline == 1)
                         {
-                            pressureIncrease = Mathf.Clamp(TempController.temp / 15 + Random.Range(0, 5), -2, 12);
+                            pressureIncrease = Mathf.Clamp(TempController.temp / 15 + Random.Range(0, 5) - coolantInjector.value * 1.5f, -3, 5);
                         }
                         else
                         {
-                            pressureIncrease = Mathf.Clamp(TempController.temp / Random.Range(4, 6), 0, 15);
+                            pressureIncrease = Mathf.Clamp(TempController.temp / Random.Range(4, 6) - coolantInjector.value * 1.5f, 0, 8);
                         }
                         pressure += pressureIncrease;
                     }
@@ -91,7 +91,7 @@ public class PressureControl : MonoBehaviour
             {
                 break;
             }
+            yield return new WaitForSeconds(2.2f);
         }
     }
-
 }

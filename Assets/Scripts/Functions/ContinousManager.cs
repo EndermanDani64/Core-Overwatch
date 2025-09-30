@@ -51,7 +51,6 @@ public class ContinousManager : MonoBehaviour
         {
             electricityDValueManagger.DValueUpdate();
             scoreManager.CheckPossibleScores();
-            fixables.DamageRandomFixable();
             yield return new WaitForSeconds(1);
             generatorController.ChangeEnergy();
         }
@@ -72,6 +71,8 @@ public class ContinousManager : MonoBehaviour
             yield return new WaitForSeconds(2.5f);
         }
     }
+
+    int randomInt = 0;
     /// <summary>
     /// Runs every contained functions in a 60 second delay.
     /// </summary>
@@ -80,7 +81,14 @@ public class ContinousManager : MonoBehaviour
     {
         while (true)
         {
-            //fixables.DamageRandomFixable();
+            if (PressureControl.isPressurized)
+            {
+                randomInt = UnityEngine.Random.Range(0, 10);
+                if (randomInt == 1)
+                {
+                    fixables.DamageRandomFixable();
+                }
+            }
             yield return new WaitForSeconds(60f);
         }
     }
