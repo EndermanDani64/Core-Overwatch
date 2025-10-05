@@ -54,6 +54,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3972087664869526362}
+  - component: {fileID: 5971417500275727326}
   m_Layer: 0
   m_Name: GroundCheck
   m_TagString: Untagged
@@ -76,6 +77,27 @@ Transform:
   m_Children: []
   m_Father: {fileID: 5021343273178902387}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!135 &5971417500275727326
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1989576324535270029}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.03
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &3312890183131383269
 GameObject:
   m_ObjectHideFlags: 0
@@ -95,6 +117,7 @@ GameObject:
   - component: {fileID: 5265832536116722762}
   - component: {fileID: 2179678051879672555}
   - component: {fileID: 1239485435035364143}
+  - component: {fileID: 1207952256096754354}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -351,6 +374,20 @@ MonoBehaviour:
   m_PointerBehavior: 0
   m_CursorLockBehavior: 0
   m_ScrollDeltaPerTick: 6
+--- !u!114 &1207952256096754354
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3312890183131383269}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 05b829e801a694c46b29bf6c0d40e772, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  health: 100
+  timeFallen: 0
 --- !u!1 &4863729407512620326
 GameObject:
   m_ObjectHideFlags: 0

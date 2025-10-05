@@ -20,6 +20,8 @@ public class ValueStorage : MonoBehaviour
     [SerializeField] public static int REACTOR_PS_PRESSURIZED = 2000; 
     [SerializeField] public static int REACTOR_PS_MAX = 2000;
 
+    [SerializeField] public static int PLAYER_HEALTH_MAX = 100;
+
     [Header("Electricity Cost Values")]
     [SerializeField] public static int ELECTRICITY_MANUALDOORSCOST = 5; //overall
     [SerializeField] public static int ELECTRICITY_LIGHTCOST = 2; // overall
