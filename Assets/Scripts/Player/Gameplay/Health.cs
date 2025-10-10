@@ -21,7 +21,7 @@ public class Health : MonoBehaviour
         }
         else
         {
-            if (timeFallen > 1.2f)
+            if (timeFallen > 0.8f)
             {
                 health -= Mathf.Round(1 * timeFallen);
             }
