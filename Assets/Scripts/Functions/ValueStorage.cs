@@ -37,6 +37,9 @@ public class ValueStorage : MonoBehaviour
 
     [SerializeField] public static int ELECTRICITY_BASE_INCREASE_VALUE = 15; // 2
 
+    [Header("Health stuff")]
+    [SerializeField] public static int HEALTH_LIQUID_DAMAGE = 2;
+
     [Header("Extra Values")]
     [SerializeField] public static int REACTOR_TMP_MINIMUM = 0;
     [SerializeField] public static int REACTOR_TMP_MAXIMUM = 69420;
