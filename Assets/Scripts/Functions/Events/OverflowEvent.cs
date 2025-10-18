@@ -3,39 +3,37 @@ using UnityEngine;
 
 public class OverflowEvent : MonoBehaviour
 {
-    [SerializeField] private OverallEvents OverallEvents;
-
     [SerializeField] private Transform DamagingLiquid;
     [SerializeField] private Transform PointLow; // Inactive event position
     [SerializeField] private Transform PointHigh; // Active event position
 
-    public float speed = 1.0f;
+    public float speed = 2.5f;
 
     public bool isOverflow = false;
     private bool doesRandomHaveToStop = false;
     public IEnumerator Event()
     {
         OverallEvents.IsEventRunning = true;
-        yield return new WaitForSeconds(1);
+        StartCoroutine(RaiseDamagingFluid());
+        // start music
+        yield return new WaitForSeconds(50);
+        StartCoroutine(LowerDamagingFluid());
     }
     private IEnumerator RaiseDamagingFluid()
     {
-        // start music
-        if (isOverflow)
+        while (Vector3.Distance(DamagingLiquid.position, PointHigh.position) > 0.05f)
         {
-            while (Vector3.Distance(DamagingLiquid.position, PointHigh.position) > 0.05f)
+            DamagingLiquid.position = Vector3.MoveTowards(DamagingLiquid.position, PointHigh.position, speed * Time.deltaTime);
+            if (DamagingLiquid.position == PointHigh.position)
             {
-                DamagingLiquid.position = Vector3.MoveTowards(DamagingLiquid.position, PointHigh.position, speed * Time.deltaTime);
-                if (DamagingLiquid.position == PointHigh.position)
-                {
-                    break;
-                }
-                yield return null;
+                break;
             }
+            yield return null;
         }
+    }
 
-        yield return new WaitForSeconds(10);
-
+    private IEnumerator LowerDamagingFluid()
+    {
         while (Vector3.Distance(DamagingLiquid.position, PointLow.position) > 0.05f)
         {
             DamagingLiquid.position = Vector3.MoveTowards(DamagingLiquid.position, PointLow.position, speed * Time.deltaTime);
@@ -46,19 +44,22 @@ public class OverflowEvent : MonoBehaviour
             yield return null;
         }
     }
+
     /// <summary>
     /// Force to start the event.
     /// </summary>
-    public void EventStart()
+    public bool DEV_ForceOverflow()
     {
         if (!OverallEvents.IsEventRunning && !OverallEvents.IsMainEventRunning)
         {
             StartCoroutine(Event());
             isOverflow = true;
+            return true;
         }
         else
         {
             Debug.LogWarning("Event is running, cannot start Overflow event");
+            return false;
         }
     }
     public void randomEventStart()
@@ -67,10 +68,10 @@ public class OverflowEvent : MonoBehaviour
         while (!doesRandomHaveToStop)
         {
             int willEventStart = Random.Range(0, 150);
-            if (willEventStart == 69 && !OverallEvents.IsEventRunning && !OverallEvents.IsMainEventRunning)
+            if (willEventStart == 67 && !OverallEvents.IsEventRunning && !OverallEvents.IsMainEventRunning)
             {
-                StartCoroutine(Event());
                 isOverflow = true;
+                StartCoroutine(Event());
             }
         }
     }

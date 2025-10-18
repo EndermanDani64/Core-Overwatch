@@ -12,6 +12,7 @@ public class ContinousManager : MonoBehaviour
     [SerializeField] private TempController tempController;
     [SerializeField] public ScoreManager scoreManager;
     [SerializeField] private Fixables fixables;
+    [SerializeField] private OverflowEvent overflowEvent; 
 
     [Header("UI")]
     [SerializeField] private UnityEngine.UI.Slider coolantInjectionSlider;
@@ -20,6 +21,7 @@ public class ContinousManager : MonoBehaviour
     {
         StartCoroutine(SecondsTrigger_E05());
         StartCoroutine(SecondsTrigger_E1());
+        StartCoroutine(SecondsTrigger_E2());
         StartCoroutine(SecondsTrigger_E25());
         StartCoroutine(SecondsTrigger_E60());
     }
@@ -53,6 +55,19 @@ public class ContinousManager : MonoBehaviour
             scoreManager.CheckPossibleScores();
             yield return new WaitForSeconds(1);
             generatorController.ChangeEnergy();
+        }
+    }
+
+    /// <summary>
+    /// Runs every contained functions in a 2 second delay.
+    /// </summary>
+    /// <returns></returns>
+    public IEnumerator SecondsTrigger_E2() // E25 = every 2.5 sec
+    {
+        while (true)
+        {
+            
+            yield return new WaitForSeconds(2f);
         }
     }
 
