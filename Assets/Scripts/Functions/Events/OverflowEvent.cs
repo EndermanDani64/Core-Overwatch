@@ -62,7 +62,7 @@ public class OverflowEvent : MonoBehaviour
             return false;
         }
     }
-    public void randomEventStart()
+    public void RandomEventStart()  
     {
         //Debug.Log("Random blackouts will occour again.");
         while (!doesRandomHaveToStop)
