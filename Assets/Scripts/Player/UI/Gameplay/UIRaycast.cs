@@ -7,7 +7,9 @@ public class UIRaycast : MonoBehaviour
 {
     [SerializeField] Transform playerTransform;
     [SerializeField] Transform eCoolantSupplyGameObject;
+
     [SerializeField] private InventorySystem inventorySystem;
+    [SerializeField] private HazmatSuit hazmatSuit;
 
     //[SerializeField] GameObject[] eCoolantSupplyCreates = { };
     [SerializeField] private TMP_Text pickupText;
@@ -18,6 +20,8 @@ public class UIRaycast : MonoBehaviour
     private ECoolantSupplyCreate equippedECoolantSupplyCreate = null;
     private Transform equippedTransform = null;
     Rigidbody equippedRigidbody = null;
+
+    private float timeHeld = 0f;
 
     void Update()
     {
@@ -71,6 +75,14 @@ public class UIRaycast : MonoBehaviour
                     pickupText.text = "Fix [hold: E]";
                 }
             }
+            else if (hitt.collider.CompareTag("HazmatSuit"))
+            {
+                if (!pickupText.enabled)
+                {
+                    pickupText.enabled = true;
+                    pickupText.text = "Equip [hold: E]";
+                }
+            }
             else
             {
                 pickupText.enabled = false;
@@ -108,6 +120,30 @@ public class UIRaycast : MonoBehaviour
                             equippedECoolantSupplyCreate = eCoolantSupplyCreate;
                             equippedTransform = transform;
                         }
+                    }
+                }
+            }
+        }
+
+        if (Input.GetKey(KeyCode.E)) // hazmat equip
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+
+            if (Physics.Raycast(ray, out hit))
+            {
+                if (hit.collider.CompareTag("HazmatSuit"))
+                {
+                    float distance = Vector3.Distance(playerTransform.position, hit.collider.transform.position);
+
+                    if (distance <= minDistanceToGrab && timeHeld < ValueStorage.ITEM_HAZMATSUIT_PICKUPTIME) // if the player reaches but didn't hold the button enough
+                    {
+                        timeHeld += Time.deltaTime;
+                        Debug.Log($"timeHeld: {Mathf.Round(timeHeld)}");
+                    }
+                    else if (distance <= minDistanceToGrab && timeHeld >= ValueStorage.ITEM_HAZMATSUIT_PICKUPTIME) // if the player has been holding the button for ValueStorage.ITEM_HAZMATSUIT_PICKUPTIME
+                    {
+                        hazmatSuit.WearSuit();
                     }
                 }
             }

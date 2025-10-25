@@ -1,9 +1,14 @@
 using UnityEngine;
+using static UnityEditor.Progress;
 
 public class InventorySystem : MonoBehaviour
 {
     public string heldItem = "";
+    public string wornSuit = "";
+
     public bool handsFree = true;
+    public bool naked = true;
+
     public int equippedItemID = 0;
 
     public void EquipItem(string item, int id)
@@ -20,7 +25,6 @@ public class InventorySystem : MonoBehaviour
             Debug.Log($"Your hands are full with, {item}!");
         }
     }
-
     public void DequipItem(string item, int id)
     {
         if (item != heldItem)
@@ -32,6 +36,34 @@ public class InventorySystem : MonoBehaviour
             heldItem = "";
             handsFree = true;
             equippedItemID = 0;
+        }
+    }
+
+    public void WearSuit(string suit)
+    {
+        if (naked)
+        {
+            Debug.Log($"You've put on, {suit}");
+            naked = false;
+            wornSuit = suit;
+        }
+        else
+        {
+            Debug.Log($"You are already wearing, {suit}!");
+        }
+    }
+
+    public void UnequipSuit(string suit)
+    {
+        if (suit != wornSuit)
+        {
+            Debug.LogWarning($"Wrong suit was tried to unequip. Expected suit value = {wornSuit}");
+            
+        }
+        else
+        {
+            wornSuit = "";
+            naked = true;
         }
     }
 

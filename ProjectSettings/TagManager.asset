@@ -12,6 +12,7 @@ TagManager:
   - ECoolantSupplyID
   - ECoolantSupplyDeposit
   - Fixable
+  - HazmatSuit
   layers:
   - Default
   - TransparentFX

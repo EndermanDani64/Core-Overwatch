@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEditorInternal;
 using UnityEngine;
 
 public class ValueStorage : MonoBehaviour
@@ -22,6 +23,9 @@ public class ValueStorage : MonoBehaviour
 
     [SerializeField] public static int PLAYER_HEALTH_MAX = 100;
 
+    [Header("Item Values")]
+    [SerializeField] public static float ITEM_HAZMATSUIT_PICKUPTIME = 5f;
+
     [Header("Electricity Cost Values")]
     [SerializeField] public static int ELECTRICITY_MANUALDOORSCOST = 5; //overall
     [SerializeField] public static int ELECTRICITY_LIGHTCOST = 2; // overall
@@ -39,6 +43,12 @@ public class ValueStorage : MonoBehaviour
 
     [Header("Health stuff")]
     [SerializeField] public static int HEALTH_LIQUID_DAMAGE = 2;
+
+    [Header("Movment Values")]
+    [SerializeField] public static float PLAYER_SPEED_NAKED = 4f;
+    [SerializeField] public static float PLAYER_SPEED_NAKED_SPRINT = 6f;
+    [SerializeField] public static float PLAYER_SPEED_HAZMAT = 3f;
+    [SerializeField] public static float PLAYER_SPEED_HAZMAT_SPRINT = 4.5f;
 
     [Header("Extra Values")]
     [SerializeField] public static int REACTOR_TMP_MINIMUM = 0;

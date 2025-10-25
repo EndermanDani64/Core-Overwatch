@@ -1,4 +1,6 @@
+using System;
 using System.Collections;
+using Unity.Mathematics;
 using UnityEngine;
 
 public class OverflowEvent : MonoBehaviour
@@ -62,10 +64,10 @@ public class OverflowEvent : MonoBehaviour
             return false;
         }
     }
-    public void RandomEventStart()  
+    /*public void RandomEventStart()  
     {
         //Debug.Log("Random blackouts will occour again.");
-        while (!doesRandomHaveToStop)
+        while (!doesRandomHaveToStop && !OverallEvents.IsEventRunning && !OverallEvents.IsMainEventRunning)
         {
             int willEventStart = Random.Range(0, 150);
             if (willEventStart == 67 && !OverallEvents.IsEventRunning && !OverallEvents.IsMainEventRunning)
@@ -74,5 +76,5 @@ public class OverflowEvent : MonoBehaviour
                 StartCoroutine(Event());
             }
         }
-    }
+    }*/
 }
