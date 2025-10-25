@@ -99,28 +99,28 @@ public class Movement : MonoBehaviour
     [SerializeField] public float targetSpeed = ValueStorage.PLAYER_SPEED_NAKED; // alap sebesség
     void HandleStamina()
     {
-        if (Input.GetKey(KeyCode.LeftShift) && Stamina > 0 && isGrounded)
+        if (Input.GetKey(KeyCode.LeftShift) && !HazmatSuit.isHazmat && Stamina > 0 && isGrounded)
         {
             targetSpeed = ValueStorage.PLAYER_SPEED_NAKED_SPRINT; // sprint speed
-            Speed = ValueStorage.PLAYER_SPEED_NAKED_SPRINT;
-            Stamina -= Time.deltaTime * 10; // stamina csökkentés
+            //Speed = ValueStorage.PLAYER_SPEED_NAKED_SPRINT;
+            Stamina -= Time.deltaTime * 8; // stamina csökkentés
         }
         else if (Input.GetKey(KeyCode.LeftShift) && HazmatSuit.isHazmat && Stamina > 0)
         {
             targetSpeed = ValueStorage.PLAYER_SPEED_HAZMAT_SPRINT; // hazmat sprint speed
-            Speed = ValueStorage.PLAYER_SPEED_HAZMAT_SPRINT;
+            //Speed = ValueStorage.PLAYER_SPEED_HAZMAT_SPRINT;
             Stamina -= Time.deltaTime * 15; // stamina csökkentés
         }
         else if (HazmatSuit.isHazmat && Stamina > 0)
         {
             targetSpeed = ValueStorage.PLAYER_SPEED_HAZMAT; // hazmat speed
-            Speed = ValueStorage.PLAYER_SPEED_HAZMAT;
+            //Speed = ValueStorage.PLAYER_SPEED_HAZMAT;
             Stamina -= Time.deltaTime * 15; // stamina csökkentés
         }
-        else
+        else if (!HazmatSuit.isHazmat && Stamina > 0)
         {
             targetSpeed = ValueStorage.PLAYER_SPEED_NAKED; // walking speed
-            Speed = ValueStorage.PLAYER_SPEED_NAKED;
+            //Speed = ValueStorage.PLAYER_SPEED_NAKED;
             if (Stamina < 100)
             {
                 Stamina += Time.deltaTime * 5; // Regeneráció, ha nincs sprint

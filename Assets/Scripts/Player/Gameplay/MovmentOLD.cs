@@ -46,6 +46,14 @@ public class MovmentOLD : MonoBehaviour
     {
         if (!OverlayUIManager.isPaused)
         {
+            /*if (HazmatSuit.isHazmat && Speed != ValueStorage.PLAYER_SPEED_HAZMAT) // changing the speed of the player when the hazmat suit is worn
+            {
+                Speed = ValueStorage.PLAYER_SPEED_HAZMAT;
+            }
+            else if (!HazmatSuit.isHazmat && Speed != ValueStorage.PLAYER_SPEED_NAKED)
+            {
+                Speed = ValueStorage.PLAYER_SPEED_NAKED;
+            }*/
             HandleStamina();
             UpdateMouse();
             UpdateMove();
@@ -93,18 +101,31 @@ public class MovmentOLD : MonoBehaviour
         }
     }
 
-    float targetSpeed = 12; // Alapértelmezett sebesség
+    [SerializeField] public float targetSpeed = ValueStorage.PLAYER_SPEED_NAKED; // alap sebesség
     int lastDisplayedStamina = -1;
     void HandleStamina()
     {
-        if (Input.GetKey(KeyCode.LeftShift) && Stamina > 0) //Input.GetKey(KeyCode.LeftShift) && Stamina > 0 && isGrounded
+        if (Input.GetKey(KeyCode.LeftShift) && !HazmatSuit.isHazmat && Stamina > 0) //  && isGrounded
         {
-            targetSpeed = 18; // Sprint sebesség
-            Stamina -= Time.deltaTime * 10; // Csökkentsük a staminát idõalapú fogyasztással
+            targetSpeed = ValueStorage.PLAYER_SPEED_NAKED_SPRINT; // sprint speed
+            Stamina -= Time.deltaTime * 8; // stamina csökkentés
         }
-        else
+        else if (Input.GetKey(KeyCode.LeftShift) && HazmatSuit.isHazmat && Stamina > 0)
         {
-            targetSpeed = 12; // Alap sebesség
+            targetSpeed = ValueStorage.PLAYER_SPEED_HAZMAT_SPRINT; // hazmat sprint speed
+            Stamina -= Time.deltaTime * 13; // stamina csökkentés
+        }
+        else if (HazmatSuit.isHazmat && Stamina > 0)
+        {
+            targetSpeed = ValueStorage.PLAYER_SPEED_HAZMAT; // hazmat speed
+            if (Stamina < 100)
+            {
+                Stamina += Time.deltaTime * 3; // Regeneráció, ha nincs sprint
+            }
+        }
+        else if (!HazmatSuit.isHazmat && Stamina > 0)
+        {
+            targetSpeed = ValueStorage.PLAYER_SPEED_NAKED; // walking speed
             if (Stamina < 100)
             {
                 Stamina += Time.deltaTime * 5; // Regeneráció, ha nincs sprint
@@ -112,7 +133,9 @@ public class MovmentOLD : MonoBehaviour
         }
 
         // Fokozatos sebességváltás
+        Debug.Log($"Speed: {Speed} | targetSpeed: {targetSpeed} | Mathf.Lerp(): {Mathf.Lerp(Speed, targetSpeed, Time.deltaTime * 10)}");
         Speed = Mathf.Lerp(Speed, targetSpeed, Time.deltaTime * 10);
+        
 
         int roundedStamina = Mathf.RoundToInt(Stamina);
         if (roundedStamina != lastDisplayedStamina)

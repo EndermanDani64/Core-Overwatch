@@ -13,6 +13,8 @@ public class OverflowEvent : MonoBehaviour
 
     public bool isOverflow = false;
     private bool doesRandomHaveToStop = false;
+
+
     public IEnumerator Event()
     {
         OverallEvents.IsEventRunning = true;
@@ -21,6 +23,11 @@ public class OverflowEvent : MonoBehaviour
         yield return new WaitForSeconds(50);
         StartCoroutine(LowerDamagingFluid());
     }
+
+    /// <summary>
+    /// Raises the DamagingObject in the map
+    /// </summary>
+    /// <returns></returns>
     private IEnumerator RaiseDamagingFluid()
     {
         while (Vector3.Distance(DamagingLiquid.position, PointHigh.position) > 0.05f)

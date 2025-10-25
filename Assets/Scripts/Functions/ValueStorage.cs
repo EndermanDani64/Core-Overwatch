@@ -45,10 +45,10 @@ public class ValueStorage : MonoBehaviour
     [SerializeField] public static int HEALTH_LIQUID_DAMAGE = 2;
 
     [Header("Movment Values")]
-    [SerializeField] public static float PLAYER_SPEED_NAKED = 4f;
-    [SerializeField] public static float PLAYER_SPEED_NAKED_SPRINT = 6f;
-    [SerializeField] public static float PLAYER_SPEED_HAZMAT = 3f;
-    [SerializeField] public static float PLAYER_SPEED_HAZMAT_SPRINT = 4.5f;
+    [SerializeField] public static float PLAYER_SPEED_NAKED = 12f; // 12
+    [SerializeField] public static float PLAYER_SPEED_NAKED_SPRINT = 16f; // 18
+    [SerializeField] public static float PLAYER_SPEED_HAZMAT = 6f;
+    [SerializeField] public static float PLAYER_SPEED_HAZMAT_SPRINT = 10f;
 
     [Header("Extra Values")]
     [SerializeField] public static int REACTOR_TMP_MINIMUM = 0;

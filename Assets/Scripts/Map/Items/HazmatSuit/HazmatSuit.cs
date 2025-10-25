@@ -18,7 +18,7 @@ public class HazmatSuit : MonoBehaviour
         else
         {
             isHazmat = true;
-            // többi logika
+            gameObject.transform.position = new Vector3(500, 500, 500);
         }
     }
 
