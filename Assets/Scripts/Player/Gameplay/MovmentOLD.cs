@@ -133,10 +133,8 @@ public class MovmentOLD : MonoBehaviour
         }
 
         // Fokozatos sebességváltás
-        Debug.Log($"Speed: {Speed} | targetSpeed: {targetSpeed} | Mathf.Lerp(): {Mathf.Lerp(Speed, targetSpeed, Time.deltaTime * 10)}");
         Speed = Mathf.Lerp(Speed, targetSpeed, Time.deltaTime * 10);
         
-
         int roundedStamina = Mathf.RoundToInt(Stamina);
         if (roundedStamina != lastDisplayedStamina)
         {
