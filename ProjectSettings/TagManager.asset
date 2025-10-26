@@ -13,6 +13,7 @@ TagManager:
   - ECoolantSupplyDeposit
   - Fixable
   - HazmatSuit
+  - FixablePipe
   layers:
   - Default
   - TransparentFX

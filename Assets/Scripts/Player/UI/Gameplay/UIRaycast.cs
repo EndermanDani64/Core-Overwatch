@@ -75,6 +75,14 @@ public class UIRaycast : MonoBehaviour
                     pickupText.text = "Fix [hold: E]";
                 }
             }
+            else if (hitt.collider.CompareTag("FixablePipe") && !hitt.collider.GetComponent<OverflowEvent_FixablePipe>().isFixed)
+            {
+                if (!pickupText.enabled)
+                {
+                    pickupText.enabled = true;
+                    pickupText.text = "Fix [hold: E]";
+                }
+            }
             else if (hitt.collider.CompareTag("HazmatSuit"))
             {
                 if (!pickupText.enabled)

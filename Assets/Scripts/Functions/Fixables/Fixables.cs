@@ -3,20 +3,19 @@ using UnityEngine;
 public class Fixables : MonoBehaviour
 {
     [SerializeField] public static bool isFixableAvalible = false;
-    [SerializeField] public static int fixableAvalibleCount = 0;
+    [SerializeField] private int fixableAvalibleCount = 0;
 
-    private GameObject[] FixableList = {  };
+    private GameObject[] fixableList = {  };
 
     private void Awake()
     {
-        FixableList = GameObject.FindGameObjectsWithTag("Fixable");
+        fixableList = GameObject.FindGameObjectsWithTag("Fixable");
     }
 
     private float timeHeld = 0f;
-    private float timeNeedToHeld = 3f;
     void Update()
     {
-        if (Input.GetKey(KeyCode.E) && timeHeld < timeNeedToHeld)
+        if (Input.GetKey(KeyCode.E) && timeHeld < ValueStorage.TIME_FIXABLE_TIMETOFIX)
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
@@ -27,12 +26,12 @@ public class Fixables : MonoBehaviour
                     bool isFixed = hit.collider.GetComponent<VariableStorage_Fixable>().isFixed;
                     Debug.Log($"timeheld = {Mathf.Round(timeHeld)} | isFixed = {isFixed}");
 
-                    if (Mathf.Round(timeHeld) >= timeNeedToHeld && !isFixed)
+                    if (Mathf.Round(timeHeld) >= ValueStorage.TIME_FIXABLE_TIMETOFIX && !isFixed)
                     {
                         Debug.Log("fixed!");
                         hit.collider.GetComponent<VariableStorage_Fixable>().isFixed = true;
                         hit.collider.GetComponent<ParticleSystem>().startLifetime = 0;
-                        hit.collider.GetComponent<AudioSource>().PlayOneShot(hit.collider.GetComponent<VariableStorage_Fixable>().fixingSF);
+                        hit.collider.GetComponent<AudioSource>().PlayOneShot(hit.collider.GetComponent<VariableStorage_Fixable>().fixingSFX);
                         if (fixableAvalibleCount == 1)
                         {
                             fixableAvalibleCount--; 
@@ -44,7 +43,7 @@ public class Fixables : MonoBehaviour
                         }
                         timeHeld = 0f;
                     }
-                    else if (timeHeld < timeNeedToHeld && !isFixed)
+                    else if (timeHeld < ValueStorage.TIME_FIXABLE_TIMETOFIX && !isFixed)
                     {
                         timeHeld += Time.deltaTime;
                     }
@@ -72,13 +71,13 @@ public class Fixables : MonoBehaviour
     {
         int randomEvent = Random.Range(45, 45); // should be defined in ValueStorage for different scenarios
 
-        if (randomEvent == 45 && fixableAvalibleCount < FixableList.Length)
+        if (randomEvent == 45 && fixableAvalibleCount < fixableList.Length)
         {
-            int randomIndex = Random.Range(0, FixableList.Length);
-            if (FixableList[randomIndex].GetComponent<VariableStorage_Fixable>().isFixed) 
+            int randomIndex = Random.Range(0, fixableList.Length);
+            if (fixableList[randomIndex].GetComponent<VariableStorage_Fixable>().isFixed) 
             {
-                FixableList[randomIndex].GetComponent<VariableStorage_Fixable>().isFixed = false;
-                FixableList[randomIndex].GetComponent<ParticleSystem>().startLifetime = 0.13f;
+                fixableList[randomIndex].GetComponent<VariableStorage_Fixable>().isFixed = false;
+                fixableList[randomIndex].GetComponent<ParticleSystem>().startLifetime = 0.13f;
 
                 isFixableAvalible = true;
                 fixableAvalibleCount++;

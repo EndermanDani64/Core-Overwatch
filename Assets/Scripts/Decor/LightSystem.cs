@@ -18,21 +18,33 @@ public class LightSystem : MonoBehaviour
 
     void Update()
     {
-        if (TempController.isMeltdown == true)
+        if (TempController.isMeltdown)
         {
             GetComponent<Light>().color = Color.red;
             GetComponent<Light>().enabled = true;
             GetComponent<LensFlareComponentSRP>().intensity = 1;
             transform.Rotate(rotation * speed * Time.deltaTime);
         }
-        else if (BlackoutEvent.isBlackout == true)
+        else if (BlackoutEvent.isBlackout)
         {
             GetComponent<Light>().color = Color.yellow;
             GetComponent<Light>().enabled = true;
             GetComponent<LensFlareComponentSRP>().intensity = 1;
             transform.Rotate(rotation * speed * Time.deltaTime);
         }
-        else if (BlackoutEvent.isBlackout == false)
+        else if (!BlackoutEvent.isBlackout)
+        {
+            GetComponent<Light>().enabled = false;
+            GetComponent<LensFlareComponentSRP>().intensity = 0;
+        }
+        else if (OverflowEvent.IsOverflowEvent)
+        {
+            GetComponent<Light>().color = Color.yellow;
+            GetComponent<Light>().enabled = true;
+            GetComponent<LensFlareComponentSRP>().intensity = 1;
+            transform.Rotate(rotation * speed * Time.deltaTime);
+        }
+        else if (!OverflowEvent.IsOverflowEvent)
         {
             GetComponent<Light>().enabled = false;
             GetComponent<LensFlareComponentSRP>().intensity = 0;

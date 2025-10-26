@@ -41,6 +41,12 @@ public class ValueStorage : MonoBehaviour
 
     [SerializeField] public static int ELECTRICITY_BASE_INCREASE_VALUE = 15; // 2
 
+    [Header("Time Values")]
+    [SerializeField] public static float TIME_FIXABLE_TIMETOFIX = 3f;
+    [SerializeField] public static float TIME_FIXABLE_PIPE_TIMETOFIX = 4f;
+    [SerializeField] public static float OVERFLOWEVENT_LIQUIDSPEED_INCRESE_PERPIPE = .4f;
+    [SerializeField] public static float OVERFLOWEVENT_LIQUIDSPEED_DECRESE = 1f;
+
     [Header("Health stuff")]
     [SerializeField] public static int HEALTH_LIQUID_DAMAGE = 2;
 
