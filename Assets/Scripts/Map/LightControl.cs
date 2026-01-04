@@ -1,4 +1,3 @@
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class LightControl : MonoBehaviour
@@ -6,29 +5,35 @@ public class LightControl : MonoBehaviour
     [SerializeField] private BlackoutEvent Event_Blackout;
     [SerializeField] private OverallEvents OverallEvents;
     [SerializeField] private ElectricityManagger Managger_Electricity;
-    [SerializeField] private AudioSource soundSource;
-    [SerializeField] private AudioClip soundEffect;
 
-    private float defaultAmbientIntensity;
-    private float reflectionIntensity;
+    private GameObject[] FacilityLights_Main = { };
 
     private void Start()
     {
-        defaultAmbientIntensity = RenderSettings.ambientIntensity;
-        reflectionIntensity = RenderSettings.reflectionIntensity;
+        FacilityLights_Main = GameObject.FindGameObjectsWithTag("CeilingLight");
     }
 
+    /// <summary>
+    /// Plays the "LightFadeOut" animation clip on every GameObject that has the tag "CeilingLight".
+    /// </summary>
     public void LightOutage()
     {
-        RenderSettings.ambientIntensity = 0f;
-        RenderSettings.reflectionIntensity = 0f;
-        soundSource.PlayOneShot(soundEffect);
+        foreach (GameObject light in FacilityLights_Main)
+        {
+            Animator lightAnimator = light.GetComponent<Animator>();
+            lightAnimator.Play("LightFadeOut");
+        }
     }
 
+    /// <summary>
+    /// Plays the "LightFadeIn" animation clip on every GameObject that has the tag "CeilingLight".
+    /// </summary>
     public void LightRestore()
     {
-        RenderSettings.ambientIntensity = defaultAmbientIntensity;
-        RenderSettings.reflectionIntensity = reflectionIntensity;
-        soundSource.PlayOneShot(soundEffect);
+        foreach (GameObject light in FacilityLights_Main)
+        {
+            Animator lightAnimator = light.GetComponent<Animator>();
+            lightAnimator.Play("LightFadeIn");
+        }
     }
 }

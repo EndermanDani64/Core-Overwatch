@@ -46,6 +46,25 @@ public class UIRaycast : MonoBehaviour
             }
         }
 
+        // elevator button
+        if (Input.GetMouseButtonDown(0))
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+
+            if (Physics.Raycast(ray, out hit))
+            {
+                if (hit.collider.gameObject.tag == "ElevatorButton")
+                {
+                    hit.collider.gameObject.GetComponent<ElevatorButton>().CallToFloor();
+                }
+                else if (hit.collider.gameObject.tag == "ElevatorButton_Nav")
+                {
+                    hit.collider.gameObject.GetComponent<ElevatorButton>().GoToFloor();
+                }
+            }
+        }
+
         Ray rayy = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hitt;
 
@@ -89,6 +108,22 @@ public class UIRaycast : MonoBehaviour
                 {
                     pickupText.enabled = true;
                     pickupText.text = "Equip [hold: E]";
+                }
+            }
+            else if (hitt.collider.CompareTag("ElevatorButton"))
+            {
+                if (!pickupText.enabled)
+                {
+                    pickupText.enabled = true;
+                    pickupText.text = "Call [Left Click]";
+                }
+            }
+            else if (hitt.collider.CompareTag("ElevatorButton_Nav"))
+            {
+                if (!pickupText.enabled)
+                {
+                    pickupText.enabled = true;
+                    pickupText.text = "Call [Left Click]";
                 }
             }
             else

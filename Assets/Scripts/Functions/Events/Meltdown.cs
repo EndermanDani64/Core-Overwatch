@@ -13,6 +13,7 @@ public class Meltdown : MonoBehaviour
     [SerializeField] private ECoolantController ECoolantController;
     [SerializeField] private ShoutSystem ShoutSystem;
     [SerializeField] private BlastDoorController BlastDoorController;
+    [SerializeField] private OverallEvents overallEvents;
 
     [Header("Event materials")]
     [SerializeField] private SoundSystem SoundSystem;
@@ -150,7 +151,15 @@ public class Meltdown : MonoBehaviour
         StartCoroutine(CheckForMeltdownEvent());
         StartCoroutine(CooldownAfterMeltdownECoolantSuccess());
     }
+    public void ForceMeltdown()
+    {
+        tempController.isMeltdown = true;
+        StartCoroutine(MeltdownEvent());
+    }
 
+    /// <summary>
+    /// Returns with a true value if the event ran.
+    /// </summary> 
     public bool DEV_ForceMeltdown()
     {
         tempController.isMeltdown = true;

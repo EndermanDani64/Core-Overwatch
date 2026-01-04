@@ -3,17 +3,21 @@ using UnityEngine;
 
 public class OverflowEvent : MonoBehaviour
 {
-    public static bool IsOverflowEvent = false;
+    [SerializeField] public bool IsOverflowEventCooldown = false;
+    public bool IsWaitingForOverflowEvent = false;
 
     [SerializeField] private Transform DamagingLiquid;
     [SerializeField] private Transform PointLow; // Inactive event position
     [SerializeField] private Transform PointMaxHigh; // Maximum height that the DamagingLiquid can go up
 
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip musicClip;
+    [SerializeField] private OverallEvents overallEvents;
+
     public float speed = 0f; // 1 piece of dp. adds to the speed +.36f
 
     public int difficulty = 0; // 0: 0 damaged pipe | 1: 1 dp. | 2: 2 dp. | ... max 5
 
-    public bool isOverflow = false;
     // private bool doesRandomHaveToStop = false; DEPRICATED, COULD USE THE isFixablePipeAvalible INSTEAD
 
     public GameObject[] fixablePipeList = { };
@@ -24,14 +28,62 @@ public class OverflowEvent : MonoBehaviour
         fixablePipeList = GameObject.FindGameObjectsWithTag("FixablePipe");
     }
 
+    // -----------------------------------------
+
+    private float TimeEllapsedSinceWaiting = 0f;
+
+    /// <summary>
+    /// Used for calling it in loops, so it's random when the event starts.
+    /// </summary>
+    public IEnumerator RandomEventStart()
+    {
+        int randomWaitTime = -1;
+        IsWaitingForOverflowEvent = true;
+
+        while (PressureControl.isPressurized)
+        {
+            if (randomWaitTime == -1)
+            {
+                randomWaitTime = Random.Range(20, 25); // 80, 360
+                Debug.Log($"Selected time for OverflowEvent = {randomWaitTime}");
+            }
+
+            if (TimeEllapsedSinceWaiting >= randomWaitTime) // If the player waited randomWaitTime seconds...
+            {
+                int randomInt = Random.Range(0, Mathf.RoundToInt(PressureControl.pressure / 3));
+
+                // Debug.Log($"range: 0-{Mathf.RoundToInt(PressureControl.pressure / 3)} | randomInt = {randomInt} <? {Mathf.RoundToInt(PressureControl.pressure / 5)} | ? {randomInt < Mathf.RoundToInt(PressureControl.pressure / 5)}");
+
+                if (randomInt < Mathf.RoundToInt(PressureControl.pressure / 5) && !IsOverflowEventCooldown)
+                {
+                    difficulty = 4;
+                    StartCoroutine(Event());
+                    //overallEvents.PlayEvent("overflow");
+                    break;
+                }
+            }
+            else
+            {
+                TimeEllapsedSinceWaiting += 1f;
+                Debug.Log($"Untill OverflowEvent = {TimeEllapsedSinceWaiting} -> {randomWaitTime}");
+            }
+            yield return new WaitForSeconds(1f);
+        }
+    }
+
+    /// <summary>
+    /// Starts the Overflow event.
+    /// </summary>
     public IEnumerator Event()
     {
+        IsWaitingForOverflowEvent = false;
+        OverallEvents.IsOverflow = true;
         OverallEvents.IsEventRunning = true;
-        IsOverflowEvent = true;
+
         DamageRandomPipe(difficulty);
         yield return new WaitForSeconds(1);
         StartCoroutine(RaiseDamagingFluid());
-        // start music
+        audioSource.PlayOneShot(musicClip);
 
         while (fixablePipeAvalibleCount > 0)
         {
@@ -40,16 +92,26 @@ public class OverflowEvent : MonoBehaviour
         }
 
         OverallEvents.IsEventRunning = false;
-        IsOverflowEvent = false;
+        OverallEvents.IsOverflow = false;
         yield return new WaitForSeconds(.5f);
         StartCoroutine(LowerDamagingFluid_FixedPoint());
+        StartCoroutine(EventCooldown());
+        overallEvents.EventQueue_TriggerNext();
+    }
+
+    private IEnumerator EventCooldown()
+    {
+        IsOverflowEventCooldown = true;
+        yield return new WaitForSeconds(300);
+        IsOverflowEventCooldown = false;
+        overallEvents.EventQueue_TriggerNext();
     }
 
     private void DamageRandomPipe(int piece)
     {
         while (piece > 0)
         {
-            int random = UnityEngine.Random.Range(0, fixablePipeList.Length);
+            int random = Random.Range(0, fixablePipeList.Length);
 
             if (fixablePipeList[random].GetComponent<OverflowEvent_FixablePipe>().isFixed) // if the pipe is fixed then damage it
             {
@@ -65,7 +127,7 @@ public class OverflowEvent : MonoBehaviour
 
     private float timeHeld = 0f;
 
-    void Update()
+    void Update() // some player interaction checks
     {
         if (Input.GetKey(KeyCode.E) && timeHeld < ValueStorage.TIME_FIXABLE_PIPE_TIMETOFIX && fixablePipeAvalibleCount > 0)
         {
@@ -80,10 +142,8 @@ public class OverflowEvent : MonoBehaviour
 
                     if (Mathf.Round(timeHeld) >= ValueStorage.TIME_FIXABLE_PIPE_TIMETOFIX && !isFixed)
                     {
-                        Debug.Log("fixed!");
-                        hit.collider.GetComponent<OverflowEvent_FixablePipe>().isFixed = true;
-                        //hit.collider.GetComponent<ParticleSystem>().startLifetime = 0;
-                        hit.collider.GetComponent<OverflowEvent_FixablePipe>().Sound();
+                        //Debug.Log("fixed!");
+                        hit.collider.GetComponent<OverflowEvent_FixablePipe>().FixPipe();
 
                         fixablePipeAvalibleCount--;
                         timeHeld = 0f;
@@ -95,11 +155,6 @@ public class OverflowEvent : MonoBehaviour
                 }
             }
         }
-        /*else
-        {
-            Debug.Log("elengedve");
-            timeHeld = 0f;
-        }*/
 
         if (!Input.GetKey(KeyCode.E) && fixablePipeAvalibleCount > 0 && timeHeld != 0) // if the player releases the button [E] then 
         {
@@ -126,23 +181,6 @@ public class OverflowEvent : MonoBehaviour
     }
 
     /// <summary>
-    /// [DEPRICATED] Raises the DamagingObject in the map to a fixed point.
-    /// </summary>
-    /// <returns></returns>
-    private IEnumerator RaiseDamagingFluid_FixedPoint()
-    {
-        while (Vector3.Distance(DamagingLiquid.position, PointMaxHigh.position) > 0.05f)
-        {
-            DamagingLiquid.position = Vector3.MoveTowards(DamagingLiquid.position, PointMaxHigh.position, speed * Time.deltaTime);
-            if (DamagingLiquid.position == PointMaxHigh.position)
-            {
-                break;
-            }
-            yield return null;
-        }
-    }
-
-    /// <summary>
     /// Lowers the DamagingObject in the map to a fixed point.
     /// </summary>
     /// <returns></returns>
@@ -160,14 +198,13 @@ public class OverflowEvent : MonoBehaviour
     }
 
     /// <summary>
-    /// Force to start the event.
+    /// Returns with a true value if the event ran.
     /// </summary>
     public bool DEV_ForceOverflow()
     {
         if (!OverallEvents.IsEventRunning && !OverallEvents.IsMainEventRunning)
         {
-            StartCoroutine(Event());
-            isOverflow = true;
+            overallEvents.PlayEvent("overflow");
             return true;
         }
         else
@@ -177,17 +214,19 @@ public class OverflowEvent : MonoBehaviour
         }
     }
 
-    /*public void RandomEventStart()  
+    /// <summary>
+    /// Do not call except from OverallEvents!!!
+    /// </summary>
+    public void ForceOverflow()
     {
-        //Debug.Log("Random blackouts will occour again.");
-        while (!doesRandomHaveToStop && !OverallEvents.IsEventRunning && !OverallEvents.IsMainEventRunning)
-        {
-            int willEventStart = Random.Range(0, 150);
-            if (willEventStart == 67 && !OverallEvents.IsEventRunning && !OverallEvents.IsMainEventRunning)
-            {
-                isOverflow = true;
-                StartCoroutine(Event());
-            }
-        }
-    }*/
+        StartCoroutine(Event());
+    }
+
+    /// <summary>
+    /// Do not call except from OverallEvents!!!
+    /// </summary>
+    public void ForceOverflowWait()
+    {
+        StartCoroutine(RandomEventStart());
+    }
 }

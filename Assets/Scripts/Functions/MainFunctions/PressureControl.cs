@@ -1,6 +1,7 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using System;
 
 public class PressureControl : MonoBehaviour
 {
@@ -8,8 +9,10 @@ public class PressureControl : MonoBehaviour
     public bool isError = false;
     
     [SerializeField] private Button startupButton;
-    [SerializeField] private TempController TempController;
+    [SerializeField] private TempController tempController;
+    [SerializeField] private OverflowEvent overflowEvent;
     [SerializeField] private Fixables fixables;
+    [SerializeField] private OverallEvents overallEvents; 
 
     [SerializeField] private Slider coolantInjector;
 
@@ -17,80 +20,74 @@ public class PressureControl : MonoBehaviour
 
     public void StartupReactor()
     {
-        //Debug.Log($"StartupReactor() h�vva - isOnline: {TempController.isOnline}");
-
-        if (!TempController.isOnline)
+        if (!tempController.isOnline)
         {
             StopCoroutine(PressureControlFunction());
             pressure = 0;
         }
         else
         {
-            Debug.Log("Pressure coroutine indul");
             StartCoroutine(PressureControlFunction());
         }
     }
 
     public void DestroyReactor()
     {
-        Debug.Log("bumm");
         StopAllCoroutines();
-        TempController.DestroyReactor();
+        tempController.DestroyReactor();
     }
 
     private IEnumerator PressureControlFunction()
     {
-        while (true)
+        while (tempController.isOnline) // ameddig online a reaktor
         {
-            if (TempController.isOnline)
+            if (pressure < ValueStorage.REACTOR_PS_MAX)
             {
-                if (pressure < ValueStorage.REACTOR_PS_MAX)
+                float pressureIncrease = 0;
+
+                float basePressureChange = (TempController.temp / 4000f) * 100f; // alap érték a nyomás növeléséhez temp alapján
+
+                float coolantEffect = coolantInjector.value * 1.0f; // coolant folyadék bejuttatása alapján a nyomás csökkentése
+
+                // float randomness = UnityEngine.Random.Range(-1.5f, 1.5f); // véletlen szórás a rendszer "instabilitására"
+
+                float valveFactor = Mathf.Lerp(1.0f, 0.3f, ValveOverwatch.valveAmountOpen / 5f); // nyomás csökkentés nyitott szelepek alapján
+
+                /* 
+                    0 szelep = 1.0 (teljes nyomás növekedés),
+                    5 szelep = 0.3 (70% csökkentő hatás)
+                */
+
+                float targetPressureChange = (basePressureChange - coolantEffect /*+ randomness*/) * valveFactor;
+                pressureIncrease = Mathf.Lerp(pressureIncrease, targetPressureChange, Time.deltaTime * 3f) * 100; // "sima" változás
+
+                MathF.Round(pressureIncrease, 2);
+                pressure += pressureIncrease;
+
+                if (pressure > ValueStorage.REACTOR_PS_PRESSURIZED && !isPressurized)
                 {
-                    if (pressure > ValueStorage.REACTOR_PS_PRESSURIZED)
-                    {
-                        //float pressureIncrease = Mathf.Clamp(TempController.temp / 15 + Random.Range(0, 1), 1, 15); !!!!!!
-                    }
-                    else
-                    {
-                        float pressureIncrease = 0f;
-                        if (FanOverwatch.fanAmountOnline == 5)
-                        {
-                            pressureIncrease = Mathf.Clamp(TempController.temp / 15 + Random.Range(-4, 1) - coolantInjector.value * 1.5f, -12, 2);
-                        }
-                        else if(FanOverwatch.fanAmountOnline == 4)
-                        {
-                            pressureIncrease = Mathf.Clamp(TempController.temp / 15 + Random.Range(-3, 2) - coolantInjector.value * 1.5f, -9, 2);
-                        }
-                        else if (FanOverwatch.fanAmountOnline == 3)
-                        {
-                            pressureIncrease = Mathf.Clamp(TempController.temp / 15 + Random.Range(-3, 3) - coolantInjector.value * 1.5f, -7, 3);
-                        }
-                        else if (FanOverwatch.fanAmountOnline == 2)
-                        {
-                            pressureIncrease = Mathf.Clamp(TempController.temp / 15 + Random.Range(-1, 4) - coolantInjector.value * 1.5f, -5, 4);
-                        }
-                        else if (FanOverwatch.fanAmountOnline == 1)
-                        {
-                            pressureIncrease = Mathf.Clamp(TempController.temp / 15 + Random.Range(0, 5) - coolantInjector.value * 1.5f, -3, 5);
-                        }
-                        else
-                        {
-                            pressureIncrease = Mathf.Clamp(TempController.temp / Random.Range(4, 6) - coolantInjector.value * 1.5f, 0, 8);
-                        }
-                        pressure += pressureIncrease;
-                    }
+                    isPressurized = true;
+                    overallEvents.PlayEvent("overflowWait");
+                    Debug.Log("Triggered the overflowWait from pressurecontrol.");
+                }
+
+                if (pressure <= 0)
+                {
+                    pressure = 0;
                 }
                 else
                 {
-                    isError = true;
-                    isPressurized = true;
-                    Debug.LogWarning("!!!PRESSURE MAX REACHED!!!");
+                    pressure += pressureIncrease;
+                    MathF.Round(pressure, 2);
                 }
+
+                //Debug.Log($"Temp={TempController.temp:F0}°C | Valves={ValveOverwatch.valveAmountOpen} | ΔP={pressureIncrease:F2} | P={pressure:F1}");
+
+                //Debug.Log("---------------");
+                //Debug.Log($"basePressureChange = {basePressureChange}");
+                //Debug.Log($"pressureIncrease = {pressureIncrease}");
             }
-            else
-            {
-                break;
-            }
+
             yield return new WaitForSeconds(2.2f);
         }
     }

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
+using System;
 
 public class TempController : MonoBehaviour
 {
@@ -30,6 +30,7 @@ public class TempController : MonoBehaviour
     public static float temp;
     public static float tempIntensity = 0.2f;
 
+    // temp modifing values
     private float previousTemp;
     private float difference;
     private float previousDifference;
@@ -66,19 +67,6 @@ public class TempController : MonoBehaviour
             tempIntensity = 0;
         }
 
-        /*float simulatedIncrease = 0;
-
-        if (!blackoutEvent.isBlackout)
-        {
-            simulatedIncrease = (tempIntensity * Time.deltaTime * 100) + Mathf.Clamp((ControlRod1.value + ControlRod2.value + ControlRod3.value + ControlRod4.value) * tempIntensity, 0, Random.Range(50, 75));
-            simulatedIncrease -= FanOverwatch.fanAmountOnline * 1.5f;
-        }
-        else
-        {
-            simulatedIncrease = (tempIntensity * Time.deltaTime * 100) + Mathf.Clamp((ControlRod1.value + ControlRod2.value + ControlRod3.value + ControlRod4.value) * tempIntensity, 0, Random.Range(0, 30));
-            simulatedIncrease -= FanOverwatch.fanAmountOnline * 1.5f;
-        }*/
-
         float baseIncrease = tempIntensity * 50f * Time.deltaTime;
         float controlRodEffect = (ControlRod1.value + ControlRod2.value + ControlRod3.value + ControlRod4.value) * 137f * Time.deltaTime;
         float fanCooling = FanOverwatch.fanAmountOnline * 2f * Time.deltaTime;
@@ -86,47 +74,78 @@ public class TempController : MonoBehaviour
 
         float simulatedIncrease = 0f;
 
-        if (blackoutEvent.isBlackout)
+        if (OverallEvents.IsBlackout)
         {
             simulatedIncrease = baseIncrease + controlRodEffect;
+            // Debug.Log($"simulatedIncrease = {simulatedIncrease} | 1");
+        }
+        else if (!OverallEvents.IsBlackout)
+        {
+            simulatedIncrease = baseIncrease + controlRodEffect - fanCooling - coolantCooling;
+            // Debug.Log($"simulatedIncrease = {simulatedIncrease} | 2");
         }
         else
         {
-            simulatedIncrease = baseIncrease + controlRodEffect - fanCooling - coolantCooling;
+            simulatedIncrease = 0;
+            // Debug.Log($"simulatedIncrease = {simulatedIncrease} | 3");
         }
+
+        // Debug.Log($"controlRodEffect = {controlRodEffect}");
 
         //Debug.Log($"controlRodEffect = {controlRodEffect}");
         //Debug.Log($"simulatedIncrease = {simulatedIncrease}");
 
         temp += simulatedIncrease;
+        MathF.Round(temp, 2);
 
-        if (temp < ValueStorage.REACTOR_TMP_MAXIMUM)
+        if (temp > ValueStorage.REACTOR_TMP_MAXIMUM)
+        {
+            
+        }
+        else
         {
             tempTextUpdater.UpdateText();
+        }
+
+        if (temp < ValueStorage.REACTOR_TMP_MINIMUM)
+        {
+            temp = 0;
         }
     }
 
     private void UpdateTemperatureDynamics()
     {
         difference = temp - previousTemp;
-        float delta = difference - previousDifference;
+        float delta = difference - previousDifference; // difference's difference
 
-        if (previousTemp > temp) // if the temp is INCREASING
+        // ? - marked for
+        /*if (previousTemp > temp) // if the temp is INCREASING
         {
             ElectricityManagger.electricity -= difference / 2.5f;
-        }
+        }*/
 
         foreach (var modifier in intensityModifiers)
         {
-            if (delta >= modifier.minChange && delta < modifier.maxChange)
+            // if the tempIntensity is rising
+            if (delta >= modifier.minChange && delta < modifier.maxChange) 
             {
                 float[] controlRodValues = new float[] { ControlRod1.value, ControlRod2.value, ControlRod3.value, ControlRod4.value };
-                int choice = Random.Range(0, controlRodValues.Length);
-                tempIntensity += modifier.intensityDelta + controlRodValues[choice] / 5.5f;
-                //tempIntensity += modifier.intensityDelta + (ControlRod1.value + ControlRod2.value + ControlRod3.value + ControlRod4.value) / 5.5f;
+                int randomChoice = UnityEngine.Random.Range(0, controlRodValues.Length); // needed for the random choosing of one of the control rod's value
+
+                if (tempIntensity + (modifier.intensityDelta + controlRodValues[randomChoice]) / 5.5f <= 0) // we check so the tempIntensity doesn't go below 0
+                {
+                    tempIntensity = 0;
+                }
+                else
+                {
+                    tempIntensity += (modifier.intensityDelta + controlRodValues[randomChoice]) / 5.5f;
+                }
+
                 break;
             }
-            else if (delta <= modifier.minChange && delta < modifier.maxChange)
+
+            // if the tempIntensity is falling
+            else if (delta < modifier.minChange) 
             {
                 if (tempIntensity - modifier.intensityDelta < ValueStorage.REACTOR_TMP_MINIMUM) // if the tempIntensity would go under 0 then we round it up to 0
                 {
@@ -138,7 +157,9 @@ public class TempController : MonoBehaviour
                 }
                 break;
             }
-        }       
+        }
+
+        //Debug.Log($"difference = {difference}");
 
         previousDifference = difference;
         previousTemp = temp;

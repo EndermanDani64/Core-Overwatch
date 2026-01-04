@@ -10,7 +10,7 @@ public class GeneratorController : MonoBehaviour
     [SerializeField] private SoundSystem SoundSystem;
     [SerializeField] private PressureControl pressureControl;
     [SerializeField] private FanOverwatch FanOverwatch;
-    [SerializeField] private OverallEvents OverallEvents;
+    //[SerializeField] private OverallEvents OverallEvents;
     [SerializeField] private ShoutSystem shoutSystem;
     [SerializeField] private ElectricityManagger electricityManagger;
     [SerializeField] private BlackoutEvent blackoutEvent;
@@ -120,19 +120,21 @@ public class GeneratorController : MonoBehaviour
     /// </summary>
     public void ChangeEnergy()
     {
-        if (isGeneratorOnline && !blackoutEvent.isBlackout)
+        if (isGeneratorOnline && !OverallEvents.IsBlackout)
         {
             if (ElectricityManagger.electricity <= ValueStorage.ELECTRICITY_MAX) // && ElectricityManagger.electricity != 0
             {
-                electricityManagger.IncreaseEnergy(ValueStorage.ELECTRICITY_BASE_INCREASE_VALUE, ElectricityDecreaseValueManagger.decreaseValue);
+                electricityManagger.IncreaseElectricity(ValueStorage.ELECTRICITY_BASE_INCREASE_VALUE - ElectricityDecreaseValueManagger.decreaseValue);
+                //electricityManagger.DecreaseElectricity(ElectricityDecreaseValueManagger.decreaseValue);
 
                 isDecresing = false;
             }
         }
 
-        if (isGeneratorOnline && blackoutEvent.isBlackout)
+        if (isGeneratorOnline && OverallEvents.IsBlackout)
         {
-            electricityManagger.DecreaseElectricityBlackout();
+            electricityManagger.IncreaseElectricity(ValueStorage.ELECTRICITY_BASE_INCREASE_VALUE - ElectricityDecreaseValueManagger.decreaseValue);
+            // electricityManagger.DecreaseElectricity(ValueStorage.ELECTRICITY_BLACKOUT_DECREASE);
 
             Debug.Log($"decreaseEnergy.decreaseValue = {ElectricityDecreaseValueManagger.decreaseValue}");
 
@@ -149,7 +151,7 @@ public class GeneratorController : MonoBehaviour
         if (!isGeneratorOnline)
         {
             StartCoroutine(SendOutShoutMessage("Watch the decreasing energy levels."));
-            electricityManagger.DecreaseElectricityOffline(ElectricityDecreaseValueManagger.decreaseValue);
+            electricityManagger.DecreaseElectricity(ElectricityDecreaseValueManagger.decreaseValue * 1.5f);
             Debug.Log($"decreaseEnergy.decreaseValue = {ElectricityDecreaseValueManagger.decreaseValue}");
 
             if (ElectricityManagger.electricity <= 0)
@@ -163,11 +165,11 @@ public class GeneratorController : MonoBehaviour
             //previousGeneratorStatus = false;
         }
 
-        if (!isGeneratorOnline && blackoutEvent.isBlackout)
+        if (!isGeneratorOnline && OverallEvents.IsBlackout)
         {
-            electricityManagger.DecreaseElectricityBlackout();
+            electricityManagger.DecreaseElectricity(ValueStorage.ELECTRICITY_BLACKOUT_DECREASE);
             StartCoroutine(SendOutShoutMessage("Watch the decreasing energy levels."));
-            electricityManagger.DecreaseElectricityOffline(ElectricityDecreaseValueManagger.decreaseValue);
+            electricityManagger.DecreaseElectricity(ElectricityDecreaseValueManagger.decreaseValue * 1.5f);
             Debug.Log($"decreaseEnergy.decreaseValue = {ElectricityDecreaseValueManagger.decreaseValue}");
 
             Debug.Log($"decreaseEnergy.decreaseValue = {ElectricityDecreaseValueManagger.decreaseValue}");

@@ -19,7 +19,7 @@ public class ContinousManager : MonoBehaviour
 
     private void Start()
     {
-        StartCoroutine(SecondsTrigger_E05());
+        // StartCoroutine(SecondsTrigger_E05());
         StartCoroutine(SecondsTrigger_E1());
         StartCoroutine(SecondsTrigger_E2());
         StartCoroutine(SecondsTrigger_E25());
@@ -34,11 +34,7 @@ public class ContinousManager : MonoBehaviour
     {
         while (true)
         {
-            if (tempController.isOnline)
-            {
-                tempController.TemperatureLoop();
-            }
-            valueStorage.UpdateValue("COOLANT_SUPPLY_DECREASE", Convert.ToInt32(coolantInjectionSlider.value));
+            
             yield return new WaitForSeconds(.5f);
         }
     }
@@ -47,14 +43,14 @@ public class ContinousManager : MonoBehaviour
     /// Runs every contained functions in a 1 second delay.
     /// </summary>
     /// <returns></returns>
-    public IEnumerator SecondsTrigger_E1() // E1 = every 1 sec
+    public IEnumerator SecondsTrigger_E1()
     {
         while (true)
         {
             electricityDValueManagger.DValueUpdate();
             scoreManager.CheckPossibleScores();
             yield return new WaitForSeconds(1);
-            generatorController.ChangeEnergy();
+            // generatorController.ChangeEnergy();
         }
     }
 
@@ -62,20 +58,25 @@ public class ContinousManager : MonoBehaviour
     /// Runs every contained functions in a 2 second delay.
     /// </summary>
     /// <returns></returns>
-    public IEnumerator SecondsTrigger_E2() // E25 = every 2.5 sec
+    public IEnumerator SecondsTrigger_E2()
     {
         while (true)
         {
-            
+            if (tempController.isOnline)
+            {
+                tempController.TemperatureLoop();
+            }
+            valueStorage.UpdateValue("COOLANT_SUPPLY_DECREASE", Convert.ToInt32(coolantInjectionSlider.value));
             yield return new WaitForSeconds(2f);
+            generatorController.ChangeEnergy();
         }
     }
 
     /// <summary>
-    /// Runs every contained functions in a 2.25 second delay.
+    /// Runs every contained functions in a 2.5 second delay.
     /// </summary>
     /// <returns></returns>
-    public IEnumerator SecondsTrigger_E25() // E25 = every 2.5 sec
+    public IEnumerator SecondsTrigger_E25()
     {
         while (true)
         {
@@ -92,13 +93,13 @@ public class ContinousManager : MonoBehaviour
     /// Runs every contained functions in a 60 second delay.
     /// </summary>
     /// <returns></returns>
-    public IEnumerator SecondsTrigger_E60() // E60 = every 60 sec
+    public IEnumerator SecondsTrigger_E60()
     {
         while (true)
         {
             if (PressureControl.isPressurized)
             {
-                randomInt = UnityEngine.Random.Range(0, 10);
+                randomInt = UnityEngine.Random.Range(0, 5);
                 if (randomInt == 1)
                 {
                     fixables.DamageRandomFixable();

@@ -34,7 +34,7 @@ public class ElectricityDecreaseValueManagger : MonoBehaviour
             decreaseList[2] = 0;
         }
 
-        if (!BlackoutEvent.isBlackout) // light
+        if (!OverallEvents.IsBlackout) // light
         {
             decreaseList[3] = ValueStorage.ELECTRICITY_LIGHTCOST;
         }

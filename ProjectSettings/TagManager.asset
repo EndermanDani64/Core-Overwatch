@@ -14,6 +14,9 @@ TagManager:
   - Fixable
   - HazmatSuit
   - FixablePipe
+  - CeilingLight
+  - ElevatorButton
+  - ElevatorButton_Nav
   layers:
   - Default
   - TransparentFX

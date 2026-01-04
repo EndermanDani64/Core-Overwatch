@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using UnityEditorInternal;
 using UnityEngine;
 
 public class ValueStorage : MonoBehaviour
@@ -10,6 +9,9 @@ public class ValueStorage : MonoBehaviour
      The game is running on these default values, if you wish to modify these values you should make a backup.
      */
 
+    [Header("Map Values")]
+    [SerializeField] public static float MAP_DEFAULT_LIGHT_INTENSITY = 25.05f;
+
     [Header("Scoreing Values")]
     [SerializeField] public static int SCORE_COOLANTSUPPLYLEVEL_ADD = 45; // i want to rename these
     [SerializeField] public static int SCORE_COOLANTSUPPLYLEVEL_SUBTRACT = 15;
@@ -17,8 +19,9 @@ public class ValueStorage : MonoBehaviour
 
     [Header("MAX Values")]
     [SerializeField] public static int ELECTRICITY_MAX = 250; // 150
+    [SerializeField] public static int EGRID_MAX_CAPACITY = 1250;
     [SerializeField] public static int REACTOR_TMP_MELTINGPOINT = 4000;
-    [SerializeField] public static int REACTOR_PS_PRESSURIZED = 2000; 
+    [SerializeField] public static int REACTOR_PS_PRESSURIZED = 50;  // 250, 800
     [SerializeField] public static int REACTOR_PS_MAX = 2000;
 
     [SerializeField] public static int PLAYER_HEALTH_MAX = 100;
@@ -40,6 +43,8 @@ public class ValueStorage : MonoBehaviour
     [SerializeField] public static int COOLANT_SUPPLY_ADD = 20;
 
     [SerializeField] public static int ELECTRICITY_BASE_INCREASE_VALUE = 15; // 2
+    [SerializeField] public static int ELECTRICITY_TEMP_INCREASE_MIN_VALUE = 0; 
+    [SerializeField] public static int ELECTRICITY_TEMP_INCREASE_MAX_VALUE = 100;
 
     [Header("Time Values")]
     [SerializeField] public static float TIME_FIXABLE_TIMETOFIX = 3f;
@@ -56,6 +61,12 @@ public class ValueStorage : MonoBehaviour
     [SerializeField] public static float PLAYER_SPEED_HAZMAT = 6f;
     [SerializeField] public static float PLAYER_SPEED_HAZMAT_SPRINT = 10f;
 
+    [SerializeField] public static float STAMINA_NAKED_WALK_DECREASE_MULTIPLIER = 8f;
+    [SerializeField] public static float STAMINA_HAZMAT_SPRINT_DECREASE_MULTIPLIER = 15f;
+    [SerializeField] public static float STAMINA_NAKED_REGEN_MULTIPLIER = 5f;
+    [SerializeField] public static float STAMINA_HAZMAT_REGEN_MULTIPLIER = 5f;
+    
+
     [Header("Extra Values")]
     [SerializeField] public static int REACTOR_TMP_MINIMUM = 0;
     [SerializeField] public static int REACTOR_TMP_MAXIMUM = 69420;
@@ -63,9 +74,11 @@ public class ValueStorage : MonoBehaviour
     [SerializeField] public static int REACTOR_TMP_RANDOM_DELAY_MAX = 12; // the maximum delay time in seconds that can be randomly chosen
     [SerializeField] public static int ELECTRICITY_MINIMUM = 0; //0
 
+    [Header("Valid Event Ids")]
+    [SerializeField] public static List<string> VALID_EVENT_IDS = new List<string>() { "meltdown", "blackout", "overflow", "overflowWait" };
+
     [Header("Custom Game Reactor Values")]
     [SerializeField] public static float REACTOR_TMP_DELTA = 2.5f;
-
 
     public static void ResetValues()
     {

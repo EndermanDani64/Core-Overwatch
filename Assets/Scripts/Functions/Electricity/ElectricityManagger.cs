@@ -1,5 +1,5 @@
+using System.IO;
 using UnityEngine;
-using static UnityEngine.Rendering.DebugUI;
 
 public class ElectricityManagger : MonoBehaviour
 {
@@ -10,6 +10,7 @@ public class ElectricityManagger : MonoBehaviour
     [SerializeField] private GeneratorController generatorController;
     [SerializeField] private EnergyTextUpdater energyTextUpdater;
     [SerializeField] private TempController tempController;
+    [SerializeField] private OverallEvents overallEvents;
 
     [Header("Variables")]
     [SerializeField] public static float electricity = ValueStorage.ELECTRICITY_MAX; // ValueStorage.ELECTRICITY_MAX
@@ -34,9 +35,9 @@ public class ElectricityManagger : MonoBehaviour
     public const int fanCost = 1; // 4
     [Space]
     public bool isCoolantFlowOnline = true; // 5
-    public const int coolantFlowCost = 3;*/
+    public const int coolantFlowCost = 3;
 
-    /*private bool did1Check = false;
+    private bool did1Check = false;
     private bool did2Check = false;
     private bool did3Check = false;
     private bool did4Check = false;
@@ -44,84 +45,44 @@ public class ElectricityManagger : MonoBehaviour
     private int lastFanCount = 0;*/
 
     public bool enoughEnergy = true;
-    /*private void Start()
-    {
-        if (areLightsOnline && !did1Check)
-        {
-            usageLevel += lightsCost;
-            did1Check = true;
-        }
-        else if (!areLightsOnline && did1Check)
-        {
-            did1Check = !did1Check;
-        }
-        if (areDisplaysOnline && !did2Check)
-        {
-            usageLevel += displaysCost;
-            did2Check = true;
-        }
-        else if (!areDoorsOnline && did2Check)
-        {
-            did2Check = !did2Check;
-        }
-        if (areDoorsOnline && !did3Check)
-        {
-            usageLevel += doorsCost;
-            did3Check = true;
-        }
-        else if (!areDoorsOnline && did3Check)
-        {
-            did3Check = !did3Check;
-        }
-        if (isCoolantFlowOnline && !did4Check)
-        {
-            usageLevel += coolantFlowCost;
-            did4Check = true;
-        }
-        else if (!isCoolantFlowOnline && did4Check)
-        {
-            did4Check = !did4Check;
-        }
-        if (fanOverwatch.FanAmountOnline > 0 && !did5Check)
-        {
-            usageLevel += fanCost * fanOverwatch.FanAmountOnline;
-            lastFanCount = fanOverwatch.FanAmountOnline;
-            did5Check = true;
-        }
-        else if (fanOverwatch.FanAmountOnline < lastFanCount && did5Check)
-        {
-            did5Check = !did5Check;
-        }
-    }*/
+
+    public float usage = 0f;
 
     public bool isDepletedEnergy = false;
     private float previousElectricity = 0;
-    private int cooldown = 10;
+    // private int cooldown = 10; ???
 
-    public void IncreaseEnergy(float value, float decreaseValue) // here, we decrease as well
+    /// <summary>
+    /// Function for increasing the electricity on a specific increasing rate.
+    /// </summary>
+    /// <param name="value">The rate of electricity increase.</param>
+    /// <param name="multiplier">The rate of electricity increasing's multiplier.</param>
+    public void IncreaseElectricity(float value, float multiplier = 1f)
     {
-        value -= decreaseValue;
-        //Debug.LogWarning($"decreaseValue = {decreaseValue} | value = {value}");
-        if (cooldown > 0)
+        /*if (cooldown > 0) ???
         {
-            cooldown -= 1;
-        }
-        float electricityCheck = electricity + value;
+            cooldown -= 1; ???
+        }*/
 
-        if (electricityCheck <= ValueStorage.ELECTRICITY_MAX && electricityCheck > ValueStorage.ELECTRICITY_MINIMUM)
+        // electricity + (value * multiplier) = checking if the modification isn't going to be unnatural
+        if (electricity + (value * multiplier) < ValueStorage.ELECTRICITY_MAX && electricity + (value * multiplier) > ValueStorage.ELECTRICITY_MINIMUM)
         {
-            electricity += value;
+            electricity += value * multiplier;
             energyTextUpdater.textUpdate();
 
-            if (isDepletedEnergy && previousElectricity <= ValueStorage.ELECTRICITY_MINIMUM && electricityCheck >= 10)
+            // Debug.Log($"isDepletedEnergy = {isDepletedEnergy} | previousElectricity > ValueStorage.ELECTRICITY_MINIMUM = {previousElectricity > ValueStorage.ELECTRICITY_MINIMUM}");
+            // Debug.Log($"isDepletedEnergy whole = {isDepletedEnergy && previousElectricity > ValueStorage.ELECTRICITY_MINIMUM}");
+
+            if (isDepletedEnergy && previousElectricity > ValueStorage.ELECTRICITY_MINIMUM)
             {
+                Debug.Log("nice");
                 isDepletedEnergy = false;
                 RestoreEnergy();
             }
         }
-        else if (electricityCheck <= ValueStorage.ELECTRICITY_MINIMUM && !isDepletedEnergy && cooldown == 0)
+        else if (electricity + (value * multiplier) <= ValueStorage.ELECTRICITY_MINIMUM && !isDepletedEnergy /*??? && cooldown == 0 ???*/)
         {
-            //Debug.LogWarning("1");
+            Debug.Log("not that nice");
             isDepletedEnergy = true;
             DepletedEnergy();
         }
@@ -129,34 +90,19 @@ public class ElectricityManagger : MonoBehaviour
     }
 
     /// <summary>
-    /// Increased decrease rate for the electricity when the generator is offline.
+    /// Function for decreasing the electricity on a specific decreasing rate.
     /// </summary>
-    public void DecreaseElectricityOffline(float value)
+    /// <param name="value">The rate of electricity decrease.</param>
+    /// <param name="multiplier">The rate of electricity decreasing's multiplier.</param>
+    public void DecreaseElectricity(float value, float multiplier = 1f)
     {
-        if (electricity - (value * 1.5f) > ValueStorage.ELECTRICITY_MINIMUM && !isDepletedEnergy)
+        // electricity - (value * multiplier) = checking if the modification isn't going to be unnatural
+        if (electricity - (value * multiplier) > ValueStorage.ELECTRICITY_MINIMUM)
         {
-            electricity -= value;
+            electricity -= value * multiplier;
             energyTextUpdater.textUpdate();
         }
-        else if (electricity - (value * 1.5f) <= ValueStorage.ELECTRICITY_MINIMUM && !isDepletedEnergy)
-        {
-            isDepletedEnergy = true;
-            DepletedEnergy();
-        }
-        previousElectricity = electricity;
-    }
-
-    /// <summary>
-    /// Increased decrease rate for the electricity when blackout event is active.
-    /// </summary>
-    public void DecreaseElectricityBlackout()
-    {
-        if (electricity - ValueStorage.ELECTRICITY_BLACKOUT_DECREASE > ValueStorage.ELECTRICITY_MINIMUM)
-        {
-            electricity -= ValueStorage.ELECTRICITY_BLACKOUT_DECREASE + ElectricityDecreaseValueManagger.decreaseValue;
-            energyTextUpdater.textUpdate();
-        }
-        else if (electricity - ValueStorage.ELECTRICITY_BLACKOUT_DECREASE <= ValueStorage.ELECTRICITY_MINIMUM && !isDepletedEnergy)
+        else if (electricity - (value * multiplier) <= ValueStorage.ELECTRICITY_MINIMUM && !isDepletedEnergy)
         {
             isDepletedEnergy = true;
             DepletedEnergy();
@@ -166,32 +112,20 @@ public class ElectricityManagger : MonoBehaviour
 
     private void DepletedEnergy()
     {
-        if (!tempController.isMeltdown && !blackoutEvent.isBlackout)
+        if (!tempController.isMeltdown && !OverallEvents.IsBlackout)
         {
             isDepletedEnergy = true;
             generatorController.ShutDown();
             electricity = ValueStorage.ELECTRICITY_MINIMUM;
             energyTextUpdater.textUpdate();
-            blackoutEvent.ForceBlackout();
-            shoutSystem.ShowMessage("Energy is depleted. (ElectricityManagger)");
-        }
-        else
-        {
-            isDepletedEnergy = true;
-            generatorController.ShutDown();
-            electricity = ValueStorage.ELECTRICITY_MINIMUM;
-            energyTextUpdater.textUpdate();
-            blackoutEvent.ForceLightsOut();
+            overallEvents.PlayEvent("blackout");
+            shoutSystem.ShowMessage("Energy is depleted. Generator has shut down!");
         }
     }
 
     public void RestoreEnergy()
     {
-        if (isDepletedEnergy)
-        {
-            isDepletedEnergy = false;
-            blackoutEvent.ForceStop();
-            shoutSystem.HideMessage();
-        }
+        blackoutEvent.ForceStop();
+        shoutSystem.HideMessage();
     }
 }

@@ -25,26 +25,26 @@ public class LightSystem : MonoBehaviour
             GetComponent<LensFlareComponentSRP>().intensity = 1;
             transform.Rotate(rotation * speed * Time.deltaTime);
         }
-        else if (BlackoutEvent.isBlackout)
+        else if (OverallEvents.IsBlackout)
         {
             GetComponent<Light>().color = Color.yellow;
             GetComponent<Light>().enabled = true;
             GetComponent<LensFlareComponentSRP>().intensity = 1;
             transform.Rotate(rotation * speed * Time.deltaTime);
         }
-        else if (!BlackoutEvent.isBlackout)
+        else if (!OverallEvents.IsBlackout)
         {
             GetComponent<Light>().enabled = false;
             GetComponent<LensFlareComponentSRP>().intensity = 0;
         }
-        else if (OverflowEvent.IsOverflowEvent)
+        else if (OverallEvents.IsOverflow)
         {
             GetComponent<Light>().color = Color.yellow;
             GetComponent<Light>().enabled = true;
             GetComponent<LensFlareComponentSRP>().intensity = 1;
             transform.Rotate(rotation * speed * Time.deltaTime);
         }
-        else if (!OverflowEvent.IsOverflowEvent)
+        else if (!OverallEvents.IsOverflow)
         {
             GetComponent<Light>().enabled = false;
             GetComponent<LensFlareComponentSRP>().intensity = 0;

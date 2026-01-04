@@ -11,6 +11,10 @@ public class ButtonDoor : MonoBehaviour
     [SerializeField] private Transform PointA; // Closed position
     [SerializeField] private Transform PointB; // Open position
 
+    [Space]
+
+    [SerializeField] private ElectricityManagger electricityManagger;
+
     public float speed = 2f;
     private bool isOpen = false;
     private bool isMoving = false;
@@ -44,6 +48,7 @@ public class ButtonDoor : MonoBehaviour
     private IEnumerator MoveDoor(Vector3 targetPosition)
     {
         isMoving = true;
+        //electricityManagger.usage += 
 
         if (isOpen)
         {
@@ -54,7 +59,6 @@ public class ButtonDoor : MonoBehaviour
                 {
                     break;
                 }
-                //Debug.Log($"opening, Distance = {Vector3.Distance(Door.position, PointB.position)}, isOpen = {isOpen}");
                 yield return null;
             }
         }
@@ -72,9 +76,6 @@ public class ButtonDoor : MonoBehaviour
             }
         }
 
-        Debug.Log("Exited");
-
-        //Door.position = targetPosition;
         isOpen = !isOpen;
         isMoving = false;
 

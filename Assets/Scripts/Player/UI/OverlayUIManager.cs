@@ -9,7 +9,7 @@ public class OverlayUIManager : MonoBehaviour
     [SerializeField] private Canvas PauseMenuCanvas;
     [SerializeField] private Canvas DeveloperMenuCanvas;
     [SerializeField] private Canvas OptionsCanvas;
-    [SerializeField] private Movement Player;
+    [SerializeField] private Movment Player;
     [SerializeField] private Camera Camera;
     [SerializeField] private EventSystem EventSystem;
     [SerializeField] private AudioSource audioSource;
