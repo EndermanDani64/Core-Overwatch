@@ -66,7 +66,6 @@ public class Fixables : MonoBehaviour
     /// <summary>
     /// Damages a random Fixable at a random time if called from ContinousManager.cs
     /// </summary>
-
     public void DamageRandomFixable()
     {
         int randomEvent = Random.Range(45, 45); // should be defined in ValueStorage for different scenarios

@@ -3,12 +3,15 @@ using UnityEngine;
 
 public class ValueStorage : MonoBehaviour
 {
-    public List<int> occupiedIDs = new List<int>();
     /*
-     This is the storage for most of the values.
+       <------------------------------------------------!!!------------------------------------------------>
+                                  This is the storage for most of the values.
      The game is running on these default values, if you wish to modify these values you should make a backup.
+       <------------------------------------------------!!!------------------------------------------------>
      */
 
+    public List<int> occupiedIDs = new List<int>();
+    
     [Header("Map Values")]
     [SerializeField] public static float MAP_DEFAULT_LIGHT_INTENSITY = 25.05f;
 
@@ -18,10 +21,10 @@ public class ValueStorage : MonoBehaviour
     [SerializeField] public static int SCORE_WORKSHIFT_END = 500;
 
     [Header("MAX Values")]
-    [SerializeField] public static int ELECTRICITY_MAX = 250; // 150
+    [SerializeField] public static int ELECTRICITY_MAX = 250;
     [SerializeField] public static int EGRID_MAX_CAPACITY = 1250;
-    [SerializeField] public static int REACTOR_TMP_MELTINGPOINT = 4000;
-    [SerializeField] public static int REACTOR_PS_PRESSURIZED = 50;  // 250, 800
+    [SerializeField] public static int REACTOR_TMP_MELTINGPOINT = 250;
+    [SerializeField] public static int REACTOR_PS_PRESSURIZED = 800; // 250 or 800
     [SerializeField] public static int REACTOR_PS_MAX = 2000;
 
     [SerializeField] public static int PLAYER_HEALTH_MAX = 100;

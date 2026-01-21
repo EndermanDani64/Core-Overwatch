@@ -11,7 +11,6 @@ public class ContinousManager : MonoBehaviour
     [SerializeField] public GeneratorController generatorController;
     [SerializeField] private TempController tempController;
     [SerializeField] public ScoreManager scoreManager;
-    [SerializeField] private Fixables fixables;
     [SerializeField] private OverflowEvent overflowEvent; 
 
     [Header("UI")]
@@ -23,7 +22,7 @@ public class ContinousManager : MonoBehaviour
         StartCoroutine(SecondsTrigger_E1());
         StartCoroutine(SecondsTrigger_E2());
         StartCoroutine(SecondsTrigger_E25());
-        StartCoroutine(SecondsTrigger_E60());
+        // StartCoroutine(SecondsTrigger_E60());
     }
 
     /// <summary>
@@ -97,14 +96,6 @@ public class ContinousManager : MonoBehaviour
     {
         while (true)
         {
-            if (PressureControl.isPressurized)
-            {
-                randomInt = UnityEngine.Random.Range(0, 5);
-                if (randomInt == 1)
-                {
-                    fixables.DamageRandomFixable();
-                }
-            }
             yield return new WaitForSeconds(60f);
         }
     }

@@ -86,7 +86,7 @@ public class TempController : MonoBehaviour
         }
         else
         {
-            simulatedIncrease = 0;
+            simulatedIncrease = 0f;
             // Debug.Log($"simulatedIncrease = {simulatedIncrease} | 3");
         }
 

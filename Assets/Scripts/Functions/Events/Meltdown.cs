@@ -136,15 +136,17 @@ public class Meltdown : MonoBehaviour
 
     public void StopMeltdown()
     {
-        TempController.temp = 0; // 3000
+        TempController.temp = 0;
         tempController.isError = false;
         PressureControl.isPressurized = false;
         PressureControl.isError = false;
         PressureControl.pressure = 250;
+
         foreach (var alarmPanel in allAlarms)
         {
             alarmPanel.StopAlarm();
         }
+
         StopCoroutine(CoreShockWaves());
         StopCoroutine(MeltdownEvent());
         //source.PlayOneShot(successECoolant);

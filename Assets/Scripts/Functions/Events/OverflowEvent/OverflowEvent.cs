@@ -13,6 +13,7 @@ public class OverflowEvent : MonoBehaviour
     [SerializeField] private AudioSource audioSource;
     [SerializeField] private AudioClip musicClip;
     [SerializeField] private OverallEvents overallEvents;
+    [SerializeField] private Fixables fixables;
 
     public float speed = 0f; // 1 piece of dp. adds to the speed +.36f
 
@@ -44,7 +45,7 @@ public class OverflowEvent : MonoBehaviour
         {
             if (randomWaitTime == -1)
             {
-                randomWaitTime = Random.Range(20, 25); // 80, 360
+                randomWaitTime = Random.Range(80, 360); // 80, 360
                 Debug.Log($"Selected time for OverflowEvent = {randomWaitTime}");
             }
 

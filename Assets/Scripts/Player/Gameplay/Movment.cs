@@ -48,7 +48,7 @@ public class Movment : MonoBehaviour
 
     void UpdateMouse()
     {
-        Vector2 targetMouseDelta = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
+        Vector2 targetMouseDelta = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y")); // were the player is looking at
 
         currentMouseDelta = Vector2.SmoothDamp(currentMouseDelta, targetMouseDelta, ref currentMouseDeltaVelocity, mouseSmoothTime);
 
@@ -65,7 +65,7 @@ public class Movment : MonoBehaviour
     {
         isGrounded = Physics.CheckSphere(groundCheck.position, 0.2f, ground);
 
-        Vector2 targetDir = new Vector2( // ee
+        Vector2 targetDir = new Vector2( 
             Input.GetAxisRaw("Horizontal"),
             Input.GetAxisRaw("Vertical")
         );

@@ -45,21 +45,22 @@ public class PressureControl : MonoBehaviour
             {
                 float pressureIncrease = 0;
 
-                float basePressureChange = (TempController.temp / 4000f) * 100f; // alap érték a nyomás növeléséhez temp alapján
+                float basePressureChange = (TempController.temp / 4000f) * 85f; // alap érték a nyomás növeléséhez temp alapján
 
                 float coolantEffect = coolantInjector.value * 1.0f; // coolant folyadék bejuttatása alapján a nyomás csökkentése
 
                 // float randomness = UnityEngine.Random.Range(-1.5f, 1.5f); // véletlen szórás a rendszer "instabilitására"
 
-                float valveFactor = Mathf.Lerp(1.0f, 0.3f, ValveOverwatch.valveAmountOpen / 5f); // nyomás csökkentés nyitott szelepek alapján
+                float valveFactor = Mathf.Lerp(1f, -1f, ValveOverwatch.valveAmountOpen / 5f); // nyomás csökkentés nyitott szelepek alapján
+                Debug.Log($"valveFactor = {valveFactor}");
 
                 /* 
                     0 szelep = 1.0 (teljes nyomás növekedés),
-                    5 szelep = 0.3 (70% csökkentő hatás)
+                    5 szelep = -1 (70% csökkentő hatás)
                 */
 
                 float targetPressureChange = (basePressureChange - coolantEffect /*+ randomness*/) * valveFactor;
-                pressureIncrease = Mathf.Lerp(pressureIncrease, targetPressureChange, Time.deltaTime * 3f) * 100; // "sima" változás
+                pressureIncrease = Mathf.Lerp(0, targetPressureChange, Time.deltaTime * 3f) * 100; // "sima" változás
 
                 MathF.Round(pressureIncrease, 2);
                 pressure += pressureIncrease;
