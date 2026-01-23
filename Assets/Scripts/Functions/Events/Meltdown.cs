@@ -129,6 +129,8 @@ public class Meltdown : MonoBehaviour
             BlackoutEvent.ForceBlackout();
 
             yield return new WaitForSeconds(521.65f);
+            StopMeltdown();
+
             Debug.Log("Loading MainMenuScene...");
             SceneManager.LoadScene("MainMenuScene");
         }
