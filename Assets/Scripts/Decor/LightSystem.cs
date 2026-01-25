@@ -45,5 +45,4 @@ public class LightSystem : MonoBehaviour
             GetComponent<LensFlareComponentSRP>().intensity = 0;
         }
     }
-
 }
