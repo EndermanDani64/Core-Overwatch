@@ -1,8 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
-
-public class ContinousManager : MonoBehaviour
+public class GameTimeManager : MonoBehaviour
 {
     [Header("Scripts that contains the functions")]
     [SerializeField] private SupplyDeposit supplyDeposit;

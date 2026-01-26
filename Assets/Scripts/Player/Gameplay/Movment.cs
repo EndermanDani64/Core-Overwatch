@@ -54,7 +54,7 @@ public class Movment : MonoBehaviour
 
         cameraCap -= currentMouseDelta.y * mouseSensitivity;
 
-        cameraCap = Mathf.Clamp(cameraCap, -90.0f, 90.0f);
+        cameraCap = Mathf.Clamp(cameraCap, -55.0f, 55.0f);
 
         playerCamera.localEulerAngles = Vector3.right * cameraCap;
 

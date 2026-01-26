@@ -4,37 +4,6 @@ using System;
 
 public class TempController : MonoBehaviour
 {
-    [Header("Important scripts")]
-    [SerializeField] private SoundSystem SoundSystem;
-    [SerializeField] private PressureControl pressureControl;
-    [SerializeField] private OverallEvents OverallEvents;
-    [SerializeField] private BlackoutEvent blackoutEvent;
-    //[SerializeField] private ElectricityManagger ElectricityManagger;
-    [SerializeField] private SupplyDeposit supplyDeposit;
-
-    [Header("UI")]
-    [SerializeField] private UnityEngine.UI.Slider ControlRod1;
-    [SerializeField] private UnityEngine.UI.Slider ControlRod2;
-    [SerializeField] private UnityEngine.UI.Slider ControlRod3;
-    [SerializeField] private UnityEngine.UI.Slider ControlRod4;
-    [SerializeField] private UnityEngine.UI.Button startupButton;
-    [SerializeField] private TempTextUpdater tempTextUpdater;
-    [SerializeField] private UnityEngine.UI.Slider coolantInjectionSlider;
-    
-
-    [Header("Important variables")]
-    public bool isOnline = false;
-    public bool isError = false;
-    public bool isMeltdown = false;
-
-    public static float temp;
-    public static float tempIntensity = 0.2f;
-
-    // temp modifing values
-    private float previousTemp;
-    private float difference;
-    private float previousDifference;
-
     [System.Serializable]
     public class TempIntensityModifier
     {
@@ -42,9 +11,6 @@ public class TempController : MonoBehaviour
         public float maxChange;
         public float intensityDelta;
     }
-
-    [SerializeField] private List<TempIntensityModifier> intensityModifiers;
-
 
     /// <summary>
     /// Modifies the temp with all the other influential values
@@ -77,23 +43,15 @@ public class TempController : MonoBehaviour
         if (OverallEvents.IsBlackout)
         {
             simulatedIncrease = baseIncrease + controlRodEffect;
-            // Debug.Log($"simulatedIncrease = {simulatedIncrease} | 1");
         }
         else if (!OverallEvents.IsBlackout)
         {
             simulatedIncrease = baseIncrease + controlRodEffect - fanCooling - coolantCooling;
-            // Debug.Log($"simulatedIncrease = {simulatedIncrease} | 2");
         }
         else
         {
             simulatedIncrease = 0f;
-            // Debug.Log($"simulatedIncrease = {simulatedIncrease} | 3");
         }
-
-        // Debug.Log($"controlRodEffect = {controlRodEffect}");
-
-        //Debug.Log($"controlRodEffect = {controlRodEffect}");
-        //Debug.Log($"simulatedIncrease = {simulatedIncrease}");
 
         temp += simulatedIncrease;
         MathF.Round(temp, 2);
@@ -124,7 +82,7 @@ public class TempController : MonoBehaviour
             ElectricityManagger.electricity -= difference / 2.5f;
         }*/
 
-        foreach (var modifier in intensityModifiers)
+        foreach (var modifier in _intensityModifiers)
         {
             // if the tempIntensity is rising
             if (delta >= modifier.minChange && delta < modifier.maxChange) 
@@ -214,4 +172,37 @@ public class TempController : MonoBehaviour
         isError = true;
         StopAllCoroutines();
     }
+
+    [Header("Important scripts")]
+    [SerializeField] private SoundSystem SoundSystem;
+    [SerializeField] private PressureControl pressureControl;
+    [SerializeField] private OverallEvents OverallEvents;
+    [SerializeField] private BlackoutEvent blackoutEvent;
+    //[SerializeField] private ElectricityManagger ElectricityManagger;
+    [SerializeField] private SupplyDeposit supplyDeposit;
+
+    [Header("UI")]
+    [SerializeField] private UnityEngine.UI.Slider ControlRod1;
+    [SerializeField] private UnityEngine.UI.Slider ControlRod2;
+    [SerializeField] private UnityEngine.UI.Slider ControlRod3;
+    [SerializeField] private UnityEngine.UI.Slider ControlRod4;
+    [SerializeField] private UnityEngine.UI.Button startupButton;
+    [SerializeField] private TempTextUpdater tempTextUpdater;
+    [SerializeField] private UnityEngine.UI.Slider coolantInjectionSlider;
+
+
+    [Header("Important variables")]
+    public bool isOnline = false;
+    public bool isError = false;
+    public bool isMeltdown = false;
+
+    public int reactorStatus = 0;
+
+    [SerializeField] private List<TempIntensityModifier> _intensityModifiers;
+    public static float temp;
+    public static float tempIntensity = 0.2f;
+
+    private float previousTemp;
+    private float difference;
+    private float previousDifference;
 }

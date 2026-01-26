@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class TimeManager : MonoBehaviour
+public class DisplayTimeManager : MonoBehaviour
 {
     [SerializeField] ScoreManager scoreManager;
     [SerializeField] TempController tempController;
