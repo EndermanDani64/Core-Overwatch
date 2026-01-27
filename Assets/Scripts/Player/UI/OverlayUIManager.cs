@@ -26,14 +26,14 @@ public class OverlayUIManager : MonoBehaviour
 
     private void Start()
     {
-        if (Application.isPlaying)
+        /*if (Application.isPlaying)
         {
             if (!EventSystem.enabled)
                 EventSystem.enabled = true;
 
             if (!Camera.enabled)
                 Camera.enabled = true;
-        }
+        }*/
 
         PauseMenuCanvas.enabled = false;
         Time.timeScale = 1f;
@@ -69,19 +69,13 @@ public class OverlayUIManager : MonoBehaviour
             }
         }
 
-        if (isPaused)
+        /*if (isPaused)
         {
             ShowCursor();
         }
         else
         {
             HideCursor();
-        }
-        
-        /*if (cooldownFrames > 0)
-        {
-            cooldownFrames -= 1;
-            Debug.Log($"cooldownFrames = {cooldownFrames}");
         }*/
     }
 
@@ -168,6 +162,26 @@ public class OverlayUIManager : MonoBehaviour
             fpsInputModule.enabled = false;
             defaultInputModule.enabled = true;
         }
+    }
+
+    /// <summary>
+    /// Disables the movment, and shows the cursor.
+    /// </summary>
+    public void EnableDefaultInput()
+    {
+        fpsInputModule.enabled = false;
+        defaultInputModule.enabled = true;
+        Debug.Log($"fpsInputModule: {fpsInputModule.enabled} | defaultInputModule: {defaultInputModule.enabled}");
+    }
+
+    /// <summary>
+    /// Enables the movment, and hides the cursor.
+    /// </summary>
+    public void DisableDefaultInput()
+    {
+        fpsInputModule.enabled = false;
+        defaultInputModule.enabled = true;
+        Debug.Log($"fpsInputModule: {fpsInputModule.enabled} | defaultInputModule: {defaultInputModule.enabled}");
     }
 
     /// <summary>

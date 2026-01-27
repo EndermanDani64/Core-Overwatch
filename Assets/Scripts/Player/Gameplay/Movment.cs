@@ -53,6 +53,8 @@ public class Movment : MonoBehaviour
 
     private void UpdateMouse()
     {
+        // if (_camFixedY) { return; }
+
         if (!_camFixedY)
         {
 
@@ -70,7 +72,7 @@ public class Movment : MonoBehaviour
         }
         else
         {
-            Vector2 targetMouseDelta = new Vector2(Input.GetAxis("Mouse X"), 0f);
+            Vector2 targetMouseDelta = new Vector2(0f, 0f);
 
             currentMouseDelta = Vector2.SmoothDamp(currentMouseDelta, targetMouseDelta, ref currentMouseDeltaVelocity, mouseSmoothTime);
 
@@ -78,7 +80,7 @@ public class Movment : MonoBehaviour
 
             playerCamera.localEulerAngles = Vector3.right * _cameraPitch;
 
-            transform.Rotate(Vector3.up * currentMouseDelta.x * mouseSensitivity);
+            transform.Rotate(Vector3.up * 0f * mouseSensitivity);
         }
     }
 
