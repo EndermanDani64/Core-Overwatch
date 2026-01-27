@@ -15,6 +15,8 @@ public class Movment : MonoBehaviour
     [SerializeField] Transform groundCheck;
     [SerializeField] LayerMask ground;
 
+    private bool _camFixedY = false;
+
     public float Stamina = 100f;
     [SerializeField] private TextMeshProUGUI StaminaText;
 
@@ -22,7 +24,10 @@ public class Movment : MonoBehaviour
     float velocityY;
     bool isGrounded;
 
-    float cameraCap;
+    float _cameraPitch;
+    float _cameraPitchVelocity;
+    [SerializeField] float _smoothTime = 0.15f;
+    float _tabletTargetPitch = 0f;
     Vector2 currentMouseDelta;
     Vector2 currentMouseDeltaVelocity;
 
@@ -46,22 +51,48 @@ public class Movment : MonoBehaviour
         }
     }
 
-    void UpdateMouse()
+    private void UpdateMouse()
     {
-        Vector2 targetMouseDelta = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y")); // were the player is looking at
+        if (!_camFixedY)
+        {
 
-        currentMouseDelta = Vector2.SmoothDamp(currentMouseDelta, targetMouseDelta, ref currentMouseDeltaVelocity, mouseSmoothTime);
+            Vector2 targetMouseDelta = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y")); // were the player is looking at
 
-        cameraCap -= currentMouseDelta.y * mouseSensitivity;
+            currentMouseDelta = Vector2.SmoothDamp(currentMouseDelta, targetMouseDelta, ref currentMouseDeltaVelocity, mouseSmoothTime);
 
-        cameraCap = Mathf.Clamp(cameraCap, -55.0f, 55.0f);
+            _cameraPitch -= currentMouseDelta.y * mouseSensitivity;
 
-        playerCamera.localEulerAngles = Vector3.right * cameraCap;
+            _cameraPitch = Mathf.Clamp(_cameraPitch, -55.0f, 55.0f);
 
-        transform.Rotate(Vector3.up * currentMouseDelta.x * mouseSensitivity);
+            playerCamera.localEulerAngles = Vector3.right * _cameraPitch;
+
+            transform.Rotate(Vector3.up * currentMouseDelta.x * mouseSensitivity);
+        }
+        else
+        {
+            Vector2 targetMouseDelta = new Vector2(Input.GetAxis("Mouse X"), 0f);
+
+            currentMouseDelta = Vector2.SmoothDamp(currentMouseDelta, targetMouseDelta, ref currentMouseDeltaVelocity, mouseSmoothTime);
+
+            _cameraPitch = Mathf.SmoothDamp(_cameraPitch, _tabletTargetPitch, ref _cameraPitchVelocity, _smoothTime);
+
+            playerCamera.localEulerAngles = Vector3.right * _cameraPitch;
+
+            transform.Rotate(Vector3.up * currentMouseDelta.x * mouseSensitivity);
+        }
     }
 
-    void UpdateMove()
+    public void FixMouseY()
+    {
+        _camFixedY = true;
+    }
+
+    public void ReleaseMouseY()
+    {
+        _camFixedY = false;
+    }
+
+    private void UpdateMove()
     {
         isGrounded = Physics.CheckSphere(groundCheck.position, 0.2f, ground);
 
@@ -92,7 +123,7 @@ public class Movment : MonoBehaviour
 
     [SerializeField] public float targetSpeed = ValueStorage.PLAYER_SPEED_NAKED; // alap sebesség
     int lastDisplayedStamina = -1;
-    void HandleStamina()
+    private void HandleStamina()
     {
         if (Input.GetKey(KeyCode.LeftShift) && !HazmatSuit.isHazmat && Stamina > 0 && isGrounded) // regular sprint
         {
