@@ -3,16 +3,6 @@ using TMPro;
 
 public class ScoreManager : MonoBehaviour
 {
-    [SerializeField] public static int score = 0;
-    [SerializeField] public TMP_Text scoreText;
-    [SerializeField] public TMP_Text scoreTextExtra;
-    [SerializeField] public Animator scoreTextAnimator;
-    [SerializeField] public TMP_Text scoreWorkshiftTextExtra;
-    [SerializeField] public Animator scoreWorkshiftTextAnimator;
-
-    [SerializeField] public TempController tempController;
-    [SerializeField] AudioSource source;
-    [SerializeField] public AudioClip workshift_end_funny_Audio;
     void Start()
     {
         //PlayerPrefs.GetInt("HighScore");
@@ -26,8 +16,6 @@ public class ScoreManager : MonoBehaviour
         source.PlayOneShot(workshift_end_funny_Audio);
     }
 
-    private int scoreAdd;
-
     /// <summary>
     /// Checks for all avalible score points that can be added by scoring rules.
     /// </summary>
@@ -35,59 +23,84 @@ public class ScoreManager : MonoBehaviour
     {
         if (SupplyDeposit.supplyedValue > 60 && tempController.isOnline && !tempController.isMeltdown)
         {
-            scoreAdd += ValueStorage.SCORE_COOLANTSUPPLYLEVEL_ADD;
+            _scoreIncome += ValueStorage.SCORE_COOLANTSUPPLYLEVEL_ADD;
         }
         else if (SupplyDeposit.supplyedValue < 60 && tempController.isOnline && !tempController.isMeltdown)
         {
-            scoreAdd -= ValueStorage.SCORE_COOLANTSUPPLYLEVEL_SUBTRACT;
+            _scoreIncome -= ValueStorage.SCORE_COOLANTSUPPLYLEVEL_SUBTRACT;
         }
 
         //Debug.Log($"500 < TempController.temp && TempController.temp > 1000 = {500 < TempController.temp && TempController.temp > 1000}");
 
         if (500 < TempController.temp && TempController.temp < 1000 && tempController.isOnline && !tempController.isMeltdown)
         {
-            scoreAdd += 2;
+            _scoreIncome += 2;
         }
         else if (1000 < TempController.temp && TempController.temp < 1350 && tempController.isOnline && !tempController.isMeltdown)
         {
-            scoreAdd += 6;
+            _scoreIncome += 6;
         }
         else if (1350 < TempController.temp && TempController.temp < 1800 && tempController.isOnline && !tempController.isMeltdown)
         {
-            scoreAdd += 3;
+            _scoreIncome += 3;
         }
         else if (1800 < TempController.temp && TempController.temp < 2000 && tempController.isOnline && !tempController.isMeltdown)
         {
-            scoreAdd += 2;
+            _scoreIncome += 2;
         }
         else if (2000 < TempController.temp && TempController.temp < 3000 && tempController.isOnline && !tempController.isMeltdown)
         {
-            scoreAdd += 1;
+            _scoreIncome += 1;
         }   
         else if (3350 < TempController.temp && TempController.temp < 3600 && tempController.isOnline && !tempController.isMeltdown)
         {
-            scoreAdd += -3;
+            _scoreIncome += -3;
         }
         else if (3600 < TempController.temp && TempController.temp < 4000 && tempController.isOnline && !tempController.isMeltdown)
         {
-            scoreAdd += -6;
+            _scoreIncome += -6;
         }
 
-        score += scoreAdd;
-        if (scoreAdd > 0)
+        score += _scoreIncome;
+
+        if (_scoreIncome > 0)
         {
             scoreTextExtra.color = Color.green;
-            scoreTextExtra.text = $"+{scoreAdd}";
+            scoreTextExtra.text = $"+{_scoreIncome}";
             scoreTextAnimator.Play("ScoreAddAnimation", 0, 0f);
         }
-        else if (scoreAdd < 0)
+        else if (_scoreIncome < 0)
         {
             scoreTextExtra.color = Color.red;
-            scoreTextExtra.text = $"{scoreAdd}";
+            scoreTextExtra.text = $"{_scoreIncome}";
             scoreTextAnimator.Play("ScoreAddAnimation", 0, 0f);
         }
 
-        scoreAdd = 0;
+        if (_scoreIncome != _lastScoreIncome)
+        {
+            scoreIncome = _scoreIncome;
+        }
+
+        _scoreIncome = 0;
         scoreText.text = $"Score: {score}";
     }
+
+    // values
+    [SerializeField] public int score = 0;
+    private int _scoreIncome;
+
+    public int scoreIncome;
+    private int _lastScoreIncome;
+
+    // visual
+    [SerializeField] public TMP_Text scoreText;
+    [SerializeField] public TMP_Text scoreTextExtra;
+    [SerializeField] public Animator scoreTextAnimator;
+    [SerializeField] public TMP_Text scoreWorkshiftTextExtra;
+    [SerializeField] public Animator scoreWorkshiftTextAnimator;
+
+    // script references
+    [SerializeField] public TempController tempController;
+    [SerializeField] AudioSource source;
+    [SerializeField] public AudioClip workshift_end_funny_Audio;
 }

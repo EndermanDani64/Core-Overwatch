@@ -23,7 +23,7 @@ public class ValueStorage : MonoBehaviour
     [Header("MAX Values")]
     [SerializeField] public static int ELECTRICITY_MAX = 250;
     [SerializeField] public static int EGRID_MAX_CAPACITY = 1250;
-    [SerializeField] public static int REACTOR_TMP_MELTINGPOINT = 250;
+    [SerializeField] public static int REACTOR_TMP_MELTINGPOINT = 4000;
     [SerializeField] public static int REACTOR_PS_PRESSURIZED = 800; // 250 or 800
     [SerializeField] public static int REACTOR_PS_MAX = 2000;
 

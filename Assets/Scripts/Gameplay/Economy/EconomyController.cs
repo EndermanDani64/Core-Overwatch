@@ -1,19 +1,51 @@
-    using UnityEngine;
+using System;
+using System.Collections.Generic;
+using TMPro;
+using UnityEngine;
+using UnityEngine.SocialPlatforms.Impl;
 
 public class EconomyController : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public void CheckMoneyAward()
     {
-        
+        if (_sm.score >= 100) // can be increased in the future to unlock money
+        {
+            Debug.Log($"péz hozzáadások: {Mathf.Round(Mathf.Sqrt(_sm.score) * (_sm.score / (_sm.score + 10f)) * (_sm.scoreIncome / 100f))}");
+            
+            money += Mathf.Round(Mathf.Sqrt(_sm.score) * (_sm.score / (_sm.score + 10f)) * (_sm.scoreIncome / 100f));
+        }
+        UpdateDisplays();
     }
 
-    // Update is called once per frame
-    void Update()
+    private void UpdateDisplays()
     {
-        
+        foreach (TMP_Text tx in _moneyDispTexts)
+        {
+            tx.text = $"Money: {money}$";
+        }
     }
 
-    [SerializeField] public float money = 1000f;
-    private float income = 0f;
+    private void GetDisplays()
+    {
+        GameObject[] tempStorage = GameObject.FindGameObjectsWithTag("MoneyDisplay");
+
+        foreach (var moneyDisplay in tempStorage)
+        {
+            _moneyDispTexts.Add(moneyDisplay.GetComponent<TMP_Text>());
+        }
+    }
+
+    private void Start()
+    {
+        GetDisplays();
+    }
+
+    [SerializeField] public float money = 100f;
+    private float _income = 0.1f;
+
+    // script references
+    [SerializeField] private ScoreManager _sm;
+
+    // displays references
+    private List<TMP_Text> _moneyDispTexts = new(); 
 }

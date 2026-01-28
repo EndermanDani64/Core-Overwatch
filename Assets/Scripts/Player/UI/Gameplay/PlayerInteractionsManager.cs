@@ -35,6 +35,8 @@ public class PlayerInteractionsManager : MonoBehaviour
                     }
                 }
             }
+
+            Debug.Log($"hit.name = {hit.collider.gameObject.name} | hit.tag = {hit.collider.gameObject.tag}");
         }
     }
 

@@ -52,7 +52,7 @@ public class PressureControl : MonoBehaviour
                 // float randomness = UnityEngine.Random.Range(-1.5f, 1.5f); // véletlen szórás a rendszer "instabilitására"
 
                 float valveFactor = Mathf.Lerp(1f, -1f, ValveOverwatch.valveAmountOpen / 5f); // nyomás csökkentés nyitott szelepek alapján
-                Debug.Log($"valveFactor = {valveFactor}");
+                // Debug.Log($"valveFactor = {valveFactor}");
 
                 /* 
                     0 szelep = 1.0 (teljes nyomás növekedés),

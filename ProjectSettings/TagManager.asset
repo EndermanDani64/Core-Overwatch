@@ -17,6 +17,8 @@ TagManager:
   - CeilingLight
   - ElevatorButton
   - ElevatorButton_Nav
+  - ViewModel
+  - MoneyDisplay
   layers:
   - Default
   - TransparentFX

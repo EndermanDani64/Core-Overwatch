@@ -17,20 +17,17 @@ public class Tablet : MonoBehaviour
         {
             _tabletEquiped = false;
             _cooldown = true;
-            _anim.Play("TabletClose");
-
-            yield return new WaitForSeconds(1f);
-
-            _crosshair1.enabled = false;
-            _crosshair2.enabled = false;
-            _targetLabel.enabled = true;
-
-            _overlayUIManager.DisableDefaultInput();
             _overlayUIManager.HideCursor();
-
+            _overlayUIManager.DisableDefaultInput();
             _playerMovment.ReleaseMouseY();
 
-            yield return new WaitForSeconds(1f);
+            _anim.Play("TabletClose");
+
+            _crosshair1.enabled = true;
+            _crosshair2.enabled = true;
+            _targetLabel.enabled = true;
+            
+            yield return new WaitForSeconds(.3f);
 
             _cooldown = false;
         }
@@ -51,7 +48,7 @@ public class Tablet : MonoBehaviour
             _overlayUIManager.EnableDefaultInput();
             _overlayUIManager.ShowCursor();
 
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(.3f);
 
             _cooldown = false;
         }

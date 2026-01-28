@@ -68,15 +68,6 @@ public class OverlayUIManager : MonoBehaviour
                 ResumeGame();
             }
         }
-
-        /*if (isPaused)
-        {
-            ShowCursor();
-        }
-        else
-        {
-            HideCursor();
-        }*/
     }
 
     /// <summary>
@@ -171,7 +162,6 @@ public class OverlayUIManager : MonoBehaviour
     {
         fpsInputModule.enabled = false;
         defaultInputModule.enabled = true;
-        Debug.Log($"fpsInputModule: {fpsInputModule.enabled} | defaultInputModule: {defaultInputModule.enabled}");
     }
 
     /// <summary>
@@ -179,9 +169,8 @@ public class OverlayUIManager : MonoBehaviour
     /// </summary>
     public void DisableDefaultInput()
     {
-        fpsInputModule.enabled = false;
-        defaultInputModule.enabled = true;
-        Debug.Log($"fpsInputModule: {fpsInputModule.enabled} | defaultInputModule: {defaultInputModule.enabled}");
+        fpsInputModule.enabled = true;
+        defaultInputModule.enabled = false;
     }
 
     /// <summary>
@@ -231,9 +220,10 @@ public class OverlayUIManager : MonoBehaviour
             Player.mouseSensitivity = PreviusSens;
             EventSystem.enabled = false;
             Camera.enabled = false;
-            if (ScoreManager.score > PlayerPrefs.GetInt("HighScore"))
+
+            if (_sm.score > PlayerPrefs.GetInt("HighScore"))
             {
-                PlayerPrefs.SetInt("HighScore", ScoreManager.score);
+                PlayerPrefs.SetInt("HighScore", _sm.score);
                 Debug.Log("Saved your high score!");
             }
             SceneManager.LoadScene("MainMenuScene");
@@ -252,4 +242,7 @@ public class OverlayUIManager : MonoBehaviour
             Debug.LogWarning("targetedSceneID not set correctly.");
         }
     }
+
+    // script references
+    [SerializeField] private ScoreManager _sm;
 }
