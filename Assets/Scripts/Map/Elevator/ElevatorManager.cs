@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class ElevatorManager : MonoBehaviour
 {
-    private int currentFloor = 0;
+    private int _currentFloor = 0;
     public bool isMoving = false;
 
     public bool isPlayerIn = false;
@@ -27,12 +27,10 @@ public class ElevatorManager : MonoBehaviour
     /// </summary>
     public IEnumerator MoveToFloor(int destination)
     {
-        // Debug.Log("MoveToFloor() entered");
+        if (destination < 0) { Debug.LogWarning("destination is negative."); yield return null; }
 
-        if (currentFloor < destination)
+        if (_currentFloor < destination)
         {
-            // Debug.Log("MoveToFloor() first");
-
             isMoving = true;
             CloseDoors_CurrentFloor();
 
@@ -43,7 +41,7 @@ public class ElevatorManager : MonoBehaviour
 
             yield return new WaitForSeconds(6.3f);
 
-            currentFloor = destination;
+            _currentFloor = destination;
             destination = -1;
 
             OpenDoors_CurrentFloor();
@@ -51,7 +49,7 @@ public class ElevatorManager : MonoBehaviour
 
             isMoving = false;
         }
-        else if (currentFloor > destination)
+        else if (_currentFloor > destination)
         {
             // Debug.Log("MoveToFloor() first");
 
@@ -65,7 +63,7 @@ public class ElevatorManager : MonoBehaviour
 
             yield return new WaitForSeconds(6.3f);
 
-            currentFloor = destination;
+            _currentFloor = destination;
             destination = -1;
 
             OpenDoors_CurrentFloor();
@@ -77,21 +75,17 @@ public class ElevatorManager : MonoBehaviour
         {
             isMoving = true;
 
-            switch (currentFloor)
+            switch (_currentFloor)
             {
                 case 0:
-                    // Debug.Log("MoveToFloor() case 0");
                     if (!door_0_isOpen)
                     {
-                        // Debug.Log("MoveToFloor() case 0 | true");
                         OpenDoors_CurrentFloor();
                     }
                     break;
                 case 1:
-                    // Debug.Log("MoveToFloor() case 1");
                     if (!door_1_isOpen)
                     {
-                        // Debug.Log("MoveToFloor() case 1 | true");
                         OpenDoors_CurrentFloor();
                     }
                     break;
@@ -99,7 +93,6 @@ public class ElevatorManager : MonoBehaviour
 
             isMoving = false;
         }
-        // Debug.Log("MoveToFloor() exited");
     }
 
     /// <summary>
@@ -109,7 +102,7 @@ public class ElevatorManager : MonoBehaviour
     {
         if (isMoving)
         {
-            switch (currentFloor)
+            switch (_currentFloor)
             {
                 case 0:
                     door_0_animator.Play("Elevator_Door_Closing");
@@ -137,7 +130,7 @@ public class ElevatorManager : MonoBehaviour
     {
         if (isMoving)
         {
-            switch (currentFloor)
+            switch (_currentFloor)
             {
                 case 0:
                     door_0_animator.Play("Elevator_Door_Opening");

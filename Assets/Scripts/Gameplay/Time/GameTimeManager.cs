@@ -4,14 +4,14 @@ using UnityEngine;
 public class GameTimeManager : MonoBehaviour
 {
     [Header("Script references")]
-    [SerializeField] private SupplyDeposit supplyDeposit;
-    [SerializeField] private ValueStorage valueStorage;
-    [SerializeField] public ElectricityDecreaseValueManagger electricityDValueManagger;
-    [SerializeField] public GeneratorController generatorController;
-    [SerializeField] private TempController tempController;
-    [SerializeField] public ScoreManager scoreManager;
-    [SerializeField] private OverflowEvent overflowEvent;
-    [SerializeField] private EconomyController economyController;
+    [SerializeField] private SupplyDeposit _SupplyDeposit;
+    [SerializeField] private ValueStorage _ValueStorage;
+    [SerializeField] public ElectricityDecreaseValueManagger _ElectricityDValueManagger;
+    [SerializeField] public GeneratorController _GeneratorController;
+    [SerializeField] private TempController _TempController;
+    [SerializeField] public ScoreManager _ScoreManager;
+    [SerializeField] private OverflowEvent _OverflowEvent;
+    [SerializeField] private EconomyController _EconomyController;
 
     [Header("Visuals")]
     [SerializeField] private UnityEngine.UI.Slider coolantInjectionSlider;
@@ -28,7 +28,6 @@ public class GameTimeManager : MonoBehaviour
     /// <summary>
     /// Runs every contained functions in a 0.5 second delay.
     /// </summary>
-    /// <returns>Null</returns>
     public IEnumerator SecondsTrigger_E05() // E1 = every .5 sec
     {
         while (true)
@@ -41,48 +40,42 @@ public class GameTimeManager : MonoBehaviour
     /// <summary>
     /// Runs every contained functions in a 1 second delay.
     /// </summary>
-    /// <returns>Null</returns>
     public IEnumerator SecondsTrigger_E1()
     {
         while (true)
         {
-            electricityDValueManagger.DValueUpdate();
-            scoreManager.CheckPossibleScores();
-            economyController.CheckMoneyAward();
+            _ElectricityDValueManagger.DValueUpdate();
+            _ScoreManager.CheckPossibleScores();
+            _EconomyController.CheckMoneyAward();
             yield return new WaitForSeconds(1);
-            // generatorController.ChangeEnergy();
         }
     }
 
     /// <summary>
     /// Runs every contained functions in a 2 second delay.
     /// </summary>
-    /// <returns>Null</returns>
     public IEnumerator SecondsTrigger_E2()
     {
         while (true)
         {
-            if (tempController.isOnline)
-            {
-                tempController.TemperatureLoop();
-            }
-            valueStorage.UpdateValue("COOLANT_SUPPLY_DECREASE", Convert.ToInt32(coolantInjectionSlider.value));
+            if (_TempController.isOnline) { _TempController.TemperatureLoop(); }
+            _OverflowEvent.UpdateDifficulty();
+            _ValueStorage.UpdateValue("COOLANT_SUPPLY_DECREASE", Convert.ToInt32(coolantInjectionSlider.value));
             yield return new WaitForSeconds(2f);
-            generatorController.ChangeEnergy();
+            _GeneratorController.ChangeEnergy();
         }
     }
 
     /// <summary>
     /// Runs every contained functions in a 2.5 second delay.
     /// </summary>
-    /// <returns>Null</returns>
     public IEnumerator SecondsTrigger_E25()
     {
         while (true)
         {
-            if (tempController.isOnline)
+            if (_TempController.isOnline)
             {
-                supplyDeposit.DecreaseSupplyValue(ValueStorage.COOLANT_SUPPLY_DECREASE);
+                _SupplyDeposit.DecreaseSupplyValue(ValueStorage.COOLANT_SUPPLY_DECREASE);
             }
             yield return new WaitForSeconds(2.5f);
         }
@@ -92,7 +85,6 @@ public class GameTimeManager : MonoBehaviour
     /// <summary>
     /// Runs every contained functions in a 60 second delay.
     /// </summary>
-    /// <returns>Null</returns>
     public IEnumerator SecondsTrigger_E60()
     {
         while (true)

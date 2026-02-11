@@ -15,10 +15,8 @@ public class Health : MonoBehaviour
 
     void Update()
     {
-        // Ground / Liquid detection
         isGrounded = Physics.Raycast(transform.position, Vector3.down, 2f, LayerMask.GetMask("Ground"));
 
-        // Fall damage
         if (!isGrounded && !isLiquid)
         {
             timeFallen += Time.deltaTime;
@@ -33,7 +31,6 @@ public class Health : MonoBehaviour
             timeFallen = 0f;
         }
 
-        // Fade out the vignette
         vignetteAlpha = Mathf.MoveTowards(vignetteAlpha, 0f, Time.deltaTime * fadeSpeed);
         vignetteImage.color = new Color(1f, 0f, 0f, vignetteAlpha); // piros szín, áttetszõ
     }

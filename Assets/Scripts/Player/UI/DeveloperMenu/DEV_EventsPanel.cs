@@ -8,41 +8,49 @@ public class DEV_EventsPanel : MonoBehaviour
     [SerializeField] private BlackoutEvent blackoutEvent;
     [SerializeField] private Meltdown meltdownEvent;
     [SerializeField] private OverflowEvent overflowEvent;
+    [SerializeField] private OverallEvents _OverallEvents;
 
     public void StartBlackoutEvent()
     {
-        if (!OverallEvents.IsEventRunning)
+        _OverallEvents.TriggerEvent("blackout");
+
+        /*if (!OverallEvents.IsEventRunning) TEST NEEDED FOR THESE
         {
             StartCoroutine(feedbackTextToggle(blackoutEvent.DEV_ForceBlackout(), "blackout"));
         }
         else
         {
             feedbackTextToggleInfo("The blackout event is already running!");
-        }
+        }*/
     }
 
     public void StartMeltdownEvent()
     {
-        if (!OverallEvents.IsMainEventRunning)
+        _OverallEvents.TriggerEvent("meltdown");
+
+        /*if (!OverallEvents.IsMainEventRunning) TEST NEEDED FOR THESE
         {
             StartCoroutine(feedbackTextToggle(meltdownEvent.DEV_ForceMeltdown(), "meltdown"));
         }
         else
         {
             feedbackTextToggleInfo("The meltdown event is already running!");
-        }
+        }*/
     }
 
     public void StartOverflowEvent()
     {
-        if (!OverallEvents.IsEventRunning)
+        _OverallEvents.TriggerEvent("overflow");
+
+        /*if (!OverallEvents.IsEventRunning) TEST NEEDED FOR THESE
         {
-            StartCoroutine(feedbackTextToggle(overflowEvent.DEV_ForceOverflow(), "overflow"));
+            
+            //StartCoroutine(feedbackTextToggle(overflowEvent.DEV_ForceOverflow(), "overflow"));
         }
         else
         {
             feedbackTextToggleInfo("The overflow event is already running!");
-        }
+        }*/
     }
 
     [SerializeField] private TMP_Text feedbackText;

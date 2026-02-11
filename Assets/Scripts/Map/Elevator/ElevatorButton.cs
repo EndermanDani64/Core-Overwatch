@@ -2,32 +2,30 @@ using UnityEngine;
 
 public class ElevatorButton : MonoBehaviour
 {
-    [SerializeField] private int floor;
-    [SerializeField] private int designatedFloor;
-
-    [SerializeField] private ElevatorManager elevatorManager;
+    /// <summary>
+    /// Calls the ElevatorBody to the floor's valued floor.
+    /// </summary>
+    public void GoToFloor()
+    {
+        if (!_eM.isMoving)
+        {
+            StartCoroutine(_eM.MoveToFloor(_designatedFloor));
+        }
+    }
 
     /// <summary>
     /// Calls the ElevatorBody to the floor's valued floor.
     /// </summary>
-    public void CallToFloor()
+    public void CallToFloor(int targetFloor)
     {
-        if (!elevatorManager.isMoving)
+        if (!_eM.isMoving)
         {
-            // Debug.Log("MoveToFloor(floor); - ElevatorButton.cs");
-            StartCoroutine(elevatorManager.MoveToFloor(floor));
+            StartCoroutine(_eM.MoveToFloor(targetFloor));
         }
     }
 
-    /// <summary>
-    /// Moves the ElevatorBody to the designatedFloor's valued floor.
-    /// </summary>
-    public void GoToFloor()
-    {
-        if (!elevatorManager.isMoving)
-        {
-            // Debug.Log("GoToFloor(); - ElevatorButton.cs");
-            StartCoroutine(elevatorManager.MoveToFloor(designatedFloor));
-        }
-    }
+    [SerializeField] public int localFloor;
+    [SerializeField] private int _designatedFloor;
+
+    [SerializeField] private ElevatorManager _eM;
 }

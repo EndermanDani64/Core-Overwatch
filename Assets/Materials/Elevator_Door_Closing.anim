@@ -20,7 +20,7 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: {x: 4.85311, y: -0.8103485, z: -0.0011444092}
+        value: {x: 4.9531, y: -0.8103485, z: -0.0011444092}
         inSlope: {x: 0, y: 0, z: 0}
         outSlope: {x: 0, y: 0, z: 0}
         tangentMode: 0
@@ -39,13 +39,13 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    path: ElevatorDoorA
+    path: _ElevatorDoorA
   - curve:
       serializedVersion: 2
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: {x: -2.25289, y: -0.8103485, z: -0.0011444092}
+        value: {x: -2.3529, y: -0.8103485, z: -0.0011444092}
         inSlope: {x: 0, y: 0, z: 0}
         outSlope: {x: 0, y: 0, z: 0}
         tangentMode: 0
@@ -64,7 +64,7 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    path: ElevatorDoorB
+    path: _ElevatorDoorB
   m_ScaleCurves: []
   m_FloatCurves: []
   m_PPtrCurves: []
@@ -76,7 +76,7 @@ AnimationClip:
   m_ClipBindingConstant:
     genericBindings:
     - serializedVersion: 2
-      path: 2435051502
+      path: 1047769024
       attribute: 1
       script: {fileID: 0}
       typeID: 4
@@ -85,7 +85,7 @@ AnimationClip:
       isIntCurve: 0
       isSerializeReferenceCurve: 0
     - serializedVersion: 2
-      path: 137018964
+      path: 2809855610
       attribute: 1
       script: {fileID: 0}
       typeID: 4
@@ -121,7 +121,7 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 4.85311
+        value: 4.9531
         inSlope: 0
         outSlope: 0
         tangentMode: 136
@@ -141,7 +141,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.x
-    path: ElevatorDoorA
+    path: _ElevatorDoorA
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -171,7 +171,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.y
-    path: ElevatorDoorA
+    path: _ElevatorDoorA
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -201,7 +201,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.z
-    path: ElevatorDoorA
+    path: _ElevatorDoorA
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -211,7 +211,7 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: -2.25289
+        value: -2.3529
         inSlope: 0
         outSlope: 0
         tangentMode: 136
@@ -231,7 +231,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.x
-    path: ElevatorDoorB
+    path: _ElevatorDoorB
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -261,7 +261,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.y
-    path: ElevatorDoorB
+    path: _ElevatorDoorB
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -291,7 +291,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.z
-    path: ElevatorDoorB
+    path: _ElevatorDoorB
     classID: 4
     script: {fileID: 0}
     flags: 0

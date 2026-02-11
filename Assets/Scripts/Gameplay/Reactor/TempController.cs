@@ -56,11 +56,7 @@ public class TempController : MonoBehaviour
         temp += simulatedIncrease;
         MathF.Round(temp, 2);
 
-        if (temp > ValueStorage.REACTOR_TMP_MAXIMUM)
-        {
-            
-        }
-        else
+        if (temp < ValueStorage.REACTOR_TMP_MAXIMUM)
         {
             tempTextUpdater.UpdateText();
         }

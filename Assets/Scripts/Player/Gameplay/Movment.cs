@@ -34,7 +34,6 @@ public class Movment : MonoBehaviour
     CharacterController controller;
     Vector2 currentDir;
     Vector2 currentDirVelocity;
-    Vector3 velocity;
 
     void Start()
     {
@@ -53,11 +52,8 @@ public class Movment : MonoBehaviour
 
     private void UpdateMouse()
     {
-        // if (_camFixedY) { return; }
-
         if (!_camFixedY)
         {
-
             Vector2 targetMouseDelta = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y")); // were the player is looking at
 
             currentMouseDelta = Vector2.SmoothDamp(currentMouseDelta, targetMouseDelta, ref currentMouseDeltaVelocity, mouseSmoothTime);
@@ -102,6 +98,7 @@ public class Movment : MonoBehaviour
             Input.GetAxisRaw("Horizontal"),
             Input.GetAxisRaw("Vertical")
         );
+
         targetDir.Normalize();
 
         currentDir = Vector2.SmoothDamp(currentDir, targetDir, ref currentDirVelocity, moveSmoothTime);

@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using TMPro;
+
 public class PlayerInteractionsManager : MonoBehaviour
 {
     void Update()
@@ -35,8 +36,6 @@ public class PlayerInteractionsManager : MonoBehaviour
                     }
                 }
             }
-
-            Debug.Log($"hit.name = {hit.collider.gameObject.name} | hit.tag = {hit.collider.gameObject.tag}");
         }
     }
 
@@ -196,11 +195,11 @@ public class PlayerInteractionsManager : MonoBehaviour
 
                 if (targetGameObject.tag == "ElevatorButton")
                 {
-                    targetGameObject.GetComponent<ElevatorButton>().CallToFloor();
+                    targetGameObject.GetComponentInChildren<ElevatorButton>().CallToFloor(targetGameObject.GetComponentInChildren<ElevatorButton>().localFloor);
                 }
                 else if (targetGameObject.tag == "ElevatorButton_Nav")
                 {
-                    targetGameObject.GetComponent<ElevatorButton>().GoToFloor();
+                    targetGameObject.GetComponentInChildren<ElevatorButton>().GoToFloor();
                 }
             }
         }
