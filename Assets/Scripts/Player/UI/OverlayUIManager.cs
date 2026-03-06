@@ -9,7 +9,7 @@ public class OverlayUIManager : MonoBehaviour
     [SerializeField] private Canvas PauseMenuCanvas;
     [SerializeField] private Canvas DeveloperMenuCanvas;
     [SerializeField] private Canvas OptionsCanvas;
-    [SerializeField] private Movment Player;
+    [SerializeField] private Movment PlayerMovment;
     [SerializeField] private Camera Camera;
     [SerializeField] private EventSystem EventSystem;
     [SerializeField] private AudioSource audioSource;
@@ -26,15 +26,6 @@ public class OverlayUIManager : MonoBehaviour
 
     private void Start()
     {
-        /*if (Application.isPlaying)
-        {
-            if (!EventSystem.enabled)
-                EventSystem.enabled = true;
-
-            if (!Camera.enabled)
-                Camera.enabled = true;
-        }*/
-
         PauseMenuCanvas.enabled = false;
         Time.timeScale = 1f;
 
@@ -85,8 +76,7 @@ public class OverlayUIManager : MonoBehaviour
 
             HideCursor();
 
-            fpsInputModule.enabled = true;
-            defaultInputModule.enabled = false;
+            Player.DisableDefaultInput();
         }
         else if (DeveloperMenuCanvas.enabled)
         {
@@ -99,6 +89,7 @@ public class OverlayUIManager : MonoBehaviour
 
             fpsInputModule.enabled = true;
             defaultInputModule.enabled = false;
+            Player.EnableDefaultInput();
         }
     }
 
@@ -155,23 +146,7 @@ public class OverlayUIManager : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Disables the movment, and shows the cursor.
-    /// </summary>
-    public void EnableDefaultInput()
-    {
-        fpsInputModule.enabled = false;
-        defaultInputModule.enabled = true;
-    }
-
-    /// <summary>
-    /// Enables the movment, and hides the cursor.
-    /// </summary>
-    public void DisableDefaultInput()
-    {
-        fpsInputModule.enabled = true;
-        defaultInputModule.enabled = false;
-    }
+    
 
     /// <summary>
     /// Locks and then hides the cursor.
@@ -216,8 +191,8 @@ public class OverlayUIManager : MonoBehaviour
             //MeltdownEvent.StopAllCoroutines();
             MeltdownEvent.StopMeltdown();
             PauseMenuCanvas.gameObject.SetActive(false);
-            Player.Speed = 12;
-            Player.mouseSensitivity = PreviusSens;
+            PlayerMovment.Speed = 12;
+            PlayerMovment.mouseSensitivity = PreviusSens;
             EventSystem.enabled = false;
             Camera.enabled = false;
 
@@ -231,8 +206,8 @@ public class OverlayUIManager : MonoBehaviour
         else if (LoadingManagger.targetedSceneID == -1)
         {
             PauseMenuCanvas.gameObject.SetActive(false);
-            Player.Speed = 12;
-            Player.mouseSensitivity = PreviusSens;
+            PlayerMovment.Speed = 12;
+            PlayerMovment.mouseSensitivity = PreviusSens;
             EventSystem.enabled = false;
             Camera.enabled = false;
             SceneManager.LoadScene("MainMenuScene");

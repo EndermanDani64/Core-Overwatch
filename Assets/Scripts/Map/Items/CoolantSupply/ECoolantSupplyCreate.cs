@@ -17,6 +17,6 @@ public class ECoolantSupplyCreate : MonoBehaviour
     public void Drop(Transform transform, int ID)
     {
         transform.position = playerTransform.position + playerTransform.forward;
-        inventorySystem.DequipItem("ECoolantSupply", ID);
+        inventorySystem.DequipItem();
     }
 }

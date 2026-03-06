@@ -19,6 +19,7 @@ public class Fixables : MonoBehaviour
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
+
             if (Physics.Raycast(ray, out hit))
             {
                 if (hit.collider.CompareTag("Fixable") && !hit.collider.GetComponent<VariableStorage_Fixable>().isFixed)
@@ -28,10 +29,10 @@ public class Fixables : MonoBehaviour
 
                     if (Mathf.Round(timeHeld) >= ValueStorage.TIME_FIXABLE_TIMETOFIX && !isFixed)
                     {
-                        Debug.Log("fixed!");
                         hit.collider.GetComponent<VariableStorage_Fixable>().isFixed = true;
                         hit.collider.GetComponent<ParticleSystem>().startLifetime = 0;
                         hit.collider.GetComponent<AudioSource>().PlayOneShot(hit.collider.GetComponent<VariableStorage_Fixable>().fixingSFX);
+
                         if (fixableAvalibleCount == 1)
                         {
                             fixableAvalibleCount--; 
@@ -41,6 +42,8 @@ public class Fixables : MonoBehaviour
                         {
                             fixableAvalibleCount--;
                         }
+
+                        Debug.Log("fixed!");
                         timeHeld = 0f;
                     }
                     else if (timeHeld < ValueStorage.TIME_FIXABLE_TIMETOFIX && !isFixed)
@@ -50,18 +53,11 @@ public class Fixables : MonoBehaviour
                 }
             }
         }
-        /*else
-        {
-            Debug.Log("elengedve");
-            timeHeld = 0f;
-        }*/
 
-        if (!Input.GetKey(KeyCode.E) && fixableAvalibleCount > 0 && timeHeld != 0) // if the player releases the button [E] then 
-        {
-            Debug.Log("elengedve");
-            timeHeld = 0f;
-        }
+        Upd_CheckHolding();
     }
+
+    
 
     /// <summary>
     /// Damages a random Fixable at a random time if called from ContinousManager.cs
@@ -83,6 +79,17 @@ public class Fixables : MonoBehaviour
 
                 Debug.Log($"Damaged a fixable. | fixableAvalibleCount = {fixableAvalibleCount}");
             }
+        }
+    }
+
+    // ----  Submethods  ---- //
+
+    private void Upd_CheckHolding()
+    {
+        if (!Input.GetKey(KeyCode.E) && fixableAvalibleCount > 0 && timeHeld != 0) // if the player releases the button [E] then 
+        {
+            Debug.Log("elengedve");
+            timeHeld = 0f;
         }
     }
 }

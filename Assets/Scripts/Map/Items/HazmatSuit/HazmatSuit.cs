@@ -2,8 +2,6 @@ using UnityEngine;
 
 public class HazmatSuit : MonoBehaviour
 {
-    [SerializeField] private Health health;
-
     public static bool isHazmat = false;
 
     /// <summary>
@@ -18,6 +16,7 @@ public class HazmatSuit : MonoBehaviour
         else
         {
             isHazmat = true;
+            Player.SetWearing("hazmatSuit");
             gameObject.transform.position = new Vector3(500, 500, 500);
         }
     }

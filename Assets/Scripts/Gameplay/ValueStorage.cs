@@ -77,11 +77,13 @@ public class ValueStorage : MonoBehaviour
     [SerializeField] public static int REACTOR_TMP_RANDOM_DELAY_MAX = 12; // the maximum delay time in seconds that can be randomly chosen
     [SerializeField] public static int ELECTRICITY_MINIMUM = 0; //0
 
-    [Header("Valid Event Ids")]
-    [SerializeField] public static List<string> VALID_EVENT_IDS = new List<string>() { "meltdown", "blackout", "overflow", "overflowWait" };
-
     [Header("Custom Game Reactor Values")]
     [SerializeField] public static float REACTOR_TMP_DELTA = 2.5f;
+
+    [Header("Valid Ids")]
+    [SerializeField] public static List<string> VALID_EVENT_IDS = new List<string>() { "meltdown", "blackout", "overflow", "overflowWait" };
+    [SerializeField] public static List<string> VALID_ITEM_IDS = new List<string>() { "", "ECoolantSupply" };
+    [SerializeField] public static List<string> VALID_WEARABLE_IDS = new List<string>() { "", "hazmatSuit" };
 
     public static void ResetValues()
     {

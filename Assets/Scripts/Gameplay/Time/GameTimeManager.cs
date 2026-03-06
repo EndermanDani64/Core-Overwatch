@@ -18,17 +18,17 @@ public class GameTimeManager : MonoBehaviour
 
     private void Start()
     {
-        // StartCoroutine(SecondsTrigger_E05());
-        StartCoroutine(SecondsTrigger_E1());
-        StartCoroutine(SecondsTrigger_E2());
-        StartCoroutine(SecondsTrigger_E25());
-        // StartCoroutine(SecondsTrigger_E60());
+        // StartCoroutine(_SecondsTrigger_E05());
+        StartCoroutine(_SecondsTrigger_E1());
+        StartCoroutine(_SecondsTrigger_E2());
+        StartCoroutine(_SecondsTrigger_E25());
+        // StartCoroutine(_SecondsTrigger_E60());
     }
 
     /// <summary>
     /// Runs every contained functions in a 0.5 second delay.
     /// </summary>
-    public IEnumerator SecondsTrigger_E05() // E1 = every .5 sec
+    public IEnumerator _SecondsTrigger_E05() // E1 = every .5 sec
     {
         while (true)
         {
@@ -40,7 +40,7 @@ public class GameTimeManager : MonoBehaviour
     /// <summary>
     /// Runs every contained functions in a 1 second delay.
     /// </summary>
-    public IEnumerator SecondsTrigger_E1()
+    public IEnumerator _SecondsTrigger_E1()
     {
         while (true)
         {
@@ -54,7 +54,7 @@ public class GameTimeManager : MonoBehaviour
     /// <summary>
     /// Runs every contained functions in a 2 second delay.
     /// </summary>
-    public IEnumerator SecondsTrigger_E2()
+    public IEnumerator _SecondsTrigger_E2()
     {
         while (true)
         {
@@ -69,7 +69,7 @@ public class GameTimeManager : MonoBehaviour
     /// <summary>
     /// Runs every contained functions in a 2.5 second delay.
     /// </summary>
-    public IEnumerator SecondsTrigger_E25()
+    public IEnumerator _SecondsTrigger_E25()
     {
         while (true)
         {
@@ -85,7 +85,7 @@ public class GameTimeManager : MonoBehaviour
     /// <summary>
     /// Runs every contained functions in a 60 second delay.
     /// </summary>
-    public IEnumerator SecondsTrigger_E60()
+    public IEnumerator _SecondsTrigger_E60()
     {
         while (true)
         {

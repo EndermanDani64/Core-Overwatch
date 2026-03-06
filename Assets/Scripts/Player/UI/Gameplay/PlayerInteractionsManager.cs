@@ -144,7 +144,7 @@ public class PlayerInteractionsManager : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.Q))
         {
-            if (!_inventorySystem.handsFree && _inventorySystem.heldItem == "ECoolantSupply")
+            if (!Player.handsFree && _inventorySystem.heldItem == "ECoolantSupply")
             {
                 /*if (equippedID != null && equippedECoolantSupplyCreate != null)
                 {

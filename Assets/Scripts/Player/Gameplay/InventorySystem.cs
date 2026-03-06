@@ -3,86 +3,91 @@ using UnityEngine;
 public class InventorySystem : MonoBehaviour
 {
     public string heldItem = "";
-    public string wornSuit = "";
-
-    public bool handsFree = true;
-    public bool naked = true;
-
     public int equippedItemID = 0;
 
+    /// <summary>
+    /// Set's the equipped item to the item parameter.
+    /// </summary>
+    /// <param name="item">The item's code used specific name. Check ValueStorage for the possible names.</param>
+    /// <param name="id">The item's id. If there is more items of this type then I use ids to distinct them.</param>
     public void EquipItem(string item, int id)
     {
-        if (handsFree)
+        if (ValueStorage.VALID_ITEM_IDS.Contains(item))
         {
-            Debug.Log($"You've picked up, {item}!");
-            heldItem = item;
-            handsFree = false;
-            equippedItemID = id;
+            if (Player.handsFree)
+            {
+                heldItem = item;
+                equippedItemID = id;
+                Player.ISetHolding(item);
+                Debug.Log($"You've picked up, {item}!");
+            }
+            else
+            {
+                Debug.Log($"Your hands are full with, {item}!");
+            }
         }
-        else
-        {
-            Debug.Log($"Your hands are full with, {item}!");
-        }
+        else Debug.LogWarning("The set item in EquipItem() is not valid.", gameObject);
     }
-    public void DequipItem(string item, int id)
+
+    /// <summary>
+    /// Set's the equipped item to the item parameter.
+    /// </summary>
+    public void DequipItem()
     {
-        if (item != heldItem)
-        {
-            Debug.LogWarning($"Wrong item was added to the inventory. Expected item value = {heldItem}");
-        }
-        else
+        if (heldItem != "")
         {
             heldItem = "";
-            handsFree = true;
             equippedItemID = 0;
+            Player.ISetHoldingToNone();
         }
     }
 
+    /// <summary>
+    /// Set's the worn suit to the item parameter.
+    /// </summary>
     public void WearSuit(string suit)
     {
-        if (naked)
+        if (!Player.naked)
         {
-            Debug.Log($"You've put on, {suit}");
-            naked = false;
-            wornSuit = suit;
+            Debug.LogWarning($"You are already wearing, {suit}!");
         }
         else
         {
-            Debug.Log($"You are already wearing, {suit}!");
+            if (ValueStorage.VALID_WEARABLE_IDS.Contains(suit))
+            {
+                Player.ISetWearing(suit);
+                Debug.Log($"You've put on, {suit}");
+            }
+            else Debug.LogWarning("The set suit in SetWearing() is not valid.", gameObject);
         }
     }
 
+    /// <summary>
+    /// Set's the worn suit to naked.
+    /// </summary>
     public void UnequipSuit(string suit)
     {
-        if (suit != wornSuit)
-        {
-            Debug.LogWarning($"Wrong suit was tried to unequip. Expected suit value = {wornSuit}");
-            
-        }
-        else
-        {
-            wornSuit = "";
-            naked = true;
-        }
+        if (!Player.naked) Player.ISetWearingToNone();
+        else Debug.LogWarning("The UnequipSuit() is called at a point where the Player.naked is true.", gameObject);
     }
 
     public void ClearItemInHand()
     {
-        if (handsFree)
+        if (Player.handsFree)
         {
-            Debug.LogWarning($"There is no item in hand.");
+            Debug.LogWarning($"There is no item in hand.", gameObject);
         }
         else
         {
             heldItem = "";
-            handsFree = true;
+            Player.ISetHoldingToNone();
             equippedItemID = 0;
         }
     }
 
     public bool IsHoldingItem()
     {
-        if (heldItem == null)
+        if (heldItem == null || heldItem == "")
         {
             return false;
         }

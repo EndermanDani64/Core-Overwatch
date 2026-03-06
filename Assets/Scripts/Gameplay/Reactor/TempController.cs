@@ -72,12 +72,6 @@ public class TempController : MonoBehaviour
         difference = temp - previousTemp;
         float delta = difference - previousDifference; // difference's difference
 
-        // ? - marked for
-        /*if (previousTemp > temp) // if the temp is INCREASING
-        {
-            ElectricityManagger.electricity -= difference / 2.5f;
-        }*/
-
         foreach (var modifier in _intensityModifiers)
         {
             // if the tempIntensity is rising

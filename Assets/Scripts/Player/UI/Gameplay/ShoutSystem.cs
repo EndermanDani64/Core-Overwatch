@@ -12,14 +12,12 @@ public class ShoutSystem : MonoBehaviour
         ShoutUIOverall.enabled = true;
         ShoutText.enabled = true;
         ShoutText.text = message;
-        //Debug.Log("Message shown.");
     }
 
     public void HideMessage()
     {
         ShoutUIOverall.enabled = false;
         ShoutText.enabled = false;
-        //Debug.Log("Message hidden.");
     }
 
     public bool IsActive()

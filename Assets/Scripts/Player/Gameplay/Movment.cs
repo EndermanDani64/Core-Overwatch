@@ -17,7 +17,6 @@ public class Movment : MonoBehaviour
 
     private bool _camFixedY = false;
 
-    public float Stamina = 100f;
     [SerializeField] private TextMeshProUGUI StaminaText;
 
     public float jumpHeight = 6f;
@@ -124,38 +123,38 @@ public class Movment : MonoBehaviour
     int lastDisplayedStamina = -1;
     private void HandleStamina()
     {
-        if (Input.GetKey(KeyCode.LeftShift) && !HazmatSuit.isHazmat && Stamina > 0 && isGrounded) // regular sprint
+        if (Input.GetKey(KeyCode.LeftShift) && !HazmatSuit.isHazmat && Player.stamina > 0 && isGrounded) // regular sprint
         {
             targetSpeed = ValueStorage.PLAYER_SPEED_NAKED_SPRINT;
-            Stamina -= Time.deltaTime * ValueStorage.STAMINA_NAKED_WALK_DECREASE_MULTIPLIER;
+            Player.stamina -= Time.deltaTime * ValueStorage.STAMINA_NAKED_WALK_DECREASE_MULTIPLIER;
         }
-        else if (Input.GetKey(KeyCode.LeftShift) && HazmatSuit.isHazmat && Stamina > 0) // hazmat sprint
+        else if (Input.GetKey(KeyCode.LeftShift) && HazmatSuit.isHazmat && Player.stamina > 0) // hazmat sprint
         {
-            targetSpeed = ValueStorage.PLAYER_SPEED_HAZMAT_SPRINT; 
-            Stamina -= Time.deltaTime * ValueStorage.STAMINA_HAZMAT_SPRINT_DECREASE_MULTIPLIER; // stamina csökkentés
+            targetSpeed = ValueStorage.PLAYER_SPEED_HAZMAT_SPRINT;
+            Player.stamina -= Time.deltaTime * ValueStorage.STAMINA_HAZMAT_SPRINT_DECREASE_MULTIPLIER; // stamina csökkentés
         }
-        else if (HazmatSuit.isHazmat && Mathf.Round(Stamina) >= 0) // hazmat walk
+        else if (HazmatSuit.isHazmat && Mathf.Round(Player.stamina) >= 0) // hazmat walk
         {
             targetSpeed = ValueStorage.PLAYER_SPEED_HAZMAT;
 
-            if (Stamina < 100)
+            if (Player.stamina < 100)
             {
-                Stamina += Time.deltaTime * 5;
+                Player.stamina += Time.deltaTime * 5;
             }
         }
-        else if (!HazmatSuit.isHazmat && Mathf.Round(Stamina) >= 0) // regular walk
+        else if (!HazmatSuit.isHazmat && Mathf.Round(Player.stamina) >= 0) // regular walk
         {
             targetSpeed = ValueStorage.PLAYER_SPEED_NAKED; 
 
-            if (Stamina < 100)
+            if (Player.stamina < 100)
             {
-                Stamina += Time.deltaTime * 5;
+                Player.stamina += Time.deltaTime * 5;
             }
         }
 
         Speed = Mathf.Lerp(Speed, targetSpeed, Time.deltaTime * 10);
         
-        int roundedStamina = Mathf.RoundToInt(Stamina);
+        int roundedStamina = Mathf.RoundToInt(Player.stamina);
         if (roundedStamina != lastDisplayedStamina)
         {
             StaminaText.text = $"Stamina: {roundedStamina}";
