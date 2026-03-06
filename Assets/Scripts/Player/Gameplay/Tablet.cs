@@ -18,7 +18,7 @@ public class Tablet : MonoBehaviour
             _tabletEquiped = false;
             _cooldown = true;
             _overlayUIManager.HideCursor();
-            Player.DisableDefaultInput();
+            Player.IDisableDefaultInput();
             _playerMovment.ReleaseMouseY();
 
             _anim.Play("TabletClose");
@@ -45,7 +45,7 @@ public class Tablet : MonoBehaviour
 
             yield return new WaitForSeconds(.5f);
 
-            Player.EnableDefaultInput();
+            Player.IEnableDefaultInput();
             _overlayUIManager.ShowCursor();
 
             yield return new WaitForSeconds(.3f);

@@ -76,7 +76,7 @@ public class OverlayUIManager : MonoBehaviour
 
             HideCursor();
 
-            Player.DisableDefaultInput();
+            Player.IDisableDefaultInput();
         }
         else if (DeveloperMenuCanvas.enabled)
         {
@@ -89,7 +89,7 @@ public class OverlayUIManager : MonoBehaviour
 
             fpsInputModule.enabled = true;
             defaultInputModule.enabled = false;
-            Player.EnableDefaultInput();
+            Player.IEnableDefaultInput();
         }
     }
 
