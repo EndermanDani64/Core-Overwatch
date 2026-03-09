@@ -9,10 +9,7 @@ public class HazmatSuit : MonoBehaviour
     /// </summary>
     public void WearSuit()
     {
-        if (isHazmat)
-        {
-            Debug.LogWarning("Player is already wearing a suit.");
-        }
+        if (isHazmat) Debug.LogWarning("Player is already wearing a suit.");
         else
         {
             isHazmat = true;
@@ -26,13 +23,7 @@ public class HazmatSuit : MonoBehaviour
     /// </summary>
     public bool IsWearingSuit()
     {
-        if (isHazmat)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        if (isHazmat) return true;
+        else return false;
     }
 }

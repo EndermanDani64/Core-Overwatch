@@ -6,6 +6,7 @@ using System;
 public class PressureControl : MonoBehaviour
 {
     public static float pressure;
+    public static float minimumPressure;
     public bool isError = false;
     
     [SerializeField] private Button startupButton;
@@ -17,7 +18,7 @@ public class PressureControl : MonoBehaviour
     [SerializeField] private Slider coolantInjector;
 
     public static bool isPressurized = false;
-
+    
     public void StartupReactor()
     {
         if (!tempController.isOnline)
@@ -41,6 +42,8 @@ public class PressureControl : MonoBehaviour
     {
         while (tempController.isOnline) // ameddig online a reaktor
         {
+            SetMinimumPressure();
+
             if (pressure < ValueStorage.REACTOR_PS_MAX)
             {
                 float pressureIncrease = 0;
@@ -52,7 +55,7 @@ public class PressureControl : MonoBehaviour
                 // float randomness = UnityEngine.Random.Range(-1.5f, 1.5f); // véletlen szórás a rendszer "instabilitására"
 
                 float valveFactor = Mathf.Lerp(1f, -1f, ValveOverwatch.valveAmountOpen / 5f); // nyomás csökkentés nyitott szelepek alapján
-                // Debug.Log($"valveFactor = {valveFactor}");
+                Debug.Log($"valveFactor = {valveFactor}");
 
                 /* 
                     0 szelep = 1.0 (teljes nyomás növekedés),
@@ -63,7 +66,11 @@ public class PressureControl : MonoBehaviour
                 pressureIncrease = Mathf.Lerp(0, targetPressureChange, Time.deltaTime * 3f) * 100; // "sima" változás
 
                 MathF.Round(pressureIncrease, 2);
-                pressure += pressureIncrease;
+                if (pressure + pressureIncrease <= minimumPressure)
+                {
+                    pressure = minimumPressure;
+                }
+                else pressure += pressureIncrease;
 
                 if (pressure > ValueStorage.REACTOR_PS_PRESSURIZED && !isPressurized)
                 {
@@ -91,5 +98,11 @@ public class PressureControl : MonoBehaviour
 
             yield return new WaitForSeconds(2.2f);
         }
+    }
+
+    private void SetMinimumPressure()
+    {
+        minimumPressure = (pressure / ValueStorage.REACTOR_PS_MAX) * TempController.temp;
+        Debug.Log(minimumPressure, gameObject);
     }
 }

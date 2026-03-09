@@ -4,13 +4,9 @@ using UnityEngine.InputSystem.UI;
 
 public class Player : MonoBehaviour
 {
-    public static FPSInputModule _fpsInputModule;
-    public static InputSystemUIInputModule _defaultInputModule;
-
     public static float health = 100f;
     public static bool isGrounded = false;
     public static bool isLiquid = false;
-
 
     // ----  Inventory and Suits  ---- //
 
@@ -83,7 +79,11 @@ public class Player : MonoBehaviour
     /// </summary>
     public static void IDisableDefaultInput()
     {
+        if (_fpsInputModule == null) Debug.LogWarning("this shit is somehow null");
         _fpsInputModule.enabled = true;
         _defaultInputModule.enabled = false;
     }
+
+    [SerializeField] public static FPSInputModule _fpsInputModule;
+    [SerializeField] public static InputSystemUIInputModule _defaultInputModule;
 }

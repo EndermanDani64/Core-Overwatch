@@ -70,7 +70,7 @@ public class TempController : MonoBehaviour
     private void UpdateTemperatureDynamics()
     {
         difference = temp - previousTemp;
-        float delta = difference - previousDifference; // difference's difference
+        float delta = difference - previousDifference;
 
         foreach (var modifier in _intensityModifiers)
         {

@@ -5,12 +5,12 @@ public class FPSInputModule : StandaloneInputModule
 {
     protected override MouseState GetMousePointerEventData(int id = 0)
     {
-        var reticlePosition = new Vector2(Screen.width / 2, Screen.height / 2);
+        Vector2 reticlePosition = new Vector2(Screen.width / 2, Screen.height / 2);
 
         MouseState mouseState = new MouseState();
 
         PointerEventData leftData;
-        var created = GetPointerData(kMouseLeftId, out leftData, true);
+        bool created = GetPointerData(kMouseLeftId, out leftData, true);
 
         leftData.Reset();
 
@@ -19,7 +19,7 @@ public class FPSInputModule : StandaloneInputModule
         leftData.scrollDelta = Input.mouseScrollDelta;
         leftData.button = PointerEventData.InputButton.Left;
         eventSystem.RaycastAll(leftData, m_RaycastResultCache);
-        var raycast = FindFirstRaycast(m_RaycastResultCache);
+        RaycastResult raycast = FindFirstRaycast(m_RaycastResultCache);
         leftData.pointerCurrentRaycast = raycast;
         m_RaycastResultCache.Clear();
 

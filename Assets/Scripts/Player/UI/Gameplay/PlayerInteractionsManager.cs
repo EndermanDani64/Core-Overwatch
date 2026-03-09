@@ -208,7 +208,7 @@ public class PlayerInteractionsManager : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.Tab))
         {
-            StartCoroutine(_tablet.OpenCloseTablet());
+            StartCoroutine(_tablet.ToggleTablet());
         }
     }
 

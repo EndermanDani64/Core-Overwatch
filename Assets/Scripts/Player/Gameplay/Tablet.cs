@@ -11,7 +11,7 @@ public class Tablet : MonoBehaviour
     }
 
     private bool _cooldown = false;
-    public IEnumerator OpenCloseTablet()
+    public IEnumerator ToggleTablet()
     {
         if (_tabletEquiped && !_cooldown) // close
         {
@@ -23,10 +23,8 @@ public class Tablet : MonoBehaviour
 
             _anim.Play("TabletClose");
 
-            _crosshair1.enabled = true;
-            _crosshair2.enabled = true;
-            _targetLabel.enabled = true;
-            
+            ToggleUI();
+
             yield return new WaitForSeconds(.3f);
 
             _cooldown = false;
@@ -39,9 +37,7 @@ public class Tablet : MonoBehaviour
 
             _anim.Play("TabletOpen");
 
-            _crosshair1.enabled = false;
-            _crosshair2.enabled = false;
-            _targetLabel.enabled = false;
+            ToggleUI();
 
             yield return new WaitForSeconds(.5f);
 
@@ -53,6 +49,17 @@ public class Tablet : MonoBehaviour
             _cooldown = false;
         }
     }
+
+    // ----  Submethods  ---- //
+
+    private void ToggleUI()
+    {
+        _crosshair1.enabled = !_crosshair1.enabled;
+        _crosshair2.enabled = !_crosshair2.enabled;
+        _targetLabel.enabled = !_targetLabel.enabled;
+    }
+
+    // ----  Initialization  ---- //
 
     private bool _tabletEquiped = false;
 
