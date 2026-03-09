@@ -70,6 +70,12 @@ public class Player : MonoBehaviour
     /// </summary>
     public static void IEnableDefaultInput()
     {
+        if (_fpsInputModule == null || _defaultInputModule == null)
+        {
+            Debug.LogError("Input modules are not initialized on Player.");
+            return;
+        }
+
         _fpsInputModule.enabled = false;
         _defaultInputModule.enabled = true;
     }
@@ -79,7 +85,12 @@ public class Player : MonoBehaviour
     /// </summary>
     public static void IDisableDefaultInput()
     {
-        if (_fpsInputModule == null) Debug.LogWarning("this shit is somehow null");
+        if (_fpsInputModule == null || _defaultInputModule == null)
+        {
+            Debug.LogError("Input modules are not initialized on Player.");
+            return;
+        }
+
         _fpsInputModule.enabled = true;
         _defaultInputModule.enabled = false;
     }

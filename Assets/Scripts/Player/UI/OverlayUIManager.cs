@@ -24,6 +24,12 @@ public class OverlayUIManager : MonoBehaviour
     private float PreviusSens = 0f;
     public static bool isPaused = false;
 
+    private void Awake()
+    {
+        Player._fpsInputModule = fpsInputModule;
+        Player._defaultInputModule = defaultInputModule;
+    }
+
     private void Start()
     {
         PauseMenuCanvas.enabled = false;
@@ -89,7 +95,7 @@ public class OverlayUIManager : MonoBehaviour
 
             fpsInputModule.enabled = true;
             defaultInputModule.enabled = false;
-            Player.IEnableDefaultInput();
+            Player.IDisableDefaultInput();
         }
     }
 
