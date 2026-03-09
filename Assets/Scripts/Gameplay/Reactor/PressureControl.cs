@@ -64,13 +64,7 @@ public class PressureControl : MonoBehaviour
 
                 float targetPressureChange = (basePressureChange - coolantEffect /*+ randomness*/) * valveFactor;
                 pressureIncrease = Mathf.Lerp(0, targetPressureChange, Time.deltaTime * 3f) * 100; // "sima" változás
-
-                MathF.Round(pressureIncrease, 2);
-                if (pressure + pressureIncrease <= minimumPressure)
-                {
-                    pressure = minimumPressure;
-                }
-                else pressure += pressureIncrease;
+                pressureIncrease = MathF.Round(pressureIncrease, 2);
 
                 if (pressure > ValueStorage.REACTOR_PS_PRESSURIZED && !isPressurized)
                 {
@@ -79,15 +73,11 @@ public class PressureControl : MonoBehaviour
                     Debug.Log("Triggered the overflowWait from pressurecontrol.");
                 }
 
-                if (pressure <= 0)
+                if (pressure + pressureIncrease <= minimumPressure)
                 {
-                    pressure = 0;
+                    pressure = minimumPressure;
                 }
-                else
-                {
-                    pressure += pressureIncrease;
-                    MathF.Round(pressure, 2);
-                }
+                else pressure += pressureIncrease;
 
                 //Debug.Log($"Temp={TempController.temp:F0}°C | Valves={ValveOverwatch.valveAmountOpen} | ΔP={pressureIncrease:F2} | P={pressure:F1}");
 
@@ -102,7 +92,10 @@ public class PressureControl : MonoBehaviour
 
     private void SetMinimumPressure()
     {
-        minimumPressure = (pressure / ValueStorage.REACTOR_PS_MAX) * TempController.temp;
-        Debug.Log(minimumPressure, gameObject);
+        minimumPressure = TempController.temp / ValueStorage.REACTOR_PS_MAX * 100;
+        minimumPressure = MathF.Round(minimumPressure, 3);
+        if (minimumPressure < 0) minimumPressure = 0;
+
+        Debug.Log($"minimum pressure = {minimumPressure}");
     }
 }

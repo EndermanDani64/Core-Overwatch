@@ -10,7 +10,7 @@ public class EconomyController : MonoBehaviour
     {
         if (_sm.score >= 100) // can be increased in the future to unlock money
         {
-            Debug.Log($"péz hozzáadások: {Mathf.Round(Mathf.Sqrt(_sm.score) * (_sm.score / (_sm.score + 10f)) * (_sm.scoreIncome / 100f))}");
+            //Debug.Log($"péz hozzáadások: {Mathf.Round(Mathf.Sqrt(_sm.score) * (_sm.score / (_sm.score + 10f)) * (_sm.scoreIncome / 100f))}");
             
             money += Mathf.Round(Mathf.Sqrt(_sm.score) * (_sm.score / (_sm.score + 10f)) * (_sm.scoreIncome / 100f));
         }
