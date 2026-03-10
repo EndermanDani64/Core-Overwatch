@@ -76,8 +76,13 @@ public class PressureControl : MonoBehaviour
                 if (pressure + pressureIncrease <= minimumPressure)
                 {
                     pressure = minimumPressure;
+                    WarningManager.ActivateWarningLights("minPs");
+                    Debug.LogWarning("initiated");
                 }
-                else pressure += pressureIncrease;
+                else { 
+                    pressure += pressureIncrease;
+                    WarningManager.DeactivateWarningLights("minPs");
+                }
 
                 //Debug.Log($"Temp={TempController.temp:F0}°C | Valves={ValveOverwatch.valveAmountOpen} | ΔP={pressureIncrease:F2} | P={pressure:F1}");
 

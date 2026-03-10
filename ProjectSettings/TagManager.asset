@@ -19,6 +19,7 @@ TagManager:
   - ElevatorButton_Nav
   - ViewModel
   - MoneyDisplay
+  - WarningLight
   layers:
   - Default
   - TransparentFX
