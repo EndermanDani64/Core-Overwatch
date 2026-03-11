@@ -42,7 +42,6 @@ public class Fixables : MonoBehaviour
                         {
                             fixableAvalibleCount--;
                         }
-
                         Debug.Log("fixed!");
                         timeHeld = 0f;
                     }

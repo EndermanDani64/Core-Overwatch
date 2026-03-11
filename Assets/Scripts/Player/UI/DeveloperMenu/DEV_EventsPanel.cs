@@ -27,15 +27,6 @@ public class DEV_EventsPanel : MonoBehaviour
     public void StartMeltdownEvent()
     {
         _OverallEvents.TriggerEvent("meltdown");
-
-        /*if (!OverallEvents.IsMainEventRunning) TEST NEEDED FOR THESE
-        {
-            StartCoroutine(feedbackTextToggle(meltdownEvent.DEV_ForceMeltdown(), "meltdown"));
-        }
-        else
-        {
-            feedbackTextToggleInfo("The meltdown event is already running!");
-        }*/
     }
 
     public void StartOverflowEvent()

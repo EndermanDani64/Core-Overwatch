@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class OverallEvents : MonoBehaviour
 {
@@ -7,6 +9,9 @@ public class OverallEvents : MonoBehaviour
     public static bool IsEventRunning = false;
     public static bool IsOverflow = false;
     public static bool IsBlackout = false;
+    public static bool IsMeltdown = false;
+
+    public event Action<bool> BlackoutEvent_SatusChange;
 
     [SerializeField] public Meltdown Event_Meltdown;
     [SerializeField] public BlackoutEvent Event_Blackout;
@@ -25,8 +30,6 @@ public class OverallEvents : MonoBehaviour
             IsEventRunning = false;
         }
     }
-
-    
 
     /// <summary>
     /// Triggers the in-game event related to the eventId.
@@ -47,6 +50,7 @@ public class OverallEvents : MonoBehaviour
             else if (eventId == "blackout")
             {
                 Event_Blackout.ForceBlackout();
+                BlackoutEvent_SatusChange?.Invoke(true);
             }
             else if (eventId == "overflow")
             {

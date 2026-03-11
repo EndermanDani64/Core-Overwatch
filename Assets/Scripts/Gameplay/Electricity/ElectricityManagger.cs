@@ -112,7 +112,7 @@ public class ElectricityManagger : MonoBehaviour
 
     private void DepletedEnergy()
     {
-        if (!tempController.isMeltdown && !OverallEvents.IsBlackout)
+        if (!OverallEvents.IsMeltdown && !OverallEvents.IsBlackout)
         {
             isDepletedEnergy = true;
             generatorController.ShutDown();

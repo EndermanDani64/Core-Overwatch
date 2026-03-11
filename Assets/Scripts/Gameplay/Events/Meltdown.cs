@@ -39,26 +39,6 @@ public class Meltdown : MonoBehaviour
         allAlarms.AddRange(Object.FindObjectsByType<AlarmPanel>(FindObjectsSortMode.None));
     }
 
-    private void Start()
-    {
-        StartCoroutine(CheckForMeltdownEvent());
-    }
-
-    private IEnumerator CheckForMeltdownEvent()
-    {
-        while (OverallEvents.IsMainEventRunning == false) // || !TempController.isMeltdown
-        {
-            /*Debug.LogWarning($"tempController.isMeltdown = {tempController.isMeltdown}");
-            Debug.LogWarning($"OverallEvents.IsEventRunning = {OverallEvents.IsEventRunning}");*/
-            if (tempController.isMeltdown && OverallEvents.IsEventRunning == false)
-            {
-                StartCoroutine(MeltdownEvent());
-                yield break;
-            }
-            yield return new WaitForSeconds(1.5f);
-        }
-    }
-
     private IEnumerator CoreShockWaves()
     {
         yield return new WaitForSeconds(313f);
@@ -82,7 +62,7 @@ public class Meltdown : MonoBehaviour
     private IEnumerator MeltdownEvent()
     {   
         OverallEvents.IsMainEventRunning = true;
-        Debug.Log($"MeltdownEvent started. | TempController.isMeltdown = {tempController.isMeltdown}");
+        Debug.Log($"MeltdownEvent started. | TempController.isMeltdown = {OverallEvents.IsMeltdown}");
         StartCoroutine(CoreShockWaves());
         timer.StartTimer();
         SoundSystem.BackgroundSoundsMute();
@@ -152,12 +132,11 @@ public class Meltdown : MonoBehaviour
         StopCoroutine(CoreShockWaves());
         StopCoroutine(MeltdownEvent());
         //source.PlayOneShot(successECoolant);
-        StartCoroutine(CheckForMeltdownEvent());
         StartCoroutine(CooldownAfterMeltdownECoolantSuccess());
     }
     public void ForceMeltdown()
     {
-        tempController.isMeltdown = true;
+        OverallEvents.IsMeltdown = true;
         StartCoroutine(MeltdownEvent());
     }
 
@@ -166,7 +145,7 @@ public class Meltdown : MonoBehaviour
     /// </summary> 
     public bool DEV_ForceMeltdown()
     {
-        tempController.isMeltdown = true;
+        OverallEvents.IsMeltdown = true;
         StartCoroutine(MeltdownEvent());
         return true;
     }
@@ -175,6 +154,6 @@ public class Meltdown : MonoBehaviour
     {
         yield return new WaitForSeconds(102);
         OverallEvents.IsMainEventRunning = false;
-        tempController.isMeltdown = false;
+        OverallEvents.IsMeltdown = false;
     }
 }

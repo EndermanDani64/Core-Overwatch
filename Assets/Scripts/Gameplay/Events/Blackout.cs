@@ -1,28 +1,17 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
 public class BlackoutEvent : MonoBehaviour
 {
-    [SerializeField] private AudioSource source;
-    [SerializeField] private AudioClip soundEffect;
-    [SerializeField] private AudioClip music;
-
-    [SerializeField] private TempController tempController;
-    [SerializeField] private ElectricityManagger electricityManagger;
-    [SerializeField] private OverallEvents OverallEvents;
-    [SerializeField] private ShoutSystem ShoutSystem;
-    [SerializeField] private LightControl LightControl;
-
-    [SerializeField] private Meltdown meltdownEvent;
-
     void Start()
     {
         StartCoroutine(randomEvent());
     }
 
     public IEnumerator SetPower() // this is called when the randomEvent() has got the randomness
-    {   
-        Debug.Log("Blackout Event has Started!");
+    {
+        BlackoutEvent_SatusChange?.Invoke(true);
 
         OverallEvents.IsEventRunning = true;
         OverallEvents.IsBlackout = true;
@@ -31,22 +20,22 @@ public class BlackoutEvent : MonoBehaviour
         LightControl.LightOutage();
         source.PlayOneShot(soundEffect);
         ShoutSystem.ShowMessage("Power went, whoossss-");
-        if (!tempController.isMeltdown)
+        if (!OverallEvents.IsMeltdown)
         {
             source.PlayOneShot(music);
         }
 
-        yield return new WaitForSeconds(123); 
+        yield return new WaitForSeconds(123);
 
         OverallEvents.IsEventRunning = false;
         OverallEvents.IsBlackout = false;
 
         LightControl.LightRestore();
         ShoutSystem.HideMessage();
-        OverallEvents.EventQueue_TriggerNext();
-        Debug.Log("Triggered next event on blackout end.");
+        overallEvents.EventQueue_TriggerNext();
         StartCoroutine(randomEvent());
         //flashLight.enabled = false;
+        BlackoutEvent_SatusChange?.Invoke(false);
     }
     
     private bool doesRandomHaveToStop = false;
@@ -56,23 +45,19 @@ public class BlackoutEvent : MonoBehaviour
         //Debug.Log("Random blackouts will occour again.");
         while (!doesRandomHaveToStop)
         {
-            int willEventStart = Random.Range(0, 150);
-            if (willEventStart == 69 && !OverallEvents.IsBlackout && !tempController.isMeltdown && !electricityManagger.isDepletedEnergy)
+            int willEventStart = UnityEngine.Random.Range(0, 150);
+            if (willEventStart == 69 && !OverallEvents.IsBlackout && !OverallEvents.IsMeltdown && !electricityManagger.isDepletedEnergy)
             {
-                OverallEvents.PlayEvent("blackout");
+                overallEvents.PlayEvent("blackout");
             }
             yield return new WaitForSeconds(2);
         }
     }
 
-    public void ForceBlackout() // do not use except OverallEvents
-    {
-        StartCoroutine(SetPower());
-    }
+    
     public bool DEV_ForceBlackout()
     {
-        //StartCoroutine(SetPower());
-        OverallEvents.PlayEvent("blackout");
+        overallEvents.PlayEvent("blackout");
         return true;
     }
 
@@ -84,6 +69,7 @@ public class BlackoutEvent : MonoBehaviour
         OverallEvents.IsBlackout = false;
         //source.volume = 0.6f;
         //source.PlayOneShot(soundEffect);
+        BlackoutEvent_SatusChange?.Invoke(false);
     }
 
     public void StopRandomEventCheck()
@@ -91,4 +77,27 @@ public class BlackoutEvent : MonoBehaviour
         doesRandomHaveToStop = true;
         Debug.Log("Random blackouts won't occour again.");
     }
+
+    // ----  OverallEvents using it  ---- //
+
+    public void ForceBlackout() // do not use except OverallEvents
+    {
+        StartCoroutine(SetPower());
+    }
+
+    // ----  Initiating  ---- //
+
+    public event Action<bool> BlackoutEvent_SatusChange;
+
+    [SerializeField] private AudioSource source;
+    [SerializeField] private AudioClip soundEffect;
+    [SerializeField] private AudioClip music;
+
+    [SerializeField] private TempController tempController;
+    [SerializeField] private ElectricityManagger electricityManagger;
+    [SerializeField] private OverallEvents overallEvents;
+    [SerializeField] private ShoutSystem ShoutSystem;
+    [SerializeField] private LightControl LightControl;
+
+    [SerializeField] private Meltdown meltdownEvent;
 }

@@ -13,24 +13,15 @@ public class TempController : MonoBehaviour
     }
 
     /// <summary>
-    /// Modifies the temp with all the other influential values
+    /// Used to modify temp. Contains checks for the temp value.
     /// </summary>
     public void TemperatureLoop()
     {
         UpdateTemperatureDynamics();
+
         if (temp > ValueStorage.REACTOR_TMP_MELTINGPOINT)
         {
-            isMeltdown = true;
-        }
-
-        if (tempIntensity - coolantInjectionSlider.value / 4 > 0 && SupplyDeposit.supplyedValue > 0)
-        {
-            tempIntensity -= coolantInjectionSlider.value / 3.5f;
-            supplyDeposit.DecreaseSupplyValue(((int)Mathf.Round(coolantInjectionSlider.value)) /*/ 4*/);
-        }
-        else
-        {
-            tempIntensity = 0;
+            OverallEvents.PlayEvent("meltdown");
         }
 
         float baseIncrease = tempIntensity * 50f * Time.deltaTime;
@@ -48,82 +39,59 @@ public class TempController : MonoBehaviour
         {
             simulatedIncrease = baseIncrease + controlRodEffect - fanCooling - coolantCooling;
         }
-        else
-        {
-            simulatedIncrease = 0f;
-        }
 
         temp += simulatedIncrease;
         MathF.Round(temp, 2);
 
-        if (temp < ValueStorage.REACTOR_TMP_MAXIMUM)
-        {
-            tempTextUpdater.UpdateText();
-        }
+        if (temp < ValueStorage.REACTOR_TMP_MAXIMUM) tempTextUpdater.UpdateText();
+        if (temp < ValueStorage.REACTOR_TMP_MINIMUM) temp = 0;
 
-        if (temp < ValueStorage.REACTOR_TMP_MINIMUM)
-        {
-            temp = 0;
-        }
+        OnTemperatureChanged?.Invoke(temp);
     }
 
     private void UpdateTemperatureDynamics()
     {
         difference = temp - previousTemp;
         float delta = difference - previousDifference;
+        bool isDecreasing;
+        bool isIncreasing;
 
-        foreach (var modifier in _intensityModifiers)
+        foreach (var modifier in intensityModifiers)
         {
-            // if the tempIntensity is rising
-            if (delta >= modifier.minChange && delta < modifier.maxChange) 
+            isDecreasing = delta < modifier.minChange;
+            isIncreasing = delta >= modifier.minChange && delta < modifier.maxChange;
+
+            if (isIncreasing && !isDecreasing) 
             {
                 float[] controlRodValues = new float[] { ControlRod1.value, ControlRod2.value, ControlRod3.value, ControlRod4.value };
-                int randomChoice = UnityEngine.Random.Range(0, controlRodValues.Length); // needed for the random choosing of one of the control rod's value
+                int randomChoice = UnityEngine.Random.Range(0, controlRodValues.Length);
 
-                if (tempIntensity + (modifier.intensityDelta + controlRodValues[randomChoice]) / 5.5f <= 0) // we check so the tempIntensity doesn't go below 0
-                {
-                    tempIntensity = 0;
-                }
-                else
-                {
-                    tempIntensity += (modifier.intensityDelta + controlRodValues[randomChoice]) / 5.5f;
-                }
+                tempIntensity += (modifier.intensityDelta + controlRodValues[randomChoice]) / 5.5f;
+                Mathf.Max(tempIntensity, 0f);
 
+                OnTemperatureIntensityChanged?.Invoke(tempIntensity);
                 break;
             }
-
-            // if the tempIntensity is falling
-            else if (delta < modifier.minChange) 
+            else if (isDecreasing && !isIncreasing)
             {
-                if (tempIntensity - modifier.intensityDelta < ValueStorage.REACTOR_TMP_MINIMUM) // if the tempIntensity would go under 0 then we round it up to 0
-                {
-                    tempIntensity = ValueStorage.REACTOR_TMP_MINIMUM;
-                }
-                else // else, we are going to decrease the tempIntensity, with the rod
-                {
-                    //tempIntensity -= modifier.intensityDelta;
-                }
+                Mathf.Max(tempIntensity, 0f);
+
+                OnTemperatureIntensityChanged?.Invoke(tempIntensity);
                 break;
             }
         }
 
-        //Debug.Log($"difference = {difference}");
+        // decreasing tempIntensity based on the coolantInjector
+        if (SupplyDeposit.supplyedValue > 0)
+        {
+            tempIntensity -= coolantInjectionSlider.value / 3.5f;
+            Mathf.Max(tempIntensity, 0f);
+
+            supplyDeposit.DecreaseSupplyValue(((int)Mathf.Round(coolantInjectionSlider.value)) /*/ 4*/);
+        }
 
         previousDifference = difference;
         previousTemp = temp;
-    }
-    /// <summary>
-    /// Starts the reactor, modifying the isOnline and tempIntensity values
-    /// </summary>
-    public void StartReactor()
-    {
-        //Debug.Log("Reactor startup attempt started");
-        if (!isOnline)
-        {
-            isOnline = true;
-            tempIntensity = 0.2f;
-            previousTemp = temp;
-        }
     }
 
     public void Transfer_StartReactor(float tempIntensity)
@@ -134,7 +102,6 @@ public class TempController : MonoBehaviour
             isOnline = true;
             tempIntensity = 0.2f;
             previousTemp = temp;
-
         }
         else
         {
@@ -155,6 +122,15 @@ public class TempController : MonoBehaviour
             ControlRod1.value = 0;
         }
     }
+    public void StartReactor()
+    {
+        if (!isOnline)
+        {
+            isOnline = true;
+            tempIntensity = 0.2f;
+            previousTemp = temp;
+        }
+    }
 
     public void DestroyReactor()
     {
@@ -162,6 +138,11 @@ public class TempController : MonoBehaviour
         isError = true;
         StopAllCoroutines();
     }
+
+    // ----  Submethods  ---- //
+
+
+    // ----  Initialize  ---- //
 
     [Header("Important scripts")]
     [SerializeField] private SoundSystem SoundSystem;
@@ -184,13 +165,15 @@ public class TempController : MonoBehaviour
     [Header("Important variables")]
     public bool isOnline = false;
     public bool isError = false;
-    public bool isMeltdown = false;
 
     public int reactorStatus = 0;
 
-    [SerializeField] private List<TempIntensityModifier> _intensityModifiers;
+    [SerializeField] private List<TempIntensityModifier> intensityModifiers;
     public static float temp;
     public static float tempIntensity = 0.2f;
+
+    public event Action<float> OnTemperatureChanged;
+    public event Action<float> OnTemperatureIntensityChanged;
 
     private float previousTemp;
     private float difference;
