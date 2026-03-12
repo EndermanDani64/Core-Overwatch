@@ -95,6 +95,62 @@ public class Player : MonoBehaviour
         _defaultInputModule.enabled = false;
     }
 
+    /// <summary>
+    /// Returns the GameObject which the player is looking at. If none then returns with null.
+    /// </summary>
+    public static GameObject LookingAt()
+    {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+
+        if (Physics.Raycast(ray, out hit))
+        {
+            return hit.collider.gameObject;
+        }
+        return null;
+    }
+
+    /// <summary>
+    /// Takes a string parameter and then compares it to the object's tag which the player is looking at. True if matches.
+    /// </summary>
+    /// <returns></returns>
+    public static bool LookingAtTarget(string targetTag, KeyCode targetKey = KeyCode.None)
+    {
+        if (targetTag == "" || targetTag == null) 
+        {
+            Debug.LogWarning("Parameter targetTag is not set or empty! Returned with false.");
+            return false;
+        }
+
+        if (targetKey == KeyCode.None)
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+
+            if (Physics.Raycast(ray, out hit))
+            {
+                if (hit.collider.CompareTag(targetTag))
+                {
+                    return true;
+                }
+            }
+        }
+        else if (targetKey != KeyCode.None && Input.GetKey(targetKey))
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+
+            if (Physics.Raycast(ray, out hit))
+            {
+                if (hit.collider.CompareTag(targetTag))
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     [SerializeField] public static FPSInputModule _fpsInputModule;
     [SerializeField] public static InputSystemUIInputModule _defaultInputModule;
 }
