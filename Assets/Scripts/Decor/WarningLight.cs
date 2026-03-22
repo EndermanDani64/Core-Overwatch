@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class WarningLight : MonoBehaviour
 {
     public string id = "";
-    private bool enabled = false;
+    private bool enabld = false;
 
     // ----  Methods  ---- //
 
@@ -16,11 +16,11 @@ public class WarningLight : MonoBehaviour
     public void TurnOnWarningLight()
     {
         Debug.LogWarning("entered $$$");
-        if (enabled) Debug.LogWarning("Cannot turn on the warning lights because they are already on.");
+        if (enabld) Debug.LogWarning("Cannot turn on the warning lights because they are already on.");
         else
         {
             Debug.LogWarning("$");
-            enabled = true;
+            enabld = true;
             StartCoroutine(WarningFlicker());
         }
     }
@@ -30,10 +30,10 @@ public class WarningLight : MonoBehaviour
     /// </summary>
     public void TurnOffWarningLight()
     {
-        if (!enabled) Debug.LogWarning("Cannot turn off the warning lights because they are already off.");
+        if (!enabld) Debug.LogWarning("Cannot turn off the warning lights because they are already off.");
         else
         {
-            enabled = false;
+            enabld = false;
         }
     }
 
@@ -41,8 +41,8 @@ public class WarningLight : MonoBehaviour
 
     public IEnumerator WarningFlicker()
     {
-        if (!enabled) Debug.LogWarning("Cannot start corroutine because enabled is false");
-        while (enabled)
+        if (!enabld) Debug.LogWarning("Cannot start corroutine because \"enabl\" is false");
+        while (enabld)
         {
             if (light.material == on) { light.material = off; }
             else { light.material = on; }
