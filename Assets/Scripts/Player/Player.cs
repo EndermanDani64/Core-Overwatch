@@ -111,6 +111,35 @@ public class Player : MonoBehaviour
     }
 
     /// <summary>
+    /// Returns a bool wether the player is looking at the specified GameObject or not.
+    /// </summary>
+    public static bool LookingAtThis(GameObject target, KeyCode targetKey = KeyCode.None)
+    {
+        if (targetKey != KeyCode.None)
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+
+            if (Physics.Raycast(ray, out hit))
+            {
+                if (hit.collider.gameObject == target) return true;
+            }
+            return false;
+        }
+        else
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+
+            if (Physics.Raycast(ray, out hit) && Input.GetKey(targetKey))
+            {
+                if (hit.collider.gameObject == target) return true;
+            }
+            return false;
+        }
+    }
+
+    /// <summary>
     /// Takes a string parameter and then compares it to the object's tag which the player is looking at. True if matches.
     /// </summary>
     /// <returns></returns>
@@ -150,6 +179,14 @@ public class Player : MonoBehaviour
         }
         return false;
     }
+
+    private void Start()
+    {
+        //LookingAtFixable
+    }
+
+    public delegate void LooksAt();
+    public static event LooksAt LookingAtFixable;
 
     [SerializeField] public static FPSInputModule _fpsInputModule;
     [SerializeField] public static InputSystemUIInputModule _defaultInputModule;

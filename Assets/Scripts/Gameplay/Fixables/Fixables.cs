@@ -1,9 +1,10 @@
 using UnityEngine;
+using FMODUnity;
 
 public class Fixables : MonoBehaviour
 {
     [SerializeField] public static bool isFixableAvalible = false;
-    [SerializeField] private int fixableAvalibleCount = 0;
+    [SerializeField] private int fixableTaskCount = 0;
 
     private GameObject[] fixableList = {  };
 
@@ -12,34 +13,29 @@ public class Fixables : MonoBehaviour
         fixableList = GameObject.FindGameObjectsWithTag("Fixable");
     }
 
+    private void Start()
+    {
+        SubToEvents();
+    }
+
     private float timeHeld = 0f;
     void Update()
     {
         if (Player.LookingAtTarget("Fixable", KeyCode.E) && timeHeld < ValueStorage.TIME_FIXABLE_TIMETOFIX)
         {
             GameObject go = Player.LookingAt();
+            LocalStorage fixableStorage = go.GetComponent<LocalStorage>();
 
-            if (!go.GetComponent<VariableStorage_Fixable>().isFixed)
+            if (!fixableStorage.isFixed)
             {
-                bool isFixed = go.GetComponent<VariableStorage_Fixable>().isFixed;
+                bool isFixed = fixableStorage.isFixed;
                 Debug.Log($"timeheld = {Mathf.Round(timeHeld)} | isFixed = {isFixed}");
 
                 if (Mathf.Round(timeHeld) >= ValueStorage.TIME_FIXABLE_TIMETOFIX && !isFixed)
                 {
-                    go.GetComponent<VariableStorage_Fixable>().isFixed = true;
-                    go.GetComponent<ParticleSystem>().startLifetime = 0;
-                    go.GetComponent<AudioSource>().PlayOneShot(go.GetComponent<VariableStorage_Fixable>().fixingSFX);
+                    fixableStorage.FixThis();
 
-                    if (fixableAvalibleCount == 1)
-                    {
-                        fixableAvalibleCount--;
-                        isFixableAvalible = false;
-                    }
-                    else
-                    {
-                        fixableAvalibleCount--;
-                    }
-                    Debug.Log("fixed!");
+                    
                     timeHeld = 0f;
                 }
                 else if (timeHeld < ValueStorage.TIME_FIXABLE_TIMETOFIX && !isFixed)
@@ -67,14 +63,14 @@ public class Fixables : MonoBehaviour
                         hit.collider.GetComponent<ParticleSystem>().startLifetime = 0;
                         hit.collider.GetComponent<AudioSource>().PlayOneShot(hit.collider.GetComponent<VariableStorage_Fixable>().fixingSFX);
 
-                        if (fixableAvalibleCount == 1)
+                        if (fixableTaskCount == 1)
                         {
-                            fixableAvalibleCount--; 
+                            fixableTaskCount--; 
                             isFixableAvalible = false;
                         }
                         else
                         {
-                            fixableAvalibleCount--;
+                            fixableTaskCount--;
                         }
                         Debug.Log("fixed!");
                         timeHeld = 0f;
@@ -86,8 +82,6 @@ public class Fixables : MonoBehaviour
                 }
             }
         }*/
-
-        Upd_CheckHolding();
     }
 
     /// <summary>
@@ -97,30 +91,47 @@ public class Fixables : MonoBehaviour
     {
         int randomEvent = Random.Range(45, 45); // should be defined in ValueStorage for different scenarios
 
-        if (randomEvent == 45 && fixableAvalibleCount < fixableList.Length)
+        if (randomEvent == 45 && fixableTaskCount < fixableList.Length)
         {
             int randomIndex = Random.Range(0, fixableList.Length);
-            if (fixableList[randomIndex].GetComponent<VariableStorage_Fixable>().isFixed) 
+            LocalStorage fixableStorage = fixableList[randomIndex].GetComponent<LocalStorage>();
+
+            if (fixableStorage.isFixed) 
             {
-                fixableList[randomIndex].GetComponent<VariableStorage_Fixable>().isFixed = false;
-                fixableList[randomIndex].GetComponent<ParticleSystem>().startLifetime = 0.13f;
+                fixableStorage.DamageThis();
 
                 isFixableAvalible = true;
-                fixableAvalibleCount++;
+                fixableTaskCount++;
 
-                Debug.Log($"Damaged a fixable. | fixableAvalibleCount = {fixableAvalibleCount}");
+                Debug.Log($"Damaged a fixable. | fixableTaskCount = {fixableTaskCount}");
             }
         }
     }
 
+    /// <summary>
+    /// Decreases fixableTaskCount
+    /// </summary>
+    private void SubFixalbeTask()
+    {
+        if (fixableTaskCount == 1)
+        {
+            fixableTaskCount--;
+            isFixableAvalible = false;
+            return;
+        }
+        fixableTaskCount--;
+    }
+
     // ----  Submethods  ---- //
 
-    private void Upd_CheckHolding()
+    /// <summary>
+    /// Subscribes the SubFixalbeTask() to all of the fixable object's fixTrigger event.
+    /// </summary>
+    private void SubToEvents()
     {
-        if (!Input.GetKey(KeyCode.E) && fixableAvalibleCount > 0 && timeHeld != 0) // if the player releases the button [E] then 
+        foreach (GameObject fixableObject in fixableList)
         {
-            Debug.Log("elengedve");
-            timeHeld = 0f;
+            fixableObject.GetComponent<LocalStorage>().FixTrigger += SubFixalbeTask;
         }
     }
 }
