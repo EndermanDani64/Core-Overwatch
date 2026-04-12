@@ -2,13 +2,11 @@ using UnityEngine;
 using FMODUnity;
 using System;
 
-public class LocalStorage : MonoBehaviour
+public class Fixable_LocalStorage : MonoBehaviour
 {
-    public delegate void InteractedWith();
-    public event InteractedWith FixTrigger;
+    public event System.Action FixTrigger;
 
     public bool isFixed = false;
-    public AudioClip fixingSFX;
 
     public void FixThis()
     {
@@ -17,8 +15,16 @@ public class LocalStorage : MonoBehaviour
         ParticleSystem.MainModule particleSystem = gameObject.GetComponent<ParticleSystem>().main;
 
         isFixed = true;
-        gameObject.GetComponent<StudioEventEmitter>().Play();
-        particleSystem.duration = 0;
+        //particleSystem.duration = 0;
+        StudioEventEmitter[] emmiters = gameObject.GetComponentsInChildren<StudioEventEmitter>();
+        foreach (StudioEventEmitter emmiter in emmiters)
+        {
+            if (emmiter.gameObject.name == "FixEventEmitter")
+            {
+                emmiter.Play();
+            }
+        }
+        particleSystem.startLifetime = 0;
     }
 
     public void DamageThis()
@@ -28,8 +34,17 @@ public class LocalStorage : MonoBehaviour
         ParticleSystem.MainModule particleSystem = gameObject.GetComponent<ParticleSystem>().main;
 
         isFixed = false;
-        gameObject.GetComponent<StudioEventEmitter>().Play();
-        particleSystem.duration = 0.13f;
+        //particleSystem.duration = 0.13f;
+        particleSystem.startLifetime = 0.1f;
+
+        StudioEventEmitter[] emmiters = gameObject.GetComponentsInChildren<StudioEventEmitter>();
+        foreach (StudioEventEmitter emmiter in emmiters)
+        {
+            if (emmiter.gameObject.name == "DamageEventEmitter")
+            {
+                //emmiter.Play(); !!!!
+            }
+        }
     }
 
     private void Update()

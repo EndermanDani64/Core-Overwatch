@@ -7,7 +7,7 @@ public class PlayerInteractionsManager : MonoBehaviour
 {
     void Update()
     {
-        if (OverlayUIManager.isPaused) { return; }
+        if (PlayerUIManager.isPaused) { return; }
         
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
@@ -61,9 +61,9 @@ public class PlayerInteractionsManager : MonoBehaviour
                     targetLabel.text = "Deposit [E]";
                 }
             }
-            else if (hit.collider.CompareTag("Fixable") && Fixables.isFixableAvalible)
+            else if (hit.collider.CompareTag("Fixable")/* && Fixables.activeTaskCount > 0*/)
             {
-                if (!targetLabel.enabled)
+                if (!targetLabel.enabled && !hit.collider.gameObject.GetComponent<Fixable_LocalStorage>().isFixed)
                 {
                     targetLabel.enabled = true;
                     targetLabel.text = "Fix [hold: E]";

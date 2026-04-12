@@ -13,7 +13,7 @@ public class HazmatSuit : MonoBehaviour
         else
         {
             isHazmat = true;
-            Player.ISetWearing("hazmatSuit");
+            Player.SetWearing("hazmatSuit");
             gameObject.transform.position = new Vector3(500, 500, 500);
         }
     }

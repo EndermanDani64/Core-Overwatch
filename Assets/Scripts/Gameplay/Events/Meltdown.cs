@@ -1,37 +1,31 @@
 using System.Collections;
 using UnityEngine.SceneManagement;
 using UnityEngine;
+using FMODUnity;
 using System.Collections.Generic;
 
 public class Meltdown : MonoBehaviour
 {
     [Header("Important scripts")]
-    [SerializeField] private TempController tempController;
+    [SerializeField] private TempController _tempController;
     [SerializeField] private PressureControl PressureControl;
     [SerializeField] private BlackoutEvent BlackoutEvent;
     [SerializeField] private CoreEffects CoreEffects;
     [SerializeField] private ECoolantController ECoolantController;
-    [SerializeField] private ShoutSystem ShoutSystem;
-    [SerializeField] private BlastDoorController BlastDoorController;
-    [SerializeField] private OverallEvents overallEvents;
+    [SerializeField] private ShoutSystem _shoutSystem;
+    [SerializeField] private BlastDoorController _blastDoorController;
+    [SerializeField] private OverallEvents _overallEvents;
+    [SerializeField] private PlayerAudioEmitter _soundSystem;
 
     [Header("Event materials")]
-    [SerializeField] private SoundSystem SoundSystem;
     private List<AlarmPanel> allAlarms = new List<AlarmPanel>();
     [SerializeField] private Timer timer;
-
-    [Header("Audios")]
-    [SerializeField] private AudioSource source;
-    [SerializeField] private AudioClip meltdownEventFirst;
-    [SerializeField] private AudioClip meltdownEventSecond;
-    //[SerializeField] private AudioClip successECoolant;
 
     [Header("VFX effects")]
     [SerializeField] private ParticleSystem CoreRadioation;
     [SerializeField] private ParticleSystem Steam1;
     [SerializeField] private ParticleSystem Steam2;
 
-    //[Header("Animations")]
     public Animator animator;
 
     private void Awake()
@@ -39,7 +33,7 @@ public class Meltdown : MonoBehaviour
         allAlarms.AddRange(Object.FindObjectsByType<AlarmPanel>(FindObjectsSortMode.None));
     }
 
-    private IEnumerator CoreShockWaves()
+    IEnumerator CoreShockWaves()
     {
         yield return new WaitForSeconds(313f);
         animator.Play("CoreShockwave", 0, 0f);
@@ -59,28 +53,33 @@ public class Meltdown : MonoBehaviour
         //StartCoroutine(CoreEffects.CoreShock());
     }
 
-    private IEnumerator MeltdownEvent()
-    {   
+    IEnumerator MeltdownEvent_FirstSegment()
+    {
         OverallEvents.IsMainEventRunning = true;
-        Debug.Log($"MeltdownEvent started. | TempController.isMeltdown = {OverallEvents.IsMeltdown}");
+
         StartCoroutine(CoreShockWaves());
         timer.StartTimer();
-        SoundSystem.BackgroundSoundsMute();
+        _soundSystem.StopSounds();
         foreach (var alarmPanel in allAlarms)
         {
             alarmPanel.StartAlarm_Meltdown();
         }
-        source.PlayOneShot(meltdownEventFirst);
+        _soundSystem.PlaySound("ms_beforemeltdown");
         yield return new WaitForSeconds(83);
-        ShoutSystem.ShowMessage("E-Coolant is now avalible.");
+        _shoutSystem.ShowMessage("E-Coolant is now avalible.");
         ECoolantController.StartIEnumerator();
         Debug.Log("ECoolant Started. + message should have shown");
         yield return new WaitForSeconds(94.01f);
 
+        _overallEvents.PlayEvent("meltdown_second");
+    }
+
+    IEnumerator MeltdownEvent_SecondSegment()
+    {
         if (ECoolantController.isECoolantSucces)
         {
             Debug.Log("ECoolant was successful.");
-            ShoutSystem.HideMessage();
+            _shoutSystem.HideMessage();
             StopMeltdown();
         }
         else
@@ -88,8 +87,7 @@ public class Meltdown : MonoBehaviour
             var emission = CoreRadioation.emission;
             emission.enabled = true;
             Debug.Log("Meltdown continues, no successful ECoolant.");
-            ShoutSystem.ShowMessage("E-Coolant failed!");
-            source.PlayOneShot(meltdownEventSecond);
+            _shoutSystem.ShowMessage("E-Coolant failed!");
 
             yield return new WaitForSeconds(0.85f);
             var steam1Emission = Steam1.emission;
@@ -100,10 +98,10 @@ public class Meltdown : MonoBehaviour
             steam2Emission.enabled = true;
 
             yield return new WaitForSeconds(2.5f);
-            ShoutSystem.HideMessage();
+            _shoutSystem.HideMessage();
 
             yield return new WaitForSeconds(90f);
-            BlastDoorController.ShutDownBlastDoors();
+            _blastDoorController.ShutDownBlastDoors();
 
             yield return new WaitForSeconds(12);
             BlackoutEvent.ForceBlackout();
@@ -116,10 +114,21 @@ public class Meltdown : MonoBehaviour
         }
     }
 
+    public void ForceMeltdown_FirstSegment()
+    {
+        OverallEvents.IsMeltdown = true;
+        StartCoroutine(MeltdownEvent_FirstSegment());
+    }
+    public void ForceMeltdown_SecondSegment()
+    {
+        OverallEvents.IsMeltdown = true;
+        StartCoroutine(MeltdownEvent_SecondSegment());
+    }
+
     public void StopMeltdown()
     {
-        TempController.temp = 0;
-        tempController.isError = false;
+        ReactorManager.Temp = 0;
+        _tempController.isError = false;
         PressureControl.isPressurized = false;
         PressureControl.isError = false;
         PressureControl.pressure = 250;
@@ -130,14 +139,10 @@ public class Meltdown : MonoBehaviour
         }
 
         StopCoroutine(CoreShockWaves());
-        StopCoroutine(MeltdownEvent());
-        //source.PlayOneShot(successECoolant);
+        StopCoroutine(MeltdownEvent_FirstSegment());
+        StopCoroutine(MeltdownEvent_SecondSegment());
+        
         StartCoroutine(CooldownAfterMeltdownECoolantSuccess());
-    }
-    public void ForceMeltdown()
-    {
-        OverallEvents.IsMeltdown = true;
-        StartCoroutine(MeltdownEvent());
     }
 
     /// <summary>
@@ -146,7 +151,7 @@ public class Meltdown : MonoBehaviour
     public bool DEV_ForceMeltdown()
     {
         OverallEvents.IsMeltdown = true;
-        StartCoroutine(MeltdownEvent());
+        StartCoroutine(MeltdownEvent_FirstSegment());
         return true;
     }
 

@@ -635,6 +635,7 @@ MonoBehaviour:
   - Master
   Banks:
   - EFFECTS
+  - MUSICS
   BanksToLoad: []
   LiveUpdatePort: 9264
   EnableMemoryTracking: 0
@@ -647,7 +648,7 @@ MonoBehaviour:
   SharedLibraryUpdateStage: 0
   SharedLibraryTimeSinceStart: 0
   CurrentVersion: 131635
-  HideSetupWizard: 0
+  HideSetupWizard: 1
   LastEventReferenceScanVersion: 131635
   Platforms:
   - {fileID: 5037328147495559501}
@@ -832,7 +833,7 @@ MonoBehaviour:
       Value: 0
       HasValue: 0
     Overlay:
-      Value: 1
+      Value: 2
       HasValue: 1
     OverlayPosition:
       Value: 0

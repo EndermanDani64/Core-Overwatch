@@ -13,17 +13,21 @@ public class BlackoutEvent : MonoBehaviour
     {
         BlackoutEvent_SatusChange?.Invoke(true);
 
+        playerAudioEmitter.PlaySound("fx_blackout");
+        yield return new WaitForSeconds(0.3f);
+        playerAudioEmitter.PlaySound("ms_blackout");
+
         OverallEvents.IsEventRunning = true;
         OverallEvents.IsBlackout = true;
 
         StopRandomEventCheck();
         LightControl.LightOutage();
-        source.PlayOneShot(soundEffect);
+        //source.PlayOneShot(soundEffect);
         ShoutSystem.ShowMessage("Power went, whoossss-");
-        if (!OverallEvents.IsMeltdown)
+        /*if (!OverallEvents.IsMeltdown)
         {
             source.PlayOneShot(music);
-        }
+        }*/
 
         yield return new WaitForSeconds(123);
 
@@ -65,7 +69,7 @@ public class BlackoutEvent : MonoBehaviour
     {   
         LightControl.LightRestore();
         ShoutSystem.HideMessage();
-        source.Stop();
+        //source.Stop();
         OverallEvents.IsBlackout = false;
         //source.volume = 0.6f;
         //source.PlayOneShot(soundEffect);
@@ -89,15 +93,14 @@ public class BlackoutEvent : MonoBehaviour
 
     public event Action<bool> BlackoutEvent_SatusChange;
 
-    [SerializeField] private AudioSource source;
+    /*[SerializeField] private AudioSource source;
     [SerializeField] private AudioClip soundEffect;
-    [SerializeField] private AudioClip music;
+    [SerializeField] private AudioClip music;*/
 
     [SerializeField] private TempController tempController;
     [SerializeField] private ElectricityManagger electricityManagger;
     [SerializeField] private OverallEvents overallEvents;
+    [SerializeField] private PlayerAudioEmitter playerAudioEmitter;
     [SerializeField] private ShoutSystem ShoutSystem;
     [SerializeField] private LightControl LightControl;
-
-    [SerializeField] private Meltdown meltdownEvent;
 }

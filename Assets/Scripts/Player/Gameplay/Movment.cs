@@ -41,7 +41,7 @@ public class Movment : MonoBehaviour
 
     void Update()
     {
-        if (!OverlayUIManager.isPaused)
+        if (!PlayerUIManager.isPaused)
         {
             HandleStamina();
             UpdateMouse();

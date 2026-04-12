@@ -5,7 +5,7 @@ using System;
 public class TempController : MonoBehaviour
 {
     [System.Serializable]
-    public class TempIntensityModifier
+    [SerializeField] private class TempIntensityModifier
     {
         public float minChange;
         public float maxChange;
@@ -43,8 +43,8 @@ public class TempController : MonoBehaviour
         temp += simulatedIncrease;
         MathF.Round(temp, 2);
 
-        if (temp < ValueStorage.REACTOR_TMP_MAXIMUM) tempTextUpdater.UpdateText();
-        if (temp < ValueStorage.REACTOR_TMP_MINIMUM) temp = 0;
+        if (temp < ValueStorage.REACTOR_TMP_MAX) tempTextUpdater.UpdateText();
+        if (temp < ValueStorage.REACTOR_TMP_MIN) temp = 0;
 
         OnTemperatureChanged?.Invoke(temp);
     }
@@ -115,13 +115,14 @@ public class TempController : MonoBehaviour
         {
             StopAllCoroutines();
             isOnline = false;
-            temp = ValueStorage.REACTOR_TMP_MINIMUM;
+            temp = ValueStorage.REACTOR_TMP_MIN;
             tempTextUpdater.UpdateText();
             previousTemp = temp;
             tempIntensity = 0f;
             ControlRod1.value = 0;
         }
     }
+
     public void StartReactor()
     {
         if (!isOnline)
@@ -129,6 +130,7 @@ public class TempController : MonoBehaviour
             isOnline = true;
             tempIntensity = 0.2f;
             previousTemp = temp;
+            InvokeRepeating("TemperatureLoop", 0, 2f);
         }
     }
 
@@ -145,7 +147,7 @@ public class TempController : MonoBehaviour
     // ----  Initialize  ---- //
 
     [Header("Important scripts")]
-    [SerializeField] private SoundSystem SoundSystem;
+    [SerializeField] private PlayerAudioEmitter SoundSystem;
     [SerializeField] private PressureControl pressureControl;
     [SerializeField] private OverallEvents OverallEvents;
     [SerializeField] private BlackoutEvent blackoutEvent;

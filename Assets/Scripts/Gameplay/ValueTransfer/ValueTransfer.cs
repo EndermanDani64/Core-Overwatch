@@ -4,7 +4,7 @@ public class ValueTransfer : MonoBehaviour
 {
     [Header("Important scripts")]
     [SerializeField] private GeneratorController generatorController;
-    [SerializeField] private SoundSystem soundSystem;
+    [SerializeField] private PlayerAudioEmitter soundSystem;
     [SerializeField] private FanOverwatch fanOverwatch;
     [SerializeField] private OverallEvents overallEvents;
     [SerializeField] private ShoutSystem shoutSystem;

@@ -18,7 +18,7 @@ public class InventorySystem : MonoBehaviour
             {
                 heldItem = item;
                 equippedItemID = id;
-                Player.ISetHolding(item);
+                Player.SetHolding(item);
                 Debug.Log($"You've picked up, {item}!");
             }
             else
@@ -38,7 +38,7 @@ public class InventorySystem : MonoBehaviour
         {
             heldItem = "";
             equippedItemID = 0;
-            Player.ISetHoldingToNone();
+            Player.SetHoldingToNone();
         }
     }
 
@@ -55,7 +55,7 @@ public class InventorySystem : MonoBehaviour
         {
             if (ValueStorage.VALID_WEARABLE_IDS.Contains(suit))
             {
-                Player.ISetWearing(suit);
+                Player.SetWearing(suit);
                 Debug.Log($"You've put on, {suit}");
             }
             else Debug.LogWarning("The set suit in SetWearing() is not valid.", gameObject);
@@ -67,7 +67,7 @@ public class InventorySystem : MonoBehaviour
     /// </summary>
     public void UnequipSuit(string suit)
     {
-        if (!Player.naked) Player.ISetWearingToNone();
+        if (!Player.naked) Player.SetWearingToNone();
         else Debug.LogWarning("The UnequipSuit() is called at a point where the Player.naked is true.", gameObject);
     }
 
@@ -80,7 +80,7 @@ public class InventorySystem : MonoBehaviour
         else
         {
             heldItem = "";
-            Player.ISetHoldingToNone();
+            Player.SetHoldingToNone();
             equippedItemID = 0;
         }
     }

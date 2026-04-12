@@ -1,10 +1,14 @@
 using UnityEngine;
 using FMODUnity;
+using System.Collections;
 
 public class Fixables : MonoBehaviour
 {
-    [SerializeField] public static bool isFixableAvalible = false;
-    [SerializeField] private int fixableTaskCount = 0;
+    [SerializeField] public static bool isTaskActive = false;
+    [SerializeField] private int activeTaskCount = 0;
+
+    public int avalibleTaskCount = ValueStorage.FIXABLES_MAXTASK;
+    public bool isTaskAvalible = true;
 
     private GameObject[] fixableList = {  };
 
@@ -18,13 +22,13 @@ public class Fixables : MonoBehaviour
         SubToEvents();
     }
 
-    private float timeHeld = 0f;
+    /*private float timeHeld = 0f;
     void Update()
     {
-        if (Player.LookingAtTarget("Fixable", KeyCode.E) && timeHeld < ValueStorage.TIME_FIXABLE_TIMETOFIX)
+        if (Player.LookingAtTag("Fixable", KeyCode.E) && timeHeld < ValueStorage.TIME_FIXABLE_TIMETOFIX)
         {
-            GameObject go = Player.LookingAt();
-            LocalStorage fixableStorage = go.GetComponent<LocalStorage>();
+            GameObject go = Player.GetLookedAtObject();
+            Fixable_LocalStorage fixableStorage = go.GetComponent<Fixable_LocalStorage>();
 
             if (!fixableStorage.isFixed)
             {
@@ -33,6 +37,7 @@ public class Fixables : MonoBehaviour
 
                 if (Mathf.Round(timeHeld) >= ValueStorage.TIME_FIXABLE_TIMETOFIX && !isFixed)
                 {
+                    Debug.Log("FIXED");
                     fixableStorage.FixThis();
 
                     
@@ -45,7 +50,7 @@ public class Fixables : MonoBehaviour
             }
         }
 
-        /*if (Input.GetKey(KeyCode.E) && timeHeld < ValueStorage.TIME_FIXABLE_TIMETOFIX)
+        if (Input.GetKey(KeyCode.E) && timeHeld < ValueStorage.TIME_FIXABLE_TIMETOFIX)
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
@@ -81,31 +86,54 @@ public class Fixables : MonoBehaviour
                     }
                 }
             }
-        }*/
-    }
+        }
+    }*/
 
     /// <summary>
     /// Damages a random Fixable at a random time if called from ContinousManager.cs
     /// </summary>
     public void DamageRandomFixable()
     {
+        if (avalibleTaskCount <= 0 || !isTaskAvalible) 
+        { 
+            Debug.LogWarning("No fixable is avalible!");
+            return;
+        }
+        
+        if (avalibleTaskCount > 1)
+        {
+            avalibleTaskCount--;
+        }
+        else if (avalibleTaskCount == 1)
+        {
+            avalibleTaskCount--;
+            Cooldown(ValueStorage.FIXABLES_COOLDOWNBETWEENDAMAGING);
+        }
+
         int randomEvent = Random.Range(45, 45); // should be defined in ValueStorage for different scenarios
 
-        if (randomEvent == 45 && fixableTaskCount < fixableList.Length)
+        if (randomEvent == 45 && activeTaskCount < fixableList.Length)
         {
             int randomIndex = Random.Range(0, fixableList.Length);
-            LocalStorage fixableStorage = fixableList[randomIndex].GetComponent<LocalStorage>();
+            Fixable_LocalStorage fixableStorage = fixableList[randomIndex].GetComponent<Fixable_LocalStorage>();
 
             if (fixableStorage.isFixed) 
             {
                 fixableStorage.DamageThis();
 
-                isFixableAvalible = true;
-                fixableTaskCount++;
+                isTaskActive = true;
+                activeTaskCount++;
 
-                Debug.Log($"Damaged a fixable. | fixableTaskCount = {fixableTaskCount}");
+                Debug.Log($"Damaged a fixable. | activeTaskCount = {activeTaskCount}");
             }
         }
+    }
+
+    private IEnumerator Cooldown(float seconds)
+    {
+        isTaskAvalible = false;
+        yield return new WaitForSeconds(seconds);
+        isTaskAvalible = true;
     }
 
     /// <summary>
@@ -113,13 +141,20 @@ public class Fixables : MonoBehaviour
     /// </summary>
     private void SubFixalbeTask()
     {
-        if (fixableTaskCount == 1)
+        if (avalibleTaskCount == ValueStorage.FIXABLES_MAXTASK)
         {
-            fixableTaskCount--;
-            isFixableAvalible = false;
+            Debug.LogWarning("Cannot decrease fixableTaskCount no more!");
             return;
         }
-        fixableTaskCount--;
+        if (avalibleTaskCount >= 1 && avalibleTaskCount > 0)
+        {
+            activeTaskCount--;
+            avalibleTaskCount++;
+            isTaskActive = false;
+            return;
+        }
+        activeTaskCount--;
+        avalibleTaskCount++;
     }
 
     // ----  Submethods  ---- //
@@ -131,7 +166,7 @@ public class Fixables : MonoBehaviour
     {
         foreach (GameObject fixableObject in fixableList)
         {
-            fixableObject.GetComponent<LocalStorage>().FixTrigger += SubFixalbeTask;
+            fixableObject.GetComponent<Fixable_LocalStorage>().FixTrigger += SubFixalbeTask;
         }
     }
 }

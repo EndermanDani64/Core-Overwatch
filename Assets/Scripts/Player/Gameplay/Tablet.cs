@@ -18,7 +18,7 @@ public class Tablet : MonoBehaviour
             _tabletEquiped = false;
             _cooldown = true;
             _overlayUIManager.HideCursor();
-            Player.IDisableDefaultInput();
+            Player.DisableDefaultInput();
             _playerMovment.ReleaseMouseY();
 
             _anim.Play("TabletClose");
@@ -41,7 +41,7 @@ public class Tablet : MonoBehaviour
 
             yield return new WaitForSeconds(.5f);
 
-            Player.IEnableDefaultInput();
+            Player.EnableDefaultInput();
             _overlayUIManager.ShowCursor();
 
             yield return new WaitForSeconds(.3f);
@@ -65,7 +65,7 @@ public class Tablet : MonoBehaviour
 
     [SerializeField] private Movment _playerMovment;
 
-    [SerializeField] private OverlayUIManager _overlayUIManager;
+    [SerializeField] private PlayerUIManager _overlayUIManager;
 
     // player UI stuff
     [SerializeField] private Image _crosshair1;

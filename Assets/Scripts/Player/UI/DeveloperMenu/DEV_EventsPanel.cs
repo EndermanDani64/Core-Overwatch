@@ -8,11 +8,11 @@ public class DEV_EventsPanel : MonoBehaviour
     [SerializeField] private BlackoutEvent blackoutEvent;
     [SerializeField] private Meltdown meltdownEvent;
     [SerializeField] private OverflowEvent overflowEvent;
-    [SerializeField] private OverallEvents _OverallEvents;
+    [SerializeField] private OverallEvents _overallEvents;
 
     public void StartBlackoutEvent()
     {
-        _OverallEvents.TriggerEvent("blackout");
+        _overallEvents.PlayEvent("blackout");
 
         /*if (!OverallEvents.IsEventRunning) TEST NEEDED FOR THESE
         {
@@ -26,12 +26,12 @@ public class DEV_EventsPanel : MonoBehaviour
 
     public void StartMeltdownEvent()
     {
-        _OverallEvents.TriggerEvent("meltdown");
+        _overallEvents.PlayEvent("meltdown_firstsegment");
     }
 
     public void StartOverflowEvent()
     {
-        _OverallEvents.TriggerEvent("overflow");
+        _overallEvents.PlayEvent("overflow");
 
         /*if (!OverallEvents.IsEventRunning) TEST NEEDED FOR THESE
         {

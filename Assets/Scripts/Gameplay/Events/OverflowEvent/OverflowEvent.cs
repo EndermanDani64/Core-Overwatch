@@ -1,5 +1,7 @@
 using System;
 using System.Collections;
+using System.Runtime.CompilerServices;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class OverflowEvent : MonoBehaviour
@@ -7,6 +9,7 @@ public class OverflowEvent : MonoBehaviour
     // ----  Main methods  ---- //
 
     private float TimeEllapsedSinceWaiting = 0f;
+    public delegate void test();
 
     /// <summary>
     /// Used for calling it in loops, so it's random when the event starts.
@@ -34,8 +37,8 @@ public class OverflowEvent : MonoBehaviour
                 if (randomInt < Mathf.RoundToInt(PressureControl.pressure / 5) && !IsOverflowEventCooldown)
                 {
                     difficulty = 4;
-                    StartCoroutine(Event());
-                    //overallEvents.PlayEvent("overflow");
+                    //StartCoroutine(Event());
+                    _overallEvents.PlayEvent("overflow");
                     break;
                 }
             }
@@ -54,17 +57,14 @@ public class OverflowEvent : MonoBehaviour
     public IEnumerator Event()
     {
         OverflowEvent_SatusChange?.Invoke(true);
-
         IsWaitingForOverflowEvent = false;
         OverallEvents.IsOverflow = true;
         OverallEvents.IsEventRunning = true;
-
         DamageRandomPipe(difficulty);
 
         yield return new WaitForSeconds(1);
-
         StartCoroutine(RaiseDamagingFluid());
-        audioSource.PlayOneShot(musicClip);
+        _soundSystem.PlaySound("ms_overflow");
 
         while (fixablePipeAvalibleCount > 0)
         {
@@ -79,8 +79,7 @@ public class OverflowEvent : MonoBehaviour
 
         StartCoroutine(LowerDamagingFluid_FixedPoint());
         StartCoroutine(EventCooldown());
-
-        overallEvents.EventQueue_TriggerNext();
+        _overallEvents.EventQueue_TriggerNext();
 
         OverflowEvent_SatusChange?.Invoke(false);
     }
@@ -90,7 +89,7 @@ public class OverflowEvent : MonoBehaviour
         IsOverflowEventCooldown = true;
         yield return new WaitForSeconds(300);
         IsOverflowEventCooldown = false;
-        overallEvents.EventQueue_TriggerNext();
+        _overallEvents.EventQueue_TriggerNext();
     }
 
     // ----  Unity Default Methods  ---- //
@@ -103,38 +102,47 @@ public class OverflowEvent : MonoBehaviour
     private float _timeHeld = 0f;
     void Update() // some player interaction checks
     {
-        if (Input.GetKey(KeyCode.E) && _timeHeld < ValueStorage.TIME_FIXABLE_PIPE_TIMETOFIX && fixablePipeAvalibleCount > 0)
+        if (Player.LookingAtTag("FixablePipe", KeyCode.E) && fixablePipeAvalibleCount > 0)
         {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-            if (Physics.Raycast(ray, out hit))
+            if (_timeHeld >= ValueStorage.TIME_FIXABLE_PIPE_TIMETOFIX)
             {
-                if (hit.collider.CompareTag("FixablePipe") && !hit.collider.GetComponent<OverflowEvent_FixablePipe>().isFixed)
+                OverflowEvent_FixablePipe fixablePipe = Player.GetLookedAtObject().GetComponent<OverflowEvent_FixablePipe>();
+                if (!fixablePipe.isFixed) 
                 {
-                    bool isFixed = hit.collider.GetComponent<OverflowEvent_FixablePipe>().isFixed;
-                    Debug.Log($"timeheld = {Mathf.Round(_timeHeld)} | isFixed = {isFixed}");
-
-                    if (Mathf.Round(_timeHeld) >= ValueStorage.TIME_FIXABLE_PIPE_TIMETOFIX && !isFixed)
-                    {
-                        //Debug.Log("fixed!");
-                        hit.collider.GetComponent<OverflowEvent_FixablePipe>().FixPipe();
-
-                        fixablePipeAvalibleCount--;
-                        _timeHeld = 0f;
-                    }
-                    else if (_timeHeld < ValueStorage.TIME_FIXABLE_PIPE_TIMETOFIX && !isFixed)
-                    {
-                        _timeHeld += Time.deltaTime;
-                    }
+                    fixablePipe.FixPipe();
+                    fixablePipeAvalibleCount--;
+                    _timeHeld = 0f;
                 }
             }
+            else
+            {
+                _timeHeld += Time.deltaTime;
+                Debug.Log($"timeheld = {Mathf.Round(_timeHeld)} | fixablePipeAvalibleCount = {fixablePipeAvalibleCount}");
+            }
         }
-
-        if (!Input.GetKey(KeyCode.E) && fixablePipeAvalibleCount > 0 && _timeHeld != 0) // if the player releases the button [E] then 
+        else
         {
-            Debug.Log("elengedve");
             _timeHeld = 0f;
         }
+    }
+
+    /// <summary>!!
+    /// just thinking abt stuff, nothing serious. trying to connect with the scattered FixablePipes and make an event connection so i don't have to use update()
+    /// </summary>
+    public void FixPipe(bool isFixed)
+    {
+        if (Player.LookingAtTag("FixablePipe", KeyCode.E) && !isFixed)
+        {
+            if (Mathf.Round(_timeHeld) >= ValueStorage.TIME_FIXABLE_PIPE_TIMETOFIX)
+            {
+                _timeHeld += Time.deltaTime;
+            }
+            else
+            {
+
+            }
+        }
+        fixablePipeAvalibleCount--;
     }
 
     // ----  Submethods  ----- // 
@@ -166,6 +174,7 @@ public class OverflowEvent : MonoBehaviour
     /// </summary>
     private IEnumerator RaiseDamagingFluid()
     {
+        Debug.Log("raising object");
         while (Vector3.Distance(DamagingLiquid.position, PointMaxHigh.position) > 0.05f && fixablePipeAvalibleCount > 0)
         {
             DamagingLiquid.position = Vector3.MoveTowards(DamagingLiquid.position, PointMaxHigh.position, speed * Time.deltaTime);
@@ -209,6 +218,7 @@ public class OverflowEvent : MonoBehaviour
     /// </summary>
     public void ForceOverflow()
     {
+        difficulty = 4;
         StartCoroutine(Event());
     }
 
@@ -225,9 +235,7 @@ public class OverflowEvent : MonoBehaviour
     [SerializeField] public bool IsOverflowEventCooldown = false;
     public bool IsWaitingForOverflowEvent = false;
 
-
     public float speed = 0f; // 1 piece of dp. adds to the speed +.36f
-
     public int difficulty = 0; // 0: 0 damaged pipe | 1: 1 dp. | 2: 2 dp. | ... max 5
 
     public GameObject[] fixablePipeList = { };
@@ -239,8 +247,7 @@ public class OverflowEvent : MonoBehaviour
     [SerializeField] private Transform PointLow; // Inactive event position
     [SerializeField] private Transform PointMaxHigh; // Maximum height that the DamagingLiquid can go up
 
-    [SerializeField] private AudioSource audioSource;
-    [SerializeField] private AudioClip musicClip;
-    [SerializeField] private OverallEvents overallEvents;
+    [SerializeField] private PlayerAudioEmitter _soundSystem;
+    [SerializeField] private OverallEvents _overallEvents;
     [SerializeField] private Fixables fixables;
 }

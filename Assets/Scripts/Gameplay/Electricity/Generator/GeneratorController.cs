@@ -7,7 +7,7 @@ public class GeneratorController : MonoBehaviour
 {
     [Header("Important scripts")]
     [SerializeField] private TempController TempController;
-    [SerializeField] private SoundSystem SoundSystem;
+    [SerializeField] private PlayerAudioEmitter SoundSystem;
     [SerializeField] private PressureControl pressureControl;
     [SerializeField] private FanOverwatch FanOverwatch;
     //[SerializeField] private OverallEvents OverallEvents;

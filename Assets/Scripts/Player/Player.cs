@@ -34,7 +34,7 @@ public class Player : MonoBehaviour
     /// <summary>
     /// Sets the holding variable to the parameter "item". (Holding is the item ID which the player is holding in their hand.)
     /// </summary>
-    public static void ISetHolding(string item)
+    public static void SetHolding(string item)
     {
         if (ValueStorage.VALID_ITEM_IDS.Contains(item)) holding = item;
         else Debug.LogWarning("The set item in SetHolding() is not valid.");
@@ -42,13 +42,13 @@ public class Player : MonoBehaviour
     /// <summary>
     /// Sets the holding variable to "". (Holding is the item ID which the player is holding in their hand.)
     /// </summary>
-    public static void ISetHoldingToNone()
+    public static void SetHoldingToNone()
     {
         holding = "";
     }
 
     // ----  Suits  ---- //
-    public static void ISetWearing(string suit)
+    public static void SetWearing(string suit)
     {
         if (ValueStorage.VALID_WEARABLE_IDS.Contains(suit)) wearing = suit;
         else Debug.LogWarning("The set suit in SetWearing() is not valid.");
@@ -56,7 +56,7 @@ public class Player : MonoBehaviour
     /// <summary>
     /// Sets the wearing variable to "".
     /// </summary>
-    public static void ISetWearingToNone()
+    public static void SetWearingToNone()
     {
         wearing = "";
     }
@@ -68,7 +68,7 @@ public class Player : MonoBehaviour
     /// <summary>
     /// Disables the movment, and shows the cursor.
     /// </summary>
-    public static void IEnableDefaultInput()
+    public static void EnableDefaultInput()
     {
         if (_fpsInputModule == null || _defaultInputModule == null)
         {
@@ -83,7 +83,7 @@ public class Player : MonoBehaviour
     /// <summary>
     /// Enables the movment, and hides the cursor.
     /// </summary>
-    public static void IDisableDefaultInput()
+    public static void DisableDefaultInput()
     {
         if (_fpsInputModule == null || _defaultInputModule == null)
         {
@@ -98,7 +98,7 @@ public class Player : MonoBehaviour
     /// <summary>
     /// Returns the GameObject which the player is looking at. If none then returns with null.
     /// </summary>
-    public static GameObject LookingAt()
+    public static GameObject GetLookedAtObject()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
@@ -143,7 +143,7 @@ public class Player : MonoBehaviour
     /// Takes a string parameter and then compares it to the object's tag which the player is looking at. True if matches.
     /// </summary>
     /// <returns></returns>
-    public static bool LookingAtTarget(string targetTag, KeyCode targetKey = KeyCode.None)
+    public static bool LookingAtTag(string targetTag, KeyCode targetKey = KeyCode.None)
     {
         if (targetTag == "" || targetTag == null) 
         {

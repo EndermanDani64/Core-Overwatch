@@ -4,7 +4,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.InputSystem.UI;
 using UnityEngine.SceneManagement;
 
-public class OverlayUIManager : MonoBehaviour
+public class PlayerUIManager : MonoBehaviour
 {
     [SerializeField] private Canvas PauseMenuCanvas;
     [SerializeField] private Canvas DeveloperMenuCanvas;
@@ -12,7 +12,6 @@ public class OverlayUIManager : MonoBehaviour
     [SerializeField] private Movment PlayerMovment;
     [SerializeField] private Camera Camera;
     [SerializeField] private EventSystem EventSystem;
-    [SerializeField] private AudioSource audioSource;
 
     [SerializeField] private InputSystemUIInputModule defaultInputModule;
     [SerializeField] private FPSInputModule fpsInputModule;
@@ -77,25 +76,23 @@ public class OverlayUIManager : MonoBehaviour
             // ha a pause menu aktív akkor azt zárom be, hapedig a dev menü aktív akkor pedig azt
             PauseMenuCanvas.enabled = false;
             //Time.timeScale = 1f;
-            //audioSource.Play(); EZ NEM JÓ HASZNÁLAT!!
             isPaused = false;
 
             HideCursor();
 
-            Player.IDisableDefaultInput();
+            Player.DisableDefaultInput();
         }
         else if (DeveloperMenuCanvas.enabled)
         {
             DeveloperMenuCanvas.enabled = false;
             //Time.timeScale = 1f;
-            //audioSource.Play(); EZ NEM JÓ HASZNÁLAT!!
             isPaused = false;
 
             HideCursor();
 
             fpsInputModule.enabled = true;
             defaultInputModule.enabled = false;
-            Player.IDisableDefaultInput();
+            Player.DisableDefaultInput();
         }
     }
 

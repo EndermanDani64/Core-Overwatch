@@ -58,7 +58,6 @@ public class GameTimeManager : MonoBehaviour
     {
         while (true)
         {
-            if (_TempController.isOnline) { _TempController.TemperatureLoop(); }
             _OverflowEvent.UpdateDifficulty();
             _ValueStorage.UpdateValue("COOLANT_SUPPLY_DECREASE", Convert.ToInt32(coolantInjectionSlider.value));
             yield return new WaitForSeconds(2f);

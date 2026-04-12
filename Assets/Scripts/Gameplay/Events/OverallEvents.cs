@@ -1,34 +1,16 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 public class OverallEvents : MonoBehaviour
 {
-    public static bool IsMainEventRunning = false;
-    public static bool IsEventRunning = false;
-    public static bool IsOverflow = false;
-    public static bool IsBlackout = false;
-    public static bool IsMeltdown = false;
-
-    public event Action<bool> BlackoutEvent_SatusChange;
-
-    [SerializeField] public Meltdown Event_Meltdown;
-    [SerializeField] public BlackoutEvent Event_Blackout;
-    [SerializeField] public OverflowEvent Event_Overflow;
-
-    public static List<string> EventQueue = new();
 
     private void Update()
     {
-        if (IsMainEventRunning || IsOverflow)
-        {
-            IsEventRunning = true;
-        }
-        else
-        {
-            IsEventRunning = false;
-        }
+        if (IsMainEventRunning || IsOverflow) IsEventRunning = true;
+        else IsEventRunning = false;
     }
 
     /// <summary>
@@ -43,20 +25,27 @@ public class OverallEvents : MonoBehaviour
         }
         else
         {
-            if (eventId == "meltdown")
+            if (eventId == "meltdown_first")
             {
-                Event_Meltdown.ForceMeltdown();
+                Event_Meltdown.ForceMeltdown_FirstSegment();
+                Meltdown_FirstSegment_Start?.Invoke();
+            }
+            else if (eventId == "meltdown_second")
+            {
+                Event_Meltdown.ForceMeltdown_SecondSegment();
+                Meltdown_SecondSegment_Start?.Invoke();
             }
             else if (eventId == "blackout")
             {
                 Event_Blackout.ForceBlackout();
-                BlackoutEvent_SatusChange?.Invoke(true);
+                Blackout_Start?.Invoke();
             }
             else if (eventId == "overflow")
             {
                 if (!Event_Overflow.IsOverflowEventCooldown)
                 {
                     Event_Overflow.ForceOverflow();
+                    Overflow_Start?.Invoke();
                 }
             }
             else if (eventId == "overflowWait") 
@@ -88,7 +77,6 @@ public class OverallEvents : MonoBehaviour
             {
                 EventQueue.Add(eventId);
             }
-
         }
     }
 
@@ -125,4 +113,22 @@ public class OverallEvents : MonoBehaviour
         AddEventToQueue(eventId);
         Debug.Log($"Added event by the id of {eventId}.");
     }
+
+    public static bool IsMainEventRunning = false;
+    public static bool IsEventRunning = false;
+    public static bool IsOverflow = false;
+    public static bool IsBlackout = false;
+    public static bool IsMeltdown = false;
+
+    public delegate IEnumerator TimedAction();
+    public event System.Action Meltdown_FirstSegment_Start;
+    public event System.Action Meltdown_SecondSegment_Start;
+    public event TimedAction Blackout_Start;
+    public event System.Action Overflow_Start;
+
+    [SerializeField] public Meltdown Event_Meltdown;
+    [SerializeField] public BlackoutEvent Event_Blackout;
+    [SerializeField] public OverflowEvent Event_Overflow;
+
+    public static List<string> EventQueue = new();
 }

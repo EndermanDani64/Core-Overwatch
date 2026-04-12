@@ -8,16 +8,8 @@ public class PressureControl : MonoBehaviour
     public static float pressure;
     public static float minimumPressure;
     public bool isError = false;
-    
-    [SerializeField] private Button startupButton;
-    [SerializeField] private TempController tempController;
-    [SerializeField] private OverflowEvent overflowEvent;
-    [SerializeField] private Fixables fixables;
-    [SerializeField] private OverallEvents overallEvents; 
-
-    [SerializeField] private Slider coolantInjector;
-
     public static bool isPressurized = false;
+    private int pressurizeCounter;
     
     public void StartupReactor()
     {
@@ -48,14 +40,15 @@ public class PressureControl : MonoBehaviour
             {
                 float pressureIncrease = 0;
 
-                float basePressureChange = (TempController.temp / 4000f) * 85f; // alap érték a nyomás növeléséhez temp alapján
+                float basePressureChange = (ReactorManager.Temp / 4000f) * 85f; // alap érték a nyomás növeléséhez temp alapján
 
                 float coolantEffect = coolantInjector.value * 1.0f; // coolant folyadék bejuttatása alapján a nyomás csökkentése
 
                 // float randomness = UnityEngine.Random.Range(-1.5f, 1.5f); // véletlen szórás a rendszer "instabilitására"
 
                 float valveFactor = Mathf.Lerp(1f, -1f, ValveOverwatch.valveAmountOpen / 5f); // nyomás csökkentés nyitott szelepek alapján
-                Debug.Log($"valveFactor = {valveFactor}");
+                
+                //Debug.Log($"valveFactor = {valveFactor}");
 
                 /* 
                     0 szelep = 1.0 (teljes nyomás növekedés),
@@ -75,9 +68,16 @@ public class PressureControl : MonoBehaviour
 
                 if (pressure + pressureIncrease <= minimumPressure)
                 {
+                    if (pressurizeCounter >= ValueStorage.REACTOR_PS_TOGGLEFIXABLESTRESHOLD && fixables) // 50
+                    {
+
+                        fixables.DamageRandomFixable();
+                    }
+                    Debug.Log($"pressurizeCounter = {pressurizeCounter}");
+
                     pressure = minimumPressure;
+                    pressurizeCounter++;
                     WarningManager.ActivateWarningLights("minPs");
-                    Debug.LogWarning("initiated");
                 }
                 else { 
                     pressure += pressureIncrease;
@@ -97,10 +97,18 @@ public class PressureControl : MonoBehaviour
 
     private void SetMinimumPressure()
     {
-        minimumPressure = TempController.temp / ValueStorage.REACTOR_PS_MAX * 100;
+        minimumPressure = ReactorManager.Temp / ValueStorage.REACTOR_PS_MAX * 100;
         minimumPressure = MathF.Round(minimumPressure, 3);
         if (minimumPressure < 0) minimumPressure = 0;
 
         Debug.Log($"minimum pressure = {minimumPressure}");
     }
+
+    [SerializeField] private Button startupButton;
+    [SerializeField] private TempController tempController;
+    [SerializeField] private OverflowEvent overflowEvent;
+    [SerializeField] private Fixables fixables;
+    [SerializeField] private OverallEvents overallEvents; 
+
+    [SerializeField] private Slider coolantInjector;
 }

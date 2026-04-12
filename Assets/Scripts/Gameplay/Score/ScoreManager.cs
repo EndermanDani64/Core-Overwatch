@@ -1,5 +1,6 @@
 using UnityEngine;
 using TMPro;
+using FMODUnity;
 
 public class ScoreManager : MonoBehaviour
 {
@@ -13,7 +14,7 @@ public class ScoreManager : MonoBehaviour
         scoreWorkshiftTextExtra.text = $"{workshift} workshift ended! Score awarded: +{ValueStorage.SCORE_WORKSHIFT_END}";
         scoreWorkshiftTextAnimator.Play("WorkshiftEndText", 0, 0f);
         score += ValueStorage.SCORE_WORKSHIFT_END;
-        source.PlayOneShot(workshift_end_funny_Audio);
+        soundEventEmmiter.Play();
     }
 
     /// <summary>
@@ -101,6 +102,6 @@ public class ScoreManager : MonoBehaviour
 
     // script references
     [SerializeField] public TempController tempController;
-    [SerializeField] AudioSource source;
+    [SerializeField] StudioEventEmitter soundEventEmmiter;
     [SerializeField] public AudioClip workshift_end_funny_Audio;
 }

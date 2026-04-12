@@ -8,7 +8,7 @@ public class TempTextUpdater : MonoBehaviour
 
     public void UpdateText()
     {
-        if (TempController.temp < ValueStorage.REACTOR_TMP_MAXIMUM)
+        if (TempController.temp < ValueStorage.REACTOR_TMP_MAX)
         {
             text.text = $"temp: {Mathf.Round(TempController.temp)}";
             text2.text = $"tempintensity: {TempController.tempIntensity}";

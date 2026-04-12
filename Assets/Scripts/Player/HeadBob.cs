@@ -4,7 +4,7 @@ public class HeadBob : MonoBehaviour
 {
     [SerializeField] public static bool enable = true;
 
-    [SerializeField] private float _amplitude = 0.1f;
+    [SerializeField] private float _amplitude = 0.2f;
 
     private Transform _camera;
     [SerializeField] private Transform _cameraHolder;
@@ -61,7 +61,7 @@ public class HeadBob : MonoBehaviour
     
     void Update()
     {
-        if (!enable) { return; }
+        if (!enable || PlayerUIManager.isPaused) { return; }
 
         ApplyOffset();
         ResetMotion();
