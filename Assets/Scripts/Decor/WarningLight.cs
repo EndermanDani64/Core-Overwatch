@@ -1,5 +1,4 @@
-using NUnit.Framework;
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -44,11 +43,11 @@ public class WarningLight : MonoBehaviour
         if (!enabld) Debug.LogWarning("Cannot start corroutine because \"enabl\" is false");
         while (enabld)
         {
-            if (light.material == on) { light.material = off; }
-            else { light.material = on; }
+            if (imageLight.material == on) { imageLight.material = off; }
+            else { imageLight.material = on; }
             yield return new WaitForSeconds(.5f);
         }
-        light.material = off;
+        imageLight.material = off;
     }
 
     private void Awake()
@@ -56,7 +55,7 @@ public class WarningLight : MonoBehaviour
         WarningManager.RegisterLight(gameObject.GetComponent<WarningLight>());
     }
 
-    [SerializeField] private Image light;
+    [SerializeField] private Image imageLight;
     [SerializeField] private Material on;
     [SerializeField] private Material off;
 }

@@ -1,6 +1,4 @@
-using NUnit.Framework;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class WarningManager : MonoBehaviour
@@ -59,4 +57,5 @@ public class WarningManager : MonoBehaviour
     public static void RegisterLight(WarningLight light)
     {
         WarningLights.Add(light);
-    }}
+    }
+}

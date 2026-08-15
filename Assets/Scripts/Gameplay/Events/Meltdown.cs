@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine.SceneManagement;
 using UnityEngine;
 using FMODUnity;
@@ -7,8 +7,6 @@ using System.Collections.Generic;
 public class Meltdown : MonoBehaviour
 {
     [Header("Important scripts")]
-    [SerializeField] private TempController _tempController;
-    [SerializeField] private PressureControl PressureControl;
     [SerializeField] private BlackoutEvent BlackoutEvent;
     [SerializeField] private CoreEffects CoreEffects;
     [SerializeField] private ECoolantController ECoolantController;
@@ -104,7 +102,7 @@ public class Meltdown : MonoBehaviour
             _blastDoorController.ShutDownBlastDoors();
 
             yield return new WaitForSeconds(12);
-            BlackoutEvent.ForceBlackout();
+            BlackoutEvent.EventStart();
 
             yield return new WaitForSeconds(521.65f);
             StopMeltdown();
@@ -127,11 +125,11 @@ public class Meltdown : MonoBehaviour
 
     public void StopMeltdown()
     {
-        ReactorManager.Temp = 0;
-        _tempController.isError = false;
-        PressureControl.isPressurized = false;
-        PressureControl.isError = false;
-        PressureControl.pressure = 250;
+        ReactorManager.ReactorData.Temperature = 0;
+        ReactorManager.ReactorData.ReactorStatus = "error";
+        ReactorManager.ReactorData.IsPressurized = false;
+        ReactorManager.ReactorData.IsError = false;
+        ReactorManager.ReactorData.Pressure = 250;
 
         foreach (var alarmPanel in allAlarms)
         {

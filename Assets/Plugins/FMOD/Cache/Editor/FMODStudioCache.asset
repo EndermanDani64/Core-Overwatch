@@ -89,10 +89,10 @@ MonoBehaviour:
   Path: ../CoreOverwatchFMOD/Build/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 639109096774074091
+  lastModified: 639219628652847136
   FileSizes:
   - Name: Desktop
-    Value: 1288
+    Value: 1460
   Exists: 1
 --- !u!114 &11400000
 MonoBehaviour:
@@ -122,13 +122,44 @@ MonoBehaviour:
   - {fileID: 9021570617457839431}
   - {fileID: 8956884931817074662}
   - {fileID: 5332752667130610108}
+  - {fileID: 7096911611229763307}
+  - {fileID: 1627537012809545961}
+  - {fileID: 450272800428236583}
+  - {fileID: 8316537816292538176}
   EditorParameters: []
   MasterBanks:
   - {fileID: 5942057414608666644}
   StringsBanks:
   - {fileID: -2808233907395616464}
-  cacheTime: 639109096797401492
+  cacheTime: 639220371691106044
   cacheVersion: 131635
+--- !u!114 &450272800428236583
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/FX_Hit03
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/FX_Hit03
+  Guid:
+    Data1: 849214813
+    Data2: 1308386625
+    Data3: -25807193
+    Data4: -296358668
+  Banks:
+  - {fileID: 8803960443131218319}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 130
 --- !u!114 &1141726056516721710
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -156,6 +187,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 18288
+--- !u!114 &1627537012809545961
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/FX_Hit01
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/FX_Hit01
+  Guid:
+    Data1: 460990036
+    Data2: 1191370594
+    Data3: 1630058881
+    Data4: 1475714120
+  Banks:
+  - {fileID: 8803960443131218319}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 182
 --- !u!114 &4687510424569109033
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -252,7 +310,7 @@ MonoBehaviour:
   Path: ../CoreOverwatchFMOD/Build/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 639109096774043975
+  lastModified: 639219628652836898
   FileSizes:
   - Name: Desktop
     Value: 1635552
@@ -284,6 +342,60 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 8814
+--- !u!114 &7096911611229763307
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/FX_ButtonPressFeedback
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/FX_ButtonPressFeedback
+  Guid:
+    Data1: 1241767345
+    Data2: 1298080794
+    Data3: 340048539
+    Data4: 1099421367
+  Banks:
+  - {fileID: 8803960443131218319}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 313
+--- !u!114 &8316537816292538176
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/FX_Hit02
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/FX_Hit02
+  Guid:
+    Data1: -115454564
+    Data2: 1174301955
+    Data3: -713414728
+    Data4: -1537388011
+  Banks:
+  - {fileID: 8803960443131218319}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 130
 --- !u!114 &8803960443131218319
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -299,10 +411,10 @@ MonoBehaviour:
   Path: ../CoreOverwatchFMOD/Build/Desktop/EFFECTS.bank
   Name: EFFECTS
   StudioPath: bank:/EFFECTS
-  lastModified: 639109096773121979
+  lastModified: 639220371691106044
   FileSizes:
   - Name: Desktop
-    Value: 266624
+    Value: 283584
   Exists: 1
 --- !u!114 &8956884931817074662
 MonoBehaviour:

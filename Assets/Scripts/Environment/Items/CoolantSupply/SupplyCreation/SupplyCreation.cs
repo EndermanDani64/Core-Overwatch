@@ -1,11 +1,11 @@
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class SupplyCreation : MonoBehaviour
 {
-    [SerializeField] private ElectricityManagger electricityManagger;
-    [SerializeField] private Button creationButton;
+    [SerializeField] private EnergyManagger electricityManagger;
+    [SerializeField] private UnityEngine.UI.Button creationButton;
     [SerializeField] private Transform spawnPoint;
 
     [SerializeField] private Transform supplyTransform;
@@ -19,11 +19,11 @@ public class SupplyCreation : MonoBehaviour
 
     public void SupplyCreate()
     {
-        if (ElectricityManagger.electricity - ValueStorage.ELECTRICITY_ECOOLANT_SUPPLY_CREATION_COST >= 0 && !isSupplyExists)
+        if (EnergyManagger.MasterBatteryData.Energy - ValueStorage.ENERGY_CONSUMPTION_COOLANT_CREATION >= 0 && !isSupplyExists)
         {
             supplyTransform.position = new Vector3(-17.98f, 17.97f, -24.95f);
             isSupplyExists = true;
-            ElectricityManagger.electricity -= ValueStorage.ELECTRICITY_ECOOLANT_SUPPLY_CREATION_COST; 
+            EnergyManagger.electricity -= ValueStorage.ENERGY_CONSUMPTION_COOLANT_CREATION; 
             Debug.Log("SupplyCreate has been spawned.");
         }
     }

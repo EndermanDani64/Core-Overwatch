@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using TMPro;
 using FMODUnity;
 
@@ -22,42 +22,42 @@ public class ScoreManager : MonoBehaviour
     /// </summary>
     public void CheckPossibleScores()
     {
-        if (SupplyDeposit.supplyedValue > 60 && tempController.isOnline && !OverallEvents.IsMeltdown)
+        if (SupplyDeposit.supplyedValue > 60 && ReactorManager.ReactorData.IsOnline && !OverallEvents.IsMeltdown)
         {
             _scoreIncome += ValueStorage.SCORE_COOLANTSUPPLYLEVEL_ADD;
         }
-        else if (SupplyDeposit.supplyedValue < 60 && tempController.isOnline && !OverallEvents.IsMeltdown)
+        else if (SupplyDeposit.supplyedValue < 60 && ReactorManager.ReactorData.IsOnline && !OverallEvents.IsMeltdown)
         {
             _scoreIncome -= ValueStorage.SCORE_COOLANTSUPPLYLEVEL_SUBTRACT;
         }
 
         //Debug.Log($"500 < TempController.temp && TempController.temp > 1000 = {500 < TempController.temp && TempController.temp > 1000}");
 
-        if (500 < TempController.temp && TempController.temp < 1000 && tempController.isOnline && !OverallEvents.IsMeltdown)
+        if (500 < ReactorManager.ReactorData.Temperature && ReactorManager.ReactorData.Temperature < 1000 && ReactorManager.ReactorData.IsOnline && !OverallEvents.IsMeltdown)
         {
             _scoreIncome += 2;
         }
-        else if (1000 < TempController.temp && TempController.temp < 1350 && tempController.isOnline && !OverallEvents.IsMeltdown)
+        else if (1000 < ReactorManager.ReactorData.Temperature && ReactorManager.ReactorData.Temperature < 1350 && ReactorManager.ReactorData.IsOnline && !OverallEvents.IsMeltdown)
         {
             _scoreIncome += 6;
         }
-        else if (1350 < TempController.temp && TempController.temp < 1800 && tempController.isOnline && !OverallEvents.IsMeltdown)
+        else if (1350 < ReactorManager.ReactorData.Temperature && ReactorManager.ReactorData.Temperature < 1800 && ReactorManager.ReactorData.IsOnline && !OverallEvents.IsMeltdown)
         {
             _scoreIncome += 3;
         }
-        else if (1800 < TempController.temp && TempController.temp < 2000 && tempController.isOnline && !OverallEvents.IsMeltdown)
+        else if (1800 < ReactorManager.ReactorData.Temperature && ReactorManager.ReactorData.Temperature < 2000 && ReactorManager.ReactorData.IsOnline && !OverallEvents.IsMeltdown)
         {
             _scoreIncome += 2;
         }
-        else if (2000 < TempController.temp && TempController.temp < 3000 && tempController.isOnline && !OverallEvents.IsMeltdown)
+        else if (2000 < ReactorManager.ReactorData.Temperature && ReactorManager.ReactorData.Temperature < 3000 && ReactorManager.ReactorData.IsOnline && !OverallEvents.IsMeltdown)
         {
             _scoreIncome += 1;
         }   
-        else if (3350 < TempController.temp && TempController.temp < 3600 && tempController.isOnline && !OverallEvents.IsMeltdown)
+        else if (3350 < ReactorManager.ReactorData.Temperature && ReactorManager.ReactorData.Temperature < 3600 && ReactorManager.ReactorData.IsOnline && !OverallEvents.IsMeltdown)
         {
             _scoreIncome += -3;
         }
-        else if (3600 < TempController.temp && TempController.temp < 4000 && tempController.isOnline && !OverallEvents.IsMeltdown)
+        else if (3600 < ReactorManager.ReactorData.Temperature && ReactorManager.ReactorData.Temperature < 4000 && ReactorManager.ReactorData.IsOnline && !OverallEvents.IsMeltdown)
         {
             _scoreIncome += -6;
         }
@@ -101,7 +101,6 @@ public class ScoreManager : MonoBehaviour
     [SerializeField] public Animator scoreWorkshiftTextAnimator;
 
     // script references
-    [SerializeField] public TempController tempController;
     [SerializeField] StudioEventEmitter soundEventEmmiter;
     [SerializeField] public AudioClip workshift_end_funny_Audio;
 }

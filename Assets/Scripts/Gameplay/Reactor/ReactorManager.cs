@@ -1,28 +1,57 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class ReactorManager : MonoBehaviour
 {
-    private bool _online = false;
-    private float _temp = 20f;
-    private float _pressure = 2f;
     //private float _coolantSupply;
 
+    public static ReactorData ReactorData;
+
+    public static event System.Action OnReactorStart;
+    public event System.Action MeltingPointReached; // ???
+
     /// <summary>
-    /// Read only.
+    /// Sets the IsOnline property to true, and starts calling (2s) the TempController.TemperatureLoop().
     /// </summary>
-    public static bool IsOnline
+    public void StartReactor()
     {
-        get => _online;
+        ReactorData.IsOnline = true;
+        SetValuesToDefault();
+
+        /*// Setting every tempController values for the cold reactor start
+        tempController.SetToDeafultValues();
+
+        // calling continously the loops
+        InvokeRepeating(nameof(_CallTemperatureLoop), 0f, 2f);*/
+
+        OnReactorStart?.Invoke();
     }
-    public static float Temp
+
+    // submethods //
+
+    private void SetValuesToDefault()
+    {
+        ReactorData.Temperature = ValueStorage.REACTOR_TMP_DEFAULT;
+        ReactorData.Pressure = ValueStorage.REACTOR_PS_DEFAULT;
+    }
+
+    // built-in //
+
+    private void Start()
+    {
+        ReactorData = new ReactorData();
+    }
+}
+
+[System.Serializable]
+public class ReactorData
+{
+    public bool IsOnline;
+    public float Temperature
     {
         get => _temp;
         set
         {
-            if (value >= ValueStorage.REACTOR_TMP_MELTINGPOINT)
-            {
-                MeltingPointReached?.Invoke();
-            }
+            // meltdown is getting checked in TempController
 
             if (value > ValueStorage.REACTOR_TMP_MIN)
             {
@@ -39,11 +68,11 @@ public class ReactorManager : MonoBehaviour
             {
                 _temp = ValueStorage.REACTOR_TMP_MIN + 1;
             }
-
-            
         }
     }
-    public static float Pressure
+    public float TemperatureIntensity;
+    public float AllControlRodValue; // ?
+    public float Pressure
     {
         get => _pressure;
         set
@@ -65,45 +94,37 @@ public class ReactorManager : MonoBehaviour
             }
         }
     }
-
-    public event System.Action ReactorStart;
-    public event System.Action MeltingPointReached;
-
-    /// <summary>
-    /// Sets the IsOnline property to true, and starts calling (2s) the TempController.TemperatureLoop().
-    /// </summary>
-    public void StartReactor()
+    public float MinimumPressure;
+    public bool IsPressurized;
+    public string ReactorStatus
     {
-        _online = true;
-        SetValuesToDefault();
-
-        // calling continously 
-        InvokeRepeating(nameof(CallTempLoop), 0f, 2f);
-        InvokeRepeating(nameof(CallPressureLoop), 0f, 2.2f);
+        get
+        {
+            if (_temp > ValueStorage.REACTOR_TMP_MELTINGPOINT || _temp < ValueStorage.REACTOR_TMP_MIN)
+            {
+                return "error";
+            }
+            else if (IsOnline)
+            {
+                return "online";
+            }
+            else
+            {
+                return "offline";
+            }
+        }
+        set => ReactorStatus = value;
     }
+    public bool IsError; // ?
 
-    // submethods //
 
-    private void SetValuesToDefault()
+    private float _temp = 20f;
+    private float _pressure = 2f;
+
+
+    public ReactorData()
     {
-        _temp = ValueStorage.REACTOR_TMP_DEFAULT;
-        _pressure = ValueStorage.REACTOR_PS_DEFAULT;
+        Temperature = _temp;
+        Pressure = _pressure;
     }
-
-    private void CallTempLoop()
-    {
-        tempController.TemperatureLoop();
-    }
-
-    private void CallPressureLoop()
-    {
-        if (!_online) return;   
-        tempController.TemperatureLoop();
-    }
-
-    // references //
-
-    [SerializeField] TempController tempController;
-    [SerializeField] PressureControl pressureController;
 }
-

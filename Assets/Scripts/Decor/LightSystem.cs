@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Rendering;
 
 public class LightSystem : MonoBehaviour
@@ -12,7 +12,6 @@ public class LightSystem : MonoBehaviour
     [SerializeField] private Vector3 rotation;
     [SerializeField] private float speed;
 
-    [SerializeField] private TempController tempController;
     [SerializeField] private BlackoutEvent blackoutEvent;
     [SerializeField] private OverflowEvent overflowEvent;
 
@@ -22,7 +21,7 @@ public class LightSystem : MonoBehaviour
         light.enabled = false;
         GetComponent<LensFlareComponentSRP>().intensity = 0;
 
-        tempController.OnTemperatureChanged += MeltdownRotatingLightCheck;
+        TempController.OnTemperatureChanged += MeltdownRotatingLightCheck;
         blackoutEvent.BlackoutEvent_SatusChange += BlackoutRotatingLightCheck;
         overflowEvent.OverflowEvent_SatusChange += OverflowRotatingLightCheck;
     }

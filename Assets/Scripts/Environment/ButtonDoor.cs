@@ -1,60 +1,46 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
 using System.Collections;
-using UnityEngine.EventSystems;
 
 public class ButtonDoor : MonoBehaviour
 {
-    [SerializeField] private Button Button1;
-    [SerializeField] private Button Button2;
     [SerializeField] private Transform Door;
     [SerializeField] private Transform PointA; // Closed position
     [SerializeField] private Transform PointB; // Open position
 
-    [Space]
+    [SerializeField] private bool isTimedDoor = false;
+    
+    private float _speed = 2f;
+    private bool _isOpen = false;
 
-    [SerializeField] private ElectricityManagger electricityManagger;
-
-    public float speed = 2f;
-    private bool isOpen = false;
-    private bool isMoving = false;
+    private Coroutine movingDoorCoroutine;
 
     public void ToggleDoor()
     {
-        Debug.Log($"isMoving = {isMoving}");
-        EventSystem.current.SetSelectedGameObject(null);
-        if (!isMoving)
+        if (movingDoorCoroutine == null)
         {
-            StartCoroutine(MoveDoor(isOpen ? PointA.position : PointB.position));
-        }
+            if (!isTimedDoor)
+                movingDoorCoroutine = StartCoroutine(MoveDoor(_isOpen ? PointA.position : PointB.position));
+            else
+                movingDoorCoroutine = StartCoroutine(ToggleTimeDoor());
+        }   
     }
 
-    public void ToggleTimeDoor()
+    private IEnumerator ToggleTimeDoor()
     {
-        StartCoroutine(TimeDoorEnumerator());
-    }
+        StartCoroutine(MoveDoor(_isOpen ? PointA.position : PointB.position));
+        yield return new WaitForSeconds(8f);
+        StartCoroutine(MoveDoor(_isOpen ? PointA.position : PointB.position));
 
-    private IEnumerator TimeDoorEnumerator()
-    {
-        EventSystem.current.SetSelectedGameObject(null);
-        if (!isMoving)
-        {
-            StartCoroutine(MoveDoor(isOpen ? PointA.position : PointB.position));
-            yield return new WaitForSeconds(8f);
-            StartCoroutine(MoveDoor(isOpen ? PointA.position : PointB.position));
-        }
+        movingDoorCoroutine = null;
     }
 
     private IEnumerator MoveDoor(Vector3 targetPosition)
     {
-        isMoving = true;
-        //electricityManagger.usage += 
-
-        if (isOpen)
+        if (_isOpen)
         {
             while (Vector3.Distance(Door.position, PointA.position) > 0.05f)
             {
-                Door.position = Vector3.MoveTowards(Door.position, PointA.position, speed * Time.deltaTime);
+                Door.position = Vector3.MoveTowards(Door.position, PointA.position, _speed * Time.deltaTime);
                 if (Door.position == PointA.position)
                 {
                     break;
@@ -66,23 +52,16 @@ public class ButtonDoor : MonoBehaviour
         {
             while (Vector3.Distance(Door.position, PointB.position) > 0.05f)
             {
-                Door.position = Vector3.MoveTowards(Door.position, PointB.position, speed * Time.deltaTime);
+                Door.position = Vector3.MoveTowards(Door.position, PointB.position, _speed * Time.deltaTime);
                 if (Door.position == PointB.position)
                 {
                     break;
                 }
-                //Debug.Log($"closing, Distance = {Vector3.Distance(Door.position, PointB.position)}, isOpen = {isOpen}");
                 yield return null;
             }
         }
 
-        isOpen = !isOpen;
-        isMoving = false;
-
-        //Debug.Log($"Door.position = {Door.position}");
-        //Debug.Log($"targetPosition = {targetPosition}");
-        //Debug.Log($"isOpen = {isOpen}");
+        _isOpen = !_isOpen;
+        movingDoorCoroutine = null;
     }
-
-
 }

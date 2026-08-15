@@ -1,23 +1,106 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
 using TMPro;
 
 public class PlayerInteractionsManager : MonoBehaviour
 {
+    private KeyCode InteractionButton = KeyCode.Mouse0;
+
+    private IHoldInteractible previousHoldableInteractible;
+
     void Update()
     {
         if (PlayerUIManager.isPaused) { return; }
         
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
+
+        TryActivateInteractibleByKey(ray);
+        //TryActivateInteractible(ray);
+
+
+        // - old from here - //
+
         CheckFor_UIButton(ray);
-        CheckFor_TargetLabels(ray);
+        //CheckFor_TargetLabels(ray);
         CheckFor_ElevatorButton(ray);
         CheckFor_ItemInteraction(ray);
         CheckFor_HazmatSuit(ray);
 
         CheckFor_TabletInteraction();
+    }
+
+
+    private void TryActivateInteractibleByKey(Ray ray)
+    {
+        RaycastHit raycastHit;
+        IHoldInteractible holdableInteractible;
+        IInteractible interactible;
+
+        if (Physics.Raycast(ray, out raycastHit) && raycastHit.collider.TryGetComponent<IHoldInteractible>(out holdableInteractible) && holdableInteractible != null)
+        {
+            if (holdableInteractible.IsInteractible() && !holdableInteractible.CurrentlyHolding)
+            {
+                targetLabel.enabled = true;
+                targetLabel.text = holdableInteractible.LookingAtText();
+            }
+            else targetLabel.enabled = false;
+
+
+
+            if (Input.GetKeyDown(InteractionButton))
+            {
+                if (!holdableInteractible.IsInteractible())
+                    return;
+
+                holdableInteractible.StartInteraction();
+
+                return;
+            }
+            else if (Input.GetKey(InteractionButton))
+            {
+                holdableInteractible.BaseInteraction();
+                return;
+            }
+            else if (Input.GetKeyUp(InteractionButton))
+            {
+                holdableInteractible.EndInteraction();
+            }
+
+            previousHoldableInteractible = holdableInteractible;
+
+        }
+        else if (Physics.Raycast(ray, out raycastHit) && raycastHit.collider.TryGetComponent<IInteractible>(out interactible) && interactible != null)
+        {
+            if (!interactible.IsInteractible()) return;
+
+            targetLabel.enabled = true;
+            targetLabel.text = interactible.LookingAtText();
+
+            if (Input.GetKey(InteractionButton))
+                interactible.Interact();
+        }
+        else
+        {
+            targetLabel.enabled = false;
+            previousHoldableInteractible.EndInteraction();
+            previousHoldableInteractible = null;
+        }
+    }
+
+    private void TryActivateButtonOnly(Ray ray)
+    {
+        RaycastHit hit;
+
+        if (Physics.Raycast(ray, out hit))
+        {
+            IHoldInteractible interactible = hit.collider.GetComponent<IHoldInteractible>();
+
+            if (interactible != null && interactible.IsInteractible())
+            {
+                interactible.BaseInteraction();
+            }
+        }
     }
 
     private void CheckFor_UIButton(Ray ray)
@@ -30,7 +113,7 @@ public class PlayerInteractionsManager : MonoBehaviour
             {
                 if (EventSystem.current.IsPointerOverGameObject())
                 {
-                    if (hit.collider.gameObject.GetComponent<Button>() != null)
+                    if (hit.collider.gameObject.GetComponent<ButtonManager>() != null)
                     {
                         ExecuteEvents.Execute(hit.collider.gameObject, new PointerEventData(EventSystem.current), ExecuteEvents.pointerClickHandler);
                     }

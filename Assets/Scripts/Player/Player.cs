@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using UnityEngine;
 using UnityEngine.InputSystem.UI;
 
@@ -185,8 +185,7 @@ public class Player : MonoBehaviour
         //LookingAtFixable
     }
 
-    public delegate void LooksAt();
-    public static event LooksAt LookingAtFixable;
+    public static event Action LookingAtFixable;
 
     [SerializeField] public static FPSInputModule _fpsInputModule;
     [SerializeField] public static InputSystemUIInputModule _defaultInputModule;

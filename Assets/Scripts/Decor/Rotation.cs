@@ -1,5 +1,4 @@
-using UnityEngine;
-using TMPro;
+ï»¿using UnityEngine;
 
 public class Rotation : MonoBehaviour
 {
@@ -15,7 +14,7 @@ public class Rotation : MonoBehaviour
     {
         if (Input.mousePosition.x < (Screen.width / 3))
         {
-            Debug.Log($"Egér a BAL oldalon van, {lastPos}"); //-22
+            Debug.Log($"EgÃ©r a BAL oldalon van, {lastPos}"); //-22
             foreach (Transform child in canvasTransform)
             {
                 if (child.gameObject != excludedObject && excludedObject && lastPos == 0)
@@ -38,12 +37,12 @@ public class Rotation : MonoBehaviour
                     child.localPosition += moveOffsetMain;
                 }
             }
-            Debug.Log($"Egér a JOBB oldalon van, {lastPos}");
+            Debug.Log($"EgÃ©r a JOBB oldalon van, {lastPos}");
             lastPos = 1;
         }
         else
         {
-            Debug.Log($"Egér a KÖZÉPEN oldalon van, {lastPos}");
+            Debug.Log($"EgÃ©r a KÃ–ZÃ‰PEN oldalon van, {lastPos}");
             foreach (Transform child in canvasTransform)
             {
                 if (child.gameObject != excludedObject && lastPos == -1)

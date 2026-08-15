@@ -1,13 +1,12 @@
-using UnityEngine;
+﻿using UnityEngine;
 using TMPro;
-using UnityEngine.UI;
 using System.Collections;
 using UnityEngine.EventSystems;
 
 public class ValveControl : MonoBehaviour
 {
     [Header("Important scripts")]
-    [SerializeField] private Button MainButton;
+    [SerializeField] private UnityEngine.UI.Button MainButton;
     [SerializeField] private TMP_Text ButtonText;
     [SerializeField] private ValveOverwatch ValveOverwatch;
 

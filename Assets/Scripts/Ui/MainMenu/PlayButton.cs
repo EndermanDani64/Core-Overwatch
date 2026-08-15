@@ -1,8 +1,8 @@
-using UnityEngine;
+﻿using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
+
 public class PlayManagger : MonoBehaviour
 {
     [SerializeField] private EventSystem EventSystem;
@@ -17,9 +17,9 @@ public class PlayManagger : MonoBehaviour
         }*/
     }
     [SerializeField] private TMP_Text ButtonText;
-    [SerializeField] private Button PlayButton;
-    [SerializeField] private Button OptionsButton;
-    [SerializeField] private Button QuitButton;
+    [SerializeField] private UnityEngine.UI.Button PlayButton;
+    [SerializeField] private UnityEngine.UI.Button OptionsButton;
+    [SerializeField] private UnityEngine.UI.Button QuitButton;
     [SerializeField] private Canvas StageSelectionCanvas;
     [SerializeField] private Canvas CustomLevelCanvas;
     public void ForceStartGame()
@@ -120,7 +120,7 @@ public class PlayManagger : MonoBehaviour
 
         if (maxElectricity.text != "" || int.Parse(maxElectricity.text) != 0) // if the electricity is not set or zero or it has something in it and its not = to zero, then
         {
-            ValueStorage.ELECTRICITY_MAX = int.Parse(maxElectricity.text);
+            ValueStorage.ENERGY_MAXIMUM = int.Parse(maxElectricity.text);
         }
 
         if (ecoolantSuplyDecrease.text != "" || int.Parse(ecoolantSuplyDecrease.text) != 0)

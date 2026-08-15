@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class ValueTransfer : MonoBehaviour
 {
@@ -9,22 +9,19 @@ public class ValueTransfer : MonoBehaviour
     [SerializeField] private OverallEvents overallEvents;
     [SerializeField] private ShoutSystem shoutSystem;
 
-    [Header("GameObjects")]
-    [SerializeField] private AudioSource source;
-
     private void Start()
     {
-        TempController.temp = PlayManagger.START_TEMP;
-        PressureControl.pressure = PlayManagger.START_PS;
-        ElectricityManagger.electricity = PlayManagger.START_ELECTRICITY;
+        ReactorManager.ReactorData.Temperature = PlayManagger.START_TEMP;
+        ReactorManager.ReactorData.Pressure = PlayManagger.START_PS;
+        EnergyManagger.electricity = PlayManagger.START_ELECTRICITY;
         fanOverwatch.Transfer_ForceResetAll();
     }
 
     public void RessetValues_Default()
     {
-        TempController.temp = PlayManagger.START_TEMP;
-        PressureControl.pressure = PlayManagger.START_PS;
-        ElectricityManagger.electricity = PlayManagger.START_ELECTRICITY;
+        ReactorManager.ReactorData.Temperature = PlayManagger.START_TEMP;
+        ReactorManager.ReactorData.Pressure = PlayManagger.START_PS;
+        EnergyManagger.electricity = PlayManagger.START_ELECTRICITY;
         fanOverwatch.Transfer_ForceResetAll();
     }
 }

@@ -1,28 +1,34 @@
-using System;
+﻿using System;
 using System.Collections;
 using UnityEngine;
 public class GameTimeManager : MonoBehaviour
 {
-    [Header("Script references")]
-    [SerializeField] private SupplyDeposit _SupplyDeposit;
-    [SerializeField] private ValueStorage _ValueStorage;
-    [SerializeField] public ElectricityDecreaseValueManagger _ElectricityDValueManagger;
-    [SerializeField] public GeneratorController _GeneratorController;
-    [SerializeField] private TempController _TempController;
-    [SerializeField] public ScoreManager _ScoreManager;
-    [SerializeField] private OverflowEvent _OverflowEvent;
-    [SerializeField] private EconomyController _EconomyController;
+    public float GameTime { get; private set; }
+    public static float deltaTime = 0f;
 
-    [Header("Visuals")]
-    [SerializeField] private UnityEngine.UI.Slider coolantInjectionSlider;
+    public static event Action<float> OnTickUpdate;
+
+    private float _tickDeltaTime = 0f;
+    private float _tickUpdateFrequency = .5f;
 
     private void Start()
     {
-        // StartCoroutine(_SecondsTrigger_E05());
         StartCoroutine(_SecondsTrigger_E1());
         StartCoroutine(_SecondsTrigger_E2());
         StartCoroutine(_SecondsTrigger_E25());
-        // StartCoroutine(_SecondsTrigger_E60());
+    }
+
+    private void Update()
+    {
+        GameTime += Time.deltaTime;
+        _tickDeltaTime += Time.deltaTime;
+        deltaTime = _tickDeltaTime;
+
+        if (_tickDeltaTime >= _tickUpdateFrequency)
+        {
+            OnTickUpdate?.Invoke(_tickDeltaTime);
+            _tickDeltaTime = 0f;
+        }
     }
 
     /// <summary>
@@ -44,7 +50,6 @@ public class GameTimeManager : MonoBehaviour
     {
         while (true)
         {
-            _ElectricityDValueManagger.DValueUpdate();
             _ScoreManager.CheckPossibleScores();
             _EconomyController.CheckMoneyAward();
             yield return new WaitForSeconds(1);
@@ -61,7 +66,6 @@ public class GameTimeManager : MonoBehaviour
             _OverflowEvent.UpdateDifficulty();
             _ValueStorage.UpdateValue("COOLANT_SUPPLY_DECREASE", Convert.ToInt32(coolantInjectionSlider.value));
             yield return new WaitForSeconds(2f);
-            _GeneratorController.ChangeEnergy();
         }
     }
 
@@ -72,7 +76,7 @@ public class GameTimeManager : MonoBehaviour
     {
         while (true)
         {
-            if (_TempController.isOnline)
+            if (ReactorManager.ReactorData.IsOnline)
             {
                 _SupplyDeposit.DecreaseSupplyValue(ValueStorage.COOLANT_SUPPLY_DECREASE);
             }
@@ -80,15 +84,13 @@ public class GameTimeManager : MonoBehaviour
         }
     }
 
-    int randomInt = 0;
-    /// <summary>
-    /// Runs every contained functions in a 60 second delay.
-    /// </summary>
-    public IEnumerator _SecondsTrigger_E60()
-    {
-        while (true)
-        {
-            yield return new WaitForSeconds(60f);
-        }
-    }
+    [Header("Script references")]
+    [SerializeField] private SupplyDeposit _SupplyDeposit;
+    [SerializeField] private ValueStorage _ValueStorage;
+    [SerializeField] public ScoreManager _ScoreManager;
+    [SerializeField] private OverflowEvent _OverflowEvent;
+    [SerializeField] private EconomyController _EconomyController;
+
+    [Header("Visuals")]
+    [SerializeField] private UnityEngine.UI.Slider coolantInjectionSlider;
 }

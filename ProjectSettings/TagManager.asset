@@ -5,9 +5,6 @@ TagManager:
   serializedVersion: 3
   tags:
   - Ground
-  - StartupButton
-  - Button
-  - ManualDoor
   - ECoolantSupply
   - ECoolantSupplyID
   - ECoolantSupplyDeposit
@@ -20,6 +17,12 @@ TagManager:
   - ViewModel
   - MoneyDisplay
   - WarningLight
+  - UI_TemperatureFeedbackText
+  - UI_PressureFeedbackText
+  - UI_EnergyFeedbackText
+  - UI_TempIntensityFeedbackText
+  - SliderHandleSpace
+  - ManualDoorButton
   layers:
   - Default
   - TransparentFX

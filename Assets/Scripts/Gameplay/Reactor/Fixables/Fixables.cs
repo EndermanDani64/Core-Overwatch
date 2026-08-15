@@ -1,20 +1,19 @@
-using UnityEngine;
-using FMODUnity;
+﻿using UnityEngine;
 using System.Collections;
 
 public class Fixables : MonoBehaviour
 {
-    [SerializeField] public static bool isTaskActive = false;
-    [SerializeField] private int activeTaskCount = 0;
+    public int AvalibleTaskCount = ValueStorage.FIXABLES_MAXTASK;
+    public bool IsTaskActive = false;
+    public bool IsTaskAvalible = true;
 
-    public int avalibleTaskCount = ValueStorage.FIXABLES_MAXTASK;
-    public bool isTaskAvalible = true;
+    [SerializeField] private int _activeTaskCount = 0;
+    private GameObject[] _fixableObjectList = {  };
 
-    private GameObject[] fixableList = {  };
 
     private void Awake()
     {
-        fixableList = GameObject.FindGameObjectsWithTag("Fixable");
+        _fixableObjectList = GameObject.FindGameObjectsWithTag("Fixable");
     }
 
     private void Start()
@@ -94,46 +93,46 @@ public class Fixables : MonoBehaviour
     /// </summary>
     public void DamageRandomFixable()
     {
-        if (avalibleTaskCount <= 0 || !isTaskAvalible) 
+        if (AvalibleTaskCount <= 0 || !IsTaskAvalible) 
         { 
             Debug.LogWarning("No fixable is avalible!");
             return;
         }
         
-        if (avalibleTaskCount > 1)
+        if (AvalibleTaskCount > 1)
         {
-            avalibleTaskCount--;
+            AvalibleTaskCount--;
         }
-        else if (avalibleTaskCount == 1)
+        else if (AvalibleTaskCount == 1)
         {
-            avalibleTaskCount--;
+            AvalibleTaskCount--;
             Cooldown(ValueStorage.FIXABLES_COOLDOWNBETWEENDAMAGING);
         }
 
         int randomEvent = Random.Range(45, 45); // should be defined in ValueStorage for different scenarios
 
-        if (randomEvent == 45 && activeTaskCount < fixableList.Length)
+        if (randomEvent == 45 && _activeTaskCount < _fixableObjectList.Length)
         {
-            int randomIndex = Random.Range(0, fixableList.Length);
-            Fixable_LocalStorage fixableStorage = fixableList[randomIndex].GetComponent<Fixable_LocalStorage>();
+            int randomIndex = Random.Range(0, _fixableObjectList.Length);
+            Fixable_LocalStorage fixableStorage = _fixableObjectList[randomIndex].GetComponent<Fixable_LocalStorage>();
 
             if (fixableStorage.isFixed) 
             {
                 fixableStorage.DamageThis();
 
-                isTaskActive = true;
-                activeTaskCount++;
+                IsTaskActive = true;
+                _activeTaskCount++;
 
-                Debug.Log($"Damaged a fixable. | activeTaskCount = {activeTaskCount}");
+                Debug.Log($"Damaged a fixable. | activeTaskCount = {_activeTaskCount}");
             }
         }
     }
 
     private IEnumerator Cooldown(float seconds)
     {
-        isTaskAvalible = false;
+        IsTaskAvalible = false;
         yield return new WaitForSeconds(seconds);
-        isTaskAvalible = true;
+        IsTaskAvalible = true;
     }
 
     /// <summary>
@@ -141,20 +140,20 @@ public class Fixables : MonoBehaviour
     /// </summary>
     private void SubFixalbeTask()
     {
-        if (avalibleTaskCount == ValueStorage.FIXABLES_MAXTASK)
+        if (AvalibleTaskCount == ValueStorage.FIXABLES_MAXTASK)
         {
             Debug.LogWarning("Cannot decrease fixableTaskCount no more!");
             return;
         }
-        if (avalibleTaskCount >= 1 && avalibleTaskCount > 0)
+        if (AvalibleTaskCount >= 1 && AvalibleTaskCount > 0)
         {
-            activeTaskCount--;
-            avalibleTaskCount++;
-            isTaskActive = false;
+            _activeTaskCount--;
+            AvalibleTaskCount++;
+            IsTaskActive = false;
             return;
         }
-        activeTaskCount--;
-        avalibleTaskCount++;
+        _activeTaskCount--;
+        AvalibleTaskCount++;
     }
 
     // ----  Submethods  ---- //
@@ -164,7 +163,7 @@ public class Fixables : MonoBehaviour
     /// </summary>
     private void SubToEvents()
     {
-        foreach (GameObject fixableObject in fixableList)
+        foreach (GameObject fixableObject in _fixableObjectList)
         {
             fixableObject.GetComponent<Fixable_LocalStorage>().FixTrigger += SubFixalbeTask;
         }

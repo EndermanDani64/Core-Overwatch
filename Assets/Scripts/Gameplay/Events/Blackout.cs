@@ -1,13 +1,11 @@
-using System;
+﻿using System;
 using System.Collections;
 using UnityEngine;
 
-public class BlackoutEvent : MonoBehaviour
+public class BlackoutEvent : MonoBehaviour, IEvent
 {
-    void Start()
-    {
-        StartCoroutine(randomEvent());
-    }
+    public string EventID { get; set; }
+    private Coroutine eventCoroutine;
 
     public IEnumerator SetPower() // this is called when the randomEvent() has got the randomness
     {
@@ -20,10 +18,9 @@ public class BlackoutEvent : MonoBehaviour
         OverallEvents.IsEventRunning = true;
         OverallEvents.IsBlackout = true;
 
-        StopRandomEventCheck();
         LightControl.LightOutage();
         //source.PlayOneShot(soundEffect);
-        ShoutSystem.ShowMessage("Power went, whoossss-");
+        ShoutSystem.SendMessage("Power went, whoossss-");
         /*if (!OverallEvents.IsMeltdown)
         {
             source.PlayOneShot(music);
@@ -37,57 +34,22 @@ public class BlackoutEvent : MonoBehaviour
         LightControl.LightRestore();
         ShoutSystem.HideMessage();
         overallEvents.EventQueue_TriggerNext();
-        StartCoroutine(randomEvent());
+        //StartCoroutine(randomEvent());
         //flashLight.enabled = false;
         BlackoutEvent_SatusChange?.Invoke(false);
     }
-    
-    private bool doesRandomHaveToStop = false;
-    
-    private IEnumerator randomEvent() // ? - cus if it doesn't depend on the player's actions, and it's full random
+
+    // ----  OverallEvents  ---- //
+
+    public void EventStart() // do not use except OverallEvents
     {
-        //Debug.Log("Random blackouts will occour again.");
-        while (!doesRandomHaveToStop)
-        {
-            int willEventStart = UnityEngine.Random.Range(0, 150);
-            if (willEventStart == 69 && !OverallEvents.IsBlackout && !OverallEvents.IsMeltdown && !electricityManagger.isDepletedEnergy)
-            {
-                overallEvents.PlayEvent("blackout");
-            }
-            yield return new WaitForSeconds(2);
-        }
+        eventCoroutine = StartCoroutine(SetPower());
     }
 
-    
-    public bool DEV_ForceBlackout()
+    public void EventEnd()
     {
-        overallEvents.PlayEvent("blackout");
-        return true;
-    }
-
-    public void ForceStop()
-    {   
-        LightControl.LightRestore();
-        ShoutSystem.HideMessage();
-        //source.Stop();
-        OverallEvents.IsBlackout = false;
-        //source.volume = 0.6f;
-        //source.PlayOneShot(soundEffect);
-        BlackoutEvent_SatusChange?.Invoke(false);
-    }
-
-    public void StopRandomEventCheck()
-    {
-        doesRandomHaveToStop = true;
-        Debug.Log("Random blackouts won't occour again.");
-    }
-
-    // ----  OverallEvents using it  ---- //
-
-    public void ForceBlackout() // do not use except OverallEvents
-    {
-        StartCoroutine(SetPower());
-    }
+        StopCoroutine(eventCoroutine);
+    }    
 
     // ----  Initiating  ---- //
 
@@ -97,10 +59,8 @@ public class BlackoutEvent : MonoBehaviour
     [SerializeField] private AudioClip soundEffect;
     [SerializeField] private AudioClip music;*/
 
-    [SerializeField] private TempController tempController;
-    [SerializeField] private ElectricityManagger electricityManagger;
     [SerializeField] private OverallEvents overallEvents;
     [SerializeField] private PlayerAudioEmitter playerAudioEmitter;
     [SerializeField] private ShoutSystem ShoutSystem;
-    [SerializeField] private LightControl LightControl;
+    [SerializeField] private FacilityLightsManager LightControl;
 }

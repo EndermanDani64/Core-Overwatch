@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+Ôªøusing System.Collections.Generic;
 using UnityEngine;
 
 public class ValueStorage : MonoBehaviour
@@ -50,7 +50,7 @@ public class ValueStorage : MonoBehaviour
     [SerializeField] public static int REACTOR_PS_MAX = 2000;
     [SerializeField] public static int REACTOR_PS_PRESSURIZED = 800; // 250 or 800
     [SerializeField] public static int REACTOR_PS_DEFAULT = 2;
-    [SerializeField] public static int REACTOR_PS_TOGGLEFIXABLESTRESHOLD = 10; // 50 or 80
+    [SerializeField] public static int REACTOR_PS_TOGGLEFIXABLESTRESHOLD = 50; // 50 or 80
     [Space]
     [SerializeField] public static int COOLANT_SUPPLY_DECREASE = 1;
     [SerializeField] public static int COOLANT_SUPPLY_ADD = 20;
@@ -60,19 +60,16 @@ public class ValueStorage : MonoBehaviour
     [SerializeField] public static float REACTOR_TMP_DELTA = 2.5f;
 
 
-    [Header("Electricity Values")]
-    [SerializeField] public static int ELECTRICITY_MINIMUM = 0; //0
-    [SerializeField] public static int ELECTRICITY_MAX = 250;
-    [SerializeField] public static int ELECTRICITY_BLACKOUT_DECREASE = 4;
-    [SerializeField] public static int ELECTRICITY_BASE_INCREASE_VALUE = 15; // 2
-    [SerializeField] public static int ELECTRICITY_TEMP_INCREASE_MIN_VALUE = 0; 
-    [SerializeField] public static int ELECTRICITY_TEMP_INCREASE_MAX_VALUE = 100;
+    [Header("Energy Values")]
+    [SerializeField] public static int ENERGY_MINIMUM = 0;
+    [SerializeField] public static int ENERGY_MAXIMUM = 250;
+    [SerializeField] public static float ENERGY_BASE_PRODUCTION_VALUE = 0.35f;
+    [SerializeField] public static int ENERGY_PRODUCTION_MAX_VALUE = 150;
     [Space]
-    [SerializeField] public static int ELECTRICITY_MANUALDOORSCOST = 5; //overall
-    [SerializeField] public static int ELECTRICITY_LIGHTCOST = 2; // overall
-    [SerializeField] public static int ELECTRICITY_FANCOST = 3; // 3/fan
-    [SerializeField] public static int ELECTRICITY_ECOOLANTCOST = 10;
-    [SerializeField] public static int ELECTRICITY_ECOOLANT_SUPPLY_CREATION_COST = 60;
+    [SerializeField] public static float ENERGY_CONSUMPTION_MANUALDOORS = 5; //overall
+    [SerializeField] public static float ENERGY_CONSUMPTION_LIGHT = 0.5f; // overall
+    [SerializeField] public static float ENERGY_CONSUMPTION_FAN = 3; // per fan
+    [SerializeField] public static int ENERGY_CONSUMPTION_COOLANT_CREATION = 30;
 
     [Header("Item Values")]
     [SerializeField] public static float ITEM_HAZMATSUIT_PICKUPTIME = 5f;
@@ -88,6 +85,9 @@ public class ValueStorage : MonoBehaviour
     [SerializeField] public static float OVERFLOWEVENT_LIQUIDSPEED_INCRESE_PERPIPE = .4f;
     [SerializeField] public static float OVERFLOWEVENT_LIQUIDSPEED_DECRESE = 1f;
 
+    [Header("Interactible LookingAt Texts")]
+    [SerializeField] public static string INTERACTIBLE_LOOKINGATTEXT = ": Press To Interact";
+    [SerializeField] public static string INTERACTIBLE_NOTENABLED = "Can't press...";
 
     [Header("Valid Ids")]
     [SerializeField] public static List<string> VALID_EVENT_IDS = new List<string>() { "meltdown_first", "meltdown_second", "blackout", "overflow", "overflowWait" };
@@ -98,13 +98,12 @@ public class ValueStorage : MonoBehaviour
 
     public static void ResetValues()
     {
-        ELECTRICITY_MAX = 150;
+        ENERGY_MAXIMUM = 150;
         REACTOR_TMP_MELTINGPOINT = 4000;
 
-        ELECTRICITY_MANUALDOORSCOST = 5;
-        ELECTRICITY_LIGHTCOST = 2;
-        ELECTRICITY_FANCOST = 3;
-        ELECTRICITY_ECOOLANTCOST = 10;
+        ENERGY_CONSUMPTION_MANUALDOORS = 5;
+        ENERGY_CONSUMPTION_LIGHT = 2;
+        ENERGY_CONSUMPTION_FAN = 3;
 
         COOLANT_SUPPLY_DECREASE = 0;
         COOLANT_SUPPLY_ADD = 20;
@@ -113,7 +112,7 @@ public class ValueStorage : MonoBehaviour
         REACTOR_TMP_MAX = 69420;
         REACTOR_TMP_RANDOM_DELAY_MIN = 6;
         REACTOR_TMP_RANDOM_DELAY_MAX = 12;
-        ELECTRICITY_MINIMUM = 0;
+        ENERGY_MINIMUM = 0;
 
         REACTOR_TMP_DELTA = 2.5f;   
     }
@@ -128,26 +127,23 @@ public class ValueStorage : MonoBehaviour
             case "COOLANTSUPPLYLEVEL_SCORE_SUBTRACT":
                 SCORE_COOLANTSUPPLYLEVEL_SUBTRACT = intValue;
                 break;
-            case "ELECTRICITY_MAX":
-                ELECTRICITY_MAX = intValue;
+            case "ENERGY_MAX":
+                ENERGY_MAXIMUM = intValue;
                 break;
             case "REACTOR_TMP_MELTINGPOINT":
                 REACTOR_TMP_MELTINGPOINT = intValue;
                 break;
-            case "ELECTRICITY_MANUALDOORSCOST":
-                ELECTRICITY_MANUALDOORSCOST = intValue;
+            case "ENERGY_MANUALDOORSCOST":
+                ENERGY_CONSUMPTION_MANUALDOORS = intValue;
                 break;
-            case "ELECTRICITY_LIGHTCOST":
-                ELECTRICITY_LIGHTCOST = intValue;
+            case "ENERGY_LIGHTCOST":
+                ENERGY_CONSUMPTION_LIGHT = intValue;
                 break;
-            case "ELECTRICITY_FANCOST":
-                ELECTRICITY_FANCOST = intValue;
+            case "ENERGY_FANCOST":
+                ENERGY_CONSUMPTION_FAN = intValue;
                 break;
-            case "ELECTRICITY_ECOOLANTCOST":
-                ELECTRICITY_ECOOLANTCOST = intValue;
-                break;
-            case "ELECTRICITY_ECOOLANT_SUPPLY_CREATION_COST":
-                ELECTRICITY_ECOOLANT_SUPPLY_CREATION_COST = intValue;
+            case "ENERGY_ECOOLANT_SUPPLY_CREATION_COST":
+                ENERGY_CONSUMPTION_COOLANT_CREATION = intValue;
                 break;
             case "COOLANT_SUPPLY_DECREASE":
                 COOLANT_SUPPLY_DECREASE = intValue;
@@ -155,8 +151,8 @@ public class ValueStorage : MonoBehaviour
             case "COOLANT_SUPPLY_ADD":
                 COOLANT_SUPPLY_ADD = intValue;
                 break;
-            case "ELECTRICITY_BASE_INCREASE_VALUE":
-                ELECTRICITY_BASE_INCREASE_VALUE = intValue;
+            case "ENERGY_BASE_INCREASE_VALUE":
+                ENERGY_BASE_PRODUCTION_VALUE = intValue;
                 break;
             case "REACTOR_TMP_MINIMUM":
                 REACTOR_TMP_MIN = intValue;
@@ -170,8 +166,8 @@ public class ValueStorage : MonoBehaviour
             case "REACTOR_TMP_RANDOM_DELAY_MAX":
                 REACTOR_TMP_RANDOM_DELAY_MAX = intValue;
                 break;
-            case "ELECTRICITY_MINIMUM":
-                ELECTRICITY_MINIMUM = intValue;
+            case "ENERGY_MINIMUM":
+                ENERGY_MINIMUM = intValue;
                 break;
             case "REACTOR_TMP_DELTA":
                 REACTOR_TMP_DELTA = floatValue;
@@ -188,7 +184,7 @@ public class ValueStorage : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning($"ID {id} m·r foglalt!");
+            Debug.LogWarning($"ID {id} m√°r foglalt!");
         }
     }
 
@@ -197,7 +193,7 @@ public class ValueStorage : MonoBehaviour
         if (occupiedIDs.Contains(id))
         {
             occupiedIDs.Remove(id);
-            Debug.Log($"ID {id} felszabadÌtva.");
+            Debug.Log($"ID {id} felszabad√≠tva.");
         }
         else
         {

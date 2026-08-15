@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -37,7 +37,7 @@ public class OverallEvents : MonoBehaviour
             }
             else if (eventId == "blackout")
             {
-                Event_Blackout.ForceBlackout();
+                Event_Blackout.EventStart();
                 Blackout_Start?.Invoke();
             }
             else if (eventId == "overflow")

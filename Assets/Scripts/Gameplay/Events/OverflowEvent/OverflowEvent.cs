@@ -1,15 +1,12 @@
-using System;
+﻿using System;
 using System.Collections;
-using System.Runtime.CompilerServices;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class OverflowEvent : MonoBehaviour
 {
     // ----  Main methods  ---- //
 
-    private float TimeEllapsedSinceWaiting = 0f;
-    public delegate void test();
+    private float timeEllapsedSinceWaiting = 0f;
 
     /// <summary>
     /// Used for calling it in loops, so it's random when the event starts.
@@ -20,7 +17,7 @@ public class OverflowEvent : MonoBehaviour
         IsWaitingForOverflowEvent = true;
 
         // in case the RandomEventStart has been called and the reactor isn't pressurized
-        while (PressureControl.isPressurized)
+        while (ReactorManager.ReactorData.IsPressurized)
         {
             if (randomWaitTime == -1)
             {
@@ -28,13 +25,13 @@ public class OverflowEvent : MonoBehaviour
                 Debug.Log($"Selected time for OverflowEvent = {randomWaitTime}");
             }
 
-            if (TimeEllapsedSinceWaiting >= randomWaitTime) // If the player waited randomWaitTime seconds...
+            if (timeEllapsedSinceWaiting >= randomWaitTime) // If the player waited randomWaitTime seconds...
             {
-                int randomInt = UnityEngine.Random.Range(0, Mathf.RoundToInt(PressureControl.pressure / 3));
+                int randomInt = UnityEngine.Random.Range(0, Mathf.RoundToInt(ReactorManager.ReactorData.Pressure / 3));
 
                 // Debug.Log($"range: 0-{Mathf.RoundToInt(PressureControl.pressure / 3)} | randomInt = {randomInt} <? {Mathf.RoundToInt(PressureControl.pressure / 5)} | ? {randomInt < Mathf.RoundToInt(PressureControl.pressure / 5)}");
 
-                if (randomInt < Mathf.RoundToInt(PressureControl.pressure / 5) && !IsOverflowEventCooldown)
+                if (randomInt < Mathf.RoundToInt(ReactorManager.ReactorData.Pressure / 5) && !IsOverflowEventCooldown)
                 {
                     difficulty = 4;
                     //StartCoroutine(Event());
@@ -44,8 +41,8 @@ public class OverflowEvent : MonoBehaviour
             }
             else
             {
-                TimeEllapsedSinceWaiting += 1f;
-                Debug.Log($"Untill OverflowEvent = {TimeEllapsedSinceWaiting} -> {randomWaitTime}");
+                timeEllapsedSinceWaiting += 1f;
+                Debug.Log($"Untill OverflowEvent = {timeEllapsedSinceWaiting} -> {randomWaitTime}");
             }
             yield return new WaitForSeconds(1f);
         }
@@ -210,7 +207,7 @@ public class OverflowEvent : MonoBehaviour
     /// </summary>
     public void UpdateDifficulty()
     {
-        difficulty = Mathf.Clamp(Mathf.RoundToInt((PressureControl.pressure / ValueStorage.REACTOR_PS_PRESSURIZED) * 10), 0, 4);
+        difficulty = Mathf.Clamp(Mathf.RoundToInt((ReactorManager.ReactorData.Pressure / ValueStorage.REACTOR_PS_PRESSURIZED) * 10), 0, 4);
     }
 
     /// <summary>

@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class HeadBob : MonoBehaviour
 {
@@ -9,13 +9,13 @@ public class HeadBob : MonoBehaviour
     private Transform _camera;
     [SerializeField] private Transform _cameraHolder;
 
-    [SerializeField] private float _toggleSpeed = 2f;
+    [SerializeField] private float _toggleSpeed;
     private float _bobTimer = 0f;
     private Vector3 _startPos;
     private CharacterController _controller;
 
-    [SerializeField] private float _xOffsetValue = 0.25f;
-    [SerializeField] private float _yOffsetValue = 0.8f;
+    [SerializeField] private float _xOffsetValue;
+    [SerializeField] private float _yOffsetValue;
 
     private void Awake()
     {
@@ -64,6 +64,6 @@ public class HeadBob : MonoBehaviour
         if (!enable || PlayerUIManager.isPaused) { return; }
 
         ApplyOffset();
-        ResetMotion();
+        //ResetMotion();
     }
 }

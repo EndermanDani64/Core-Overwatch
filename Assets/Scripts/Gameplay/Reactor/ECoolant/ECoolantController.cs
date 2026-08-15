@@ -1,14 +1,13 @@
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class ECoolantController : MonoBehaviour
 {
-    [SerializeField] Button Rod1;
-    [SerializeField] Button Rod2;
-    [SerializeField] Button Rod3;
-    [SerializeField] Button Rod4;
-    [SerializeField] Button Rod5;
+    [SerializeField] UnityEngine.UI.Button Rod1;
+    [SerializeField] UnityEngine.UI.Button Rod2;
+    [SerializeField] UnityEngine.UI.Button Rod3;
+    [SerializeField] UnityEngine.UI.Button Rod4;
+    [SerializeField] UnityEngine.UI.Button Rod5;
 
     [SerializeField] Meltdown MeltdownEvent;
     [SerializeField] private Timer timer;

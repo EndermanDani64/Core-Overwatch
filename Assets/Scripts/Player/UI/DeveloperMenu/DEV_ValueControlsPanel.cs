@@ -1,4 +1,4 @@
-using UnityEngine;
+Ôªøusing UnityEngine;
 using TMPro;
 
 public class DEV_ValueControlsPanel : MonoBehaviour
@@ -9,11 +9,11 @@ public class DEV_ValueControlsPanel : MonoBehaviour
     {
         if (float.TryParse(customTempInput.text, out float customTemp))
         {
-            TempController.temp = customTemp;
+            ReactorManager.ReactorData.Temperature = customTemp;
         }
         else
         {
-            Debug.LogWarning("…rvÈnytelen sz·m lett beÌrva!");
+            Debug.LogWarning("√ârv√©nytelen sz√°m lett be√≠rva!");
         }
     }
 
@@ -21,11 +21,11 @@ public class DEV_ValueControlsPanel : MonoBehaviour
     {
         if (float.TryParse(customTempInput.text, out float customEnergy))
         {
-            ElectricityManagger.electricity = customEnergy;
+            EnergyManagger.electricity = customEnergy;
         }
         else
         {
-            Debug.LogWarning("…rvÈnytelen sz·m lett beÌrva!");
+            Debug.LogWarning("√ârv√©nytelen sz√°m lett be√≠rva!");
         }
     }
 
@@ -33,11 +33,11 @@ public class DEV_ValueControlsPanel : MonoBehaviour
     {
         if (float.TryParse(customTempInput.text, out float customPressure))
         {
-            PressureControl.pressure = customPressure;
+            ReactorManager.ReactorData.Pressure = customPressure;
         }
         else
         {
-            Debug.LogWarning("…rvÈnytelen sz·m lett beÌrva!");
+            Debug.LogWarning("√ârv√©nytelen sz√°m lett be√≠rva!");
         }
     }
 
